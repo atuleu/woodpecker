@@ -1,0 +1,659 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 2 22
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Sheet
+S 1900 2800 1100 300 
+U 60906151
+F0 "MX_1" 50
+F1 "MX_LED_Underneath.sch" 50
+F2 "DI" I L 1900 3000 50 
+F3 "DO" O R 3000 3000 50 
+F4 "SW_COL" O R 3000 2900 50 
+F5 "SW_ROW" I L 1900 2900 50 
+$EndSheet
+$Sheet
+S 1900 1900 1100 500 
+U 60906159
+F0 "PELT21T_1" 50
+F1 "PEL12T_w_Driver.sch" 50
+F2 "DI" I L 1900 2100 50 
+F3 "DO" O R 3000 2100 50 
+F4 "QA" O R 3000 2200 50 
+F5 "QB" O R 3000 2300 50 
+F6 "SW_COL" O R 3000 2000 50 
+F7 "SW_ROW" I L 1900 2000 50 
+$EndSheet
+$Sheet
+S 1900 3500 1100 500 
+U 60906161
+F0 "PEL12T_6" 50
+F1 "PEL12T_w_Driver.sch" 50
+F2 "DI" I L 1900 3700 50 
+F3 "DO" O R 3000 3700 50 
+F4 "QA" O R 3000 3800 50 
+F5 "QB" O R 3000 3900 50 
+F6 "SW_COL" O R 3000 3600 50 
+F7 "SW_ROW" I L 1900 3600 50 
+$EndSheet
+Wire Wire Line
+	1700 2000 1700 2650
+Wire Wire Line
+	1700 2000 1900 2000
+Wire Wire Line
+	1900 2900 1700 2900
+Wire Wire Line
+	1700 2900 1700 3350
+Wire Wire Line
+	1900 3600 1700 3600
+Wire Wire Line
+	1700 3600 1700 4250
+$Sheet
+S 3600 2800 1100 300 
+U 6090616D
+F0 "MX_2" 50
+F1 "MX_LED_Underneath.sch" 50
+F2 "DI" I L 3600 3000 50 
+F3 "DO" O R 4700 3000 50 
+F4 "SW_COL" O R 4700 2900 50 
+F5 "SW_ROW" I L 3600 2900 50 
+$EndSheet
+$Sheet
+S 3600 1900 1100 500 
+U 60906175
+F0 "PEL12T_2" 50
+F1 "PEL12T_w_Driver.sch" 50
+F2 "DI" I L 3600 2100 50 
+F3 "DO" O R 4700 2100 50 
+F4 "QA" O R 4700 2200 50 
+F5 "QB" O R 4700 2300 50 
+F6 "SW_COL" O R 4700 2000 50 
+F7 "SW_ROW" I L 3600 2000 50 
+$EndSheet
+$Sheet
+S 3600 3500 1100 500 
+U 6090617D
+F0 "PEL12T_7" 50
+F1 "PEL12T_w_Driver.sch" 50
+F2 "DI" I L 3600 3700 50 
+F3 "DO" O R 4700 3700 50 
+F4 "QA" O R 4700 3800 50 
+F5 "QB" O R 4700 3900 50 
+F6 "SW_COL" O R 4700 3600 50 
+F7 "SW_ROW" I L 3600 3600 50 
+$EndSheet
+Wire Wire Line
+	1700 4250 1500 4250
+Wire Wire Line
+	1700 3350 1500 3350
+Wire Wire Line
+	1700 2650 1500 2650
+$Sheet
+S 5300 2800 1100 300 
+U 60906186
+F0 "MX_3" 50
+F1 "MX_LED_Underneath.sch" 50
+F2 "DI" I L 5300 3000 50 
+F3 "DO" O R 6400 3000 50 
+F4 "SW_COL" O R 6400 2900 50 
+F5 "SW_ROW" I L 5300 2900 50 
+$EndSheet
+$Sheet
+S 5300 1900 1100 500 
+U 6090618E
+F0 "PEL12T_3" 50
+F1 "PEL12T_w_Driver.sch" 50
+F2 "DI" I L 5300 2100 50 
+F3 "DO" O R 6400 2100 50 
+F4 "QA" O R 6400 2200 50 
+F5 "QB" O R 6400 2300 50 
+F6 "SW_COL" O R 6400 2000 50 
+F7 "SW_ROW" I L 5300 2000 50 
+$EndSheet
+$Sheet
+S 5300 3500 1100 500 
+U 60906196
+F0 "PEL12T_8" 50
+F1 "PEL12T_w_Driver.sch" 50
+F2 "DI" I L 5300 3700 50 
+F3 "DO" O R 6400 3700 50 
+F4 "QA" O R 6400 3800 50 
+F5 "QB" O R 6400 3900 50 
+F6 "SW_COL" O R 6400 3600 50 
+F7 "SW_ROW" I L 5300 3600 50 
+$EndSheet
+$Sheet
+S 7000 2800 1100 300 
+U 6090619C
+F0 "MX_4" 50
+F1 "MX_LED_Underneath.sch" 50
+F2 "DI" I L 7000 3000 50 
+F3 "DO" O R 8100 3000 50 
+F4 "SW_COL" O R 8100 2900 50 
+F5 "SW_ROW" I L 7000 2900 50 
+$EndSheet
+$Sheet
+S 7000 1900 1100 500 
+U 609061A4
+F0 "PEL12T_4" 50
+F1 "PEL12T_w_Driver.sch" 50
+F2 "DI" I L 7000 2100 50 
+F3 "DO" O R 8100 2100 50 
+F4 "QA" O R 8100 2200 50 
+F5 "QB" O R 8100 2300 50 
+F6 "SW_COL" O R 8100 2000 50 
+F7 "SW_ROW" I L 7000 2000 50 
+$EndSheet
+$Sheet
+S 7000 3500 1100 500 
+U 609061AC
+F0 "PEL12T_9" 50
+F1 "PEL12T_w_Driver.sch" 50
+F2 "DI" I L 7000 3700 50 
+F3 "DO" O R 8100 3700 50 
+F4 "QA" O R 8100 3800 50 
+F5 "QB" O R 8100 3900 50 
+F6 "SW_COL" O R 8100 3600 50 
+F7 "SW_ROW" I L 7000 3600 50 
+$EndSheet
+$Sheet
+S 8700 2800 1100 300 
+U 609061B2
+F0 "MX_5" 50
+F1 "MX_LED_Underneath.sch" 50
+F2 "DI" I L 8700 3000 50 
+F3 "DO" O R 9800 3000 50 
+F4 "SW_COL" O R 9800 2900 50 
+F5 "SW_ROW" I L 8700 2900 50 
+$EndSheet
+$Sheet
+S 8700 1900 1100 500 
+U 609061BA
+F0 "PEL12T_5" 50
+F1 "PEL12T_w_Driver.sch" 50
+F2 "DI" I L 8700 2100 50 
+F3 "DO" O R 9800 2100 50 
+F4 "QA" O R 9800 2200 50 
+F5 "QB" O R 9800 2300 50 
+F6 "SW_COL" O R 9800 2000 50 
+F7 "SW_ROW" I L 8700 2000 50 
+$EndSheet
+$Sheet
+S 8700 4400 1100 300 
+U 609061C8
+F0 "MX_10" 50
+F1 "MX_LED_Underneath.sch" 50
+F2 "DI" I L 8700 4600 50 
+F3 "DO" O R 9800 4600 50 
+F4 "SW_COL" O R 9800 4500 50 
+F5 "SW_ROW" I L 8700 4500 50 
+$EndSheet
+$Sheet
+S 7000 4400 1100 300 
+U 609061CE
+F0 "MX_9" 50
+F1 "MX_LED_Underneath.sch" 50
+F2 "DI" I L 7000 4600 50 
+F3 "DO" O R 8100 4600 50 
+F4 "SW_COL" O R 8100 4500 50 
+F5 "SW_ROW" I L 7000 4500 50 
+$EndSheet
+$Sheet
+S 5300 4400 1100 300 
+U 609061D4
+F0 "MX_8" 50
+F1 "MX_LED_Underneath.sch" 50
+F2 "DI" I L 5300 4600 50 
+F3 "DO" O R 6400 4600 50 
+F4 "SW_COL" O R 6400 4500 50 
+F5 "SW_ROW" I L 5300 4500 50 
+$EndSheet
+$Sheet
+S 3600 4400 1100 300 
+U 609061DA
+F0 "MX_7" 50
+F1 "MX_LED_Underneath.sch" 50
+F2 "DI" I L 3600 4600 50 
+F3 "DO" O R 4700 4600 50 
+F4 "SW_COL" O R 4700 4500 50 
+F5 "SW_ROW" I L 3600 4500 50 
+$EndSheet
+Wire Wire Line
+	1700 4950 1500 4950
+Wire Wire Line
+	1700 4500 1700 4950
+Wire Wire Line
+	1900 4500 1700 4500
+Entry Wire Line
+	3200 2200 3300 2300
+Entry Wire Line
+	3200 2300 3300 2400
+Text Label 3050 2200 0    50   ~ 0
+QA1
+Text Label 3050 2300 0    50   ~ 0
+QB1
+Wire Wire Line
+	3000 2200 3200 2200
+Wire Wire Line
+	3000 2300 3200 2300
+Entry Wire Line
+	3200 3800 3300 3900
+Entry Wire Line
+	3200 3900 3300 4000
+Text Label 3050 3800 0    50   ~ 0
+QA6
+Text Label 3050 3900 0    50   ~ 0
+QB6
+Wire Wire Line
+	3000 3800 3200 3800
+Wire Wire Line
+	3000 3900 3200 3900
+Entry Wire Line
+	4900 2200 5000 2300
+Entry Wire Line
+	4900 2300 5000 2400
+Text Label 4750 2300 0    50   ~ 0
+QB2
+Wire Wire Line
+	4700 2200 4900 2200
+Wire Wire Line
+	4700 2300 4900 2300
+Entry Wire Line
+	4900 3800 5000 3900
+Entry Wire Line
+	4900 3900 5000 4000
+Text Label 4750 3900 0    50   ~ 0
+QB7
+Wire Wire Line
+	4700 3800 4900 3800
+Wire Wire Line
+	4700 3900 4900 3900
+Text Label 4750 2200 0    50   ~ 0
+QA2
+Text Label 4750 3800 0    50   ~ 0
+QA7
+Wire Wire Line
+	3000 2000 3400 2000
+Wire Wire Line
+	3400 2000 3400 2900
+Wire Wire Line
+	3400 2900 3000 2900
+Wire Wire Line
+	3400 2900 3400 3600
+Wire Wire Line
+	3400 3600 3000 3600
+Connection ~ 3400 2900
+Wire Wire Line
+	3400 3600 3400 4500
+Wire Wire Line
+	3400 4500 3000 4500
+Connection ~ 3400 3600
+Wire Wire Line
+	1700 2650 3500 2650
+Wire Wire Line
+	3500 2650 3500 2000
+Connection ~ 1700 2650
+Wire Wire Line
+	3500 2000 3600 2000
+Wire Wire Line
+	3600 2100 3000 2100
+Wire Wire Line
+	3000 3000 3600 3000
+Wire Wire Line
+	3500 3350 3500 2900
+Wire Wire Line
+	3500 2900 3600 2900
+Connection ~ 1700 3350
+Wire Wire Line
+	1700 4250 3500 4250
+Wire Wire Line
+	3500 4250 3500 3600
+Wire Wire Line
+	3500 3600 3600 3600
+Connection ~ 1700 4250
+Wire Wire Line
+	3000 3700 3600 3700
+Wire Wire Line
+	3000 4600 3600 4600
+Wire Wire Line
+	1700 4950 3500 4950
+Wire Wire Line
+	3500 4950 3500 4500
+Wire Wire Line
+	3500 4500 3600 4500
+Connection ~ 1700 4950
+Entry Wire Line
+	6600 2200 6700 2300
+Entry Wire Line
+	6600 2300 6700 2400
+Text Label 6450 2300 0    50   ~ 0
+QB3
+Wire Wire Line
+	6400 2200 6600 2200
+Wire Wire Line
+	6400 2300 6600 2300
+Entry Wire Line
+	6600 3800 6700 3900
+Entry Wire Line
+	6600 3900 6700 4000
+Text Label 6450 3900 0    50   ~ 0
+QB8
+Wire Wire Line
+	6400 3800 6600 3800
+Wire Wire Line
+	6400 3900 6600 3900
+Text Label 6450 2200 0    50   ~ 0
+QA3
+Text Label 6450 3800 0    50   ~ 0
+QA8
+Entry Wire Line
+	8300 2200 8400 2300
+Entry Wire Line
+	8300 2300 8400 2400
+Text Label 8150 2300 0    50   ~ 0
+QB4
+Wire Wire Line
+	8100 2200 8300 2200
+Wire Wire Line
+	8100 2300 8300 2300
+Entry Wire Line
+	8300 3800 8400 3900
+Entry Wire Line
+	8300 3900 8400 4000
+Text Label 8150 3900 0    50   ~ 0
+QB9
+Wire Wire Line
+	8100 3800 8300 3800
+Wire Wire Line
+	8100 3900 8300 3900
+Text Label 8150 2200 0    50   ~ 0
+QA4
+Text Label 8150 3800 0    50   ~ 0
+QA9
+Entry Wire Line
+	10000 2200 10100 2300
+Entry Wire Line
+	10000 2300 10100 2400
+Text Label 9850 2300 0    50   ~ 0
+QB5
+Wire Wire Line
+	9800 2200 10000 2200
+Wire Wire Line
+	9800 2300 10000 2300
+Entry Wire Line
+	10000 3800 10100 3900
+Entry Wire Line
+	10000 3900 10100 4000
+Text Label 9850 3900 0    50   ~ 0
+QB10
+Wire Wire Line
+	9800 3800 10000 3800
+Wire Wire Line
+	9800 3900 10000 3900
+Text Label 9850 2200 0    50   ~ 0
+QA5
+Text Label 9850 3800 0    50   ~ 0
+QA10
+Connection ~ 6700 5300
+Wire Bus Line
+	6700 5300 8400 5300
+Connection ~ 8400 5300
+Wire Bus Line
+	8400 5300 10100 5300
+Connection ~ 5000 5300
+Wire Wire Line
+	4700 2100 5300 2100
+Wire Wire Line
+	6400 2100 7000 2100
+Wire Wire Line
+	8100 2100 8700 2100
+Wire Wire Line
+	4700 2000 5100 2000
+Wire Wire Line
+	5100 2000 5100 2900
+Wire Wire Line
+	5100 2900 4700 2900
+Wire Wire Line
+	5100 2900 5100 3600
+Wire Wire Line
+	5100 3600 4700 3600
+Connection ~ 5100 2900
+Wire Wire Line
+	5100 3600 5100 4500
+Wire Wire Line
+	5100 4500 4700 4500
+Connection ~ 5100 3600
+Wire Wire Line
+	6400 2000 6800 2000
+Wire Wire Line
+	6800 2000 6800 2900
+Wire Wire Line
+	6800 2900 6400 2900
+Wire Wire Line
+	6800 2900 6800 3600
+Wire Wire Line
+	6800 3600 6400 3600
+Connection ~ 6800 2900
+Wire Wire Line
+	6800 3600 6800 4500
+Wire Wire Line
+	6800 4500 6400 4500
+Connection ~ 6800 3600
+Wire Wire Line
+	8100 2000 8500 2000
+Wire Wire Line
+	8500 2000 8500 2900
+Wire Wire Line
+	8500 2900 8100 2900
+Wire Wire Line
+	8500 2900 8500 3600
+Wire Wire Line
+	8500 3600 8100 3600
+Connection ~ 8500 2900
+Wire Wire Line
+	8500 3600 8500 4500
+Wire Wire Line
+	8500 4500 8100 4500
+Connection ~ 8500 3600
+Wire Wire Line
+	9800 2000 10200 2000
+Wire Wire Line
+	10200 2000 10200 2900
+Wire Wire Line
+	10200 2900 9800 2900
+Wire Wire Line
+	10200 2900 10200 3600
+Wire Wire Line
+	10200 3600 9800 3600
+Connection ~ 10200 2900
+Wire Wire Line
+	10200 3600 10200 4500
+Wire Wire Line
+	10200 4500 9800 4500
+Connection ~ 10200 3600
+Wire Wire Line
+	3500 2650 5200 2650
+Wire Wire Line
+	5200 2650 5200 2000
+Wire Wire Line
+	5200 2000 5300 2000
+Connection ~ 3500 2650
+Wire Wire Line
+	5200 2650 6900 2650
+Wire Wire Line
+	6900 2650 6900 2000
+Wire Wire Line
+	6900 2000 7000 2000
+Connection ~ 5200 2650
+Wire Wire Line
+	6900 2650 8600 2650
+Wire Wire Line
+	8600 2650 8600 2000
+Wire Wire Line
+	8600 2000 8700 2000
+Connection ~ 6900 2650
+Wire Wire Line
+	5200 3350 5200 2900
+Wire Wire Line
+	5200 2900 5300 2900
+Wire Wire Line
+	1700 3350 3500 3350
+Connection ~ 3500 3350
+Wire Wire Line
+	3500 3350 5200 3350
+Wire Wire Line
+	5200 3350 6900 3350
+Wire Wire Line
+	6900 3350 6900 2900
+Wire Wire Line
+	6900 2900 7000 2900
+Connection ~ 5200 3350
+Wire Wire Line
+	6900 3350 8600 3350
+Wire Wire Line
+	8600 3350 8600 2900
+Wire Wire Line
+	8600 2900 8700 2900
+Connection ~ 6900 3350
+Wire Wire Line
+	4700 3000 5300 3000
+Wire Wire Line
+	7000 3000 6400 3000
+Wire Wire Line
+	8100 3000 8700 3000
+Wire Wire Line
+	4700 4600 5300 4600
+Wire Wire Line
+	6400 4600 7000 4600
+Wire Wire Line
+	3500 4250 5200 4250
+Wire Wire Line
+	5200 4250 5200 3600
+Wire Wire Line
+	5200 3600 5300 3600
+Connection ~ 3500 4250
+Wire Wire Line
+	5200 4250 6900 4250
+Wire Wire Line
+	6900 4250 6900 3600
+Wire Wire Line
+	6900 3600 7000 3600
+Connection ~ 5200 4250
+Wire Wire Line
+	6900 4250 8600 4250
+Wire Wire Line
+	8600 4250 8600 3600
+Wire Wire Line
+	8600 3600 8700 3600
+Connection ~ 6900 4250
+Wire Wire Line
+	8100 4600 8700 4600
+Wire Wire Line
+	4700 3700 5300 3700
+Wire Wire Line
+	7000 3700 6400 3700
+Wire Wire Line
+	8700 3700 8100 3700
+Wire Wire Line
+	3500 4950 5200 4950
+Wire Wire Line
+	5200 4950 5200 4500
+Wire Wire Line
+	5200 4500 5300 4500
+Connection ~ 3500 4950
+Wire Wire Line
+	5200 4950 6900 4950
+Wire Wire Line
+	6900 4950 6900 4500
+Wire Wire Line
+	6900 4500 7000 4500
+Connection ~ 5200 4950
+Wire Wire Line
+	6900 4950 8600 4950
+Wire Wire Line
+	8600 4950 8600 4500
+Wire Wire Line
+	8600 4500 8700 4500
+Connection ~ 6900 4950
+Text Label 3100 2000 0    50   ~ 0
+COL1
+Text Label 4800 2000 0    50   ~ 0
+COL2
+Text Label 6500 2000 0    50   ~ 0
+COL3
+Text Label 8200 2000 0    50   ~ 0
+COL4
+Text Label 9900 2000 0    50   ~ 0
+COL5
+Text Label 1500 2650 0    50   ~ 0
+R1
+Text Label 1500 3350 0    50   ~ 0
+R2
+Text Label 1500 4250 0    50   ~ 0
+R3
+Text Label 1500 4950 0    50   ~ 0
+R4
+$Sheet
+S 1900 4400 1100 300 
+U 609061E3
+F0 "MX_6" 50
+F1 "MX_LED_Underneath.sch" 50
+F2 "DI" I L 1900 4600 50 
+F3 "DO" O R 3000 4600 50 
+F4 "SW_COL" O R 3000 4500 50 
+F5 "SW_ROW" I L 1900 4500 50 
+$EndSheet
+$Sheet
+S 8700 3500 1100 500 
+U 609061C2
+F0 "PEL12T_10" 50
+F1 "PEL12T_w_Driver.sch" 50
+F2 "DI" I L 8700 3700 50 
+F3 "DO" O R 9800 3700 50 
+F4 "QA" O R 9800 3800 50 
+F5 "QB" O R 9800 3900 50 
+F6 "SW_COL" O R 9800 3600 50 
+F7 "SW_ROW" I L 8700 3600 50 
+$EndSheet
+Wire Bus Line
+	5000 5300 6700 5300
+Wire Bus Line
+	3300 5300 5000 5300
+Wire Bus Line
+	10100 1700 10100 5300
+Wire Bus Line
+	8400 1700 8400 5300
+Wire Bus Line
+	6700 1700 6700 5300
+Wire Bus Line
+	5000 1700 5000 5300
+Wire Bus Line
+	3300 1700 3300 5300
+Text Label 1350 4600 0    50   ~ 0
+DI4
+Text Label 1350 3700 0    50   ~ 0
+DI3
+Text Label 1350 3000 0    50   ~ 0
+DI2
+Wire Wire Line
+	1350 4600 1900 4600
+Wire Wire Line
+	1350 3700 1900 3700
+Wire Wire Line
+	1350 3000 1900 3000
+Text Label 1350 2100 0    50   ~ 0
+DI1
+Wire Wire Line
+	1900 2100 1350 2100
+$EndSCHEMATC
