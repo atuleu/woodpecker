@@ -1,0 +1,275 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 23 97
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Sheet
+S 2500 3350 1100 300 
+U 60B3CF36
+F0 "MX_B_1" 50
+F1 "MX_LED_Underneath.sch" 50
+F2 "DI" I L 2500 3550 50 
+F3 "DO" O R 3600 3550 50 
+F4 "SW_COL" O R 3600 3450 50 
+F5 "SW_ROW" I L 2500 3450 50 
+$EndSheet
+$Sheet
+S 3950 3350 1100 300 
+U 60B3D212
+F0 "MX_B_2" 50
+F1 "MX_LED_Underneath.sch" 50
+F2 "DI" I L 3950 3550 50 
+F3 "DO" O R 5050 3550 50 
+F4 "SW_COL" O R 5050 3450 50 
+F5 "SW_ROW" I L 3950 3450 50 
+$EndSheet
+$Sheet
+S 5400 3350 1100 300 
+U 60B3D2C3
+F0 "MX_B_3" 50
+F1 "MX_LED_Underneath.sch" 50
+F2 "DI" I L 5400 3550 50 
+F3 "DO" O R 6500 3550 50 
+F4 "SW_COL" O R 6500 3450 50 
+F5 "SW_ROW" I L 5400 3450 50 
+$EndSheet
+$Sheet
+S 6850 3350 1100 300 
+U 60B3D329
+F0 "MX_B_4" 50
+F1 "MX_LED_Underneath.sch" 50
+F2 "DI" I L 6850 3550 50 
+F3 "DO" O R 7950 3550 50 
+F4 "SW_COL" O R 7950 3450 50 
+F5 "SW_ROW" I L 6850 3450 50 
+$EndSheet
+$Sheet
+S 8350 3350 1100 300 
+U 60B3D38F
+F0 "MX_B_5" 50
+F1 "MX_LED_Underneath.sch" 50
+F2 "DI" I L 8350 3550 50 
+F3 "DO" O R 9450 3550 50 
+F4 "SW_COL" O R 9450 3450 50 
+F5 "SW_ROW" I L 8350 3450 50 
+$EndSheet
+$Sheet
+S 2500 3950 1100 300 
+U 60B3E33D
+F0 "MX_B_6" 50
+F1 "MX_LED_Underneath.sch" 50
+F2 "DI" I L 2500 4150 50 
+F3 "DO" O R 3600 4150 50 
+F4 "SW_COL" O R 3600 4050 50 
+F5 "SW_ROW" I L 2500 4050 50 
+$EndSheet
+$Sheet
+S 3950 3950 1100 300 
+U 60B3E39E
+F0 "MX_B_7" 50
+F1 "MX_LED_Underneath.sch" 50
+F2 "DI" I L 3950 4150 50 
+F3 "DO" O R 5050 4150 50 
+F4 "SW_COL" O R 5050 4050 50 
+F5 "SW_ROW" I L 3950 4050 50 
+$EndSheet
+$Sheet
+S 5400 3950 1100 300 
+U 60B3E431
+F0 "MX_B_8" 50
+F1 "MX_LED_Underneath.sch" 50
+F2 "DI" I L 5400 4150 50 
+F3 "DO" O R 6500 4150 50 
+F4 "SW_COL" O R 6500 4050 50 
+F5 "SW_ROW" I L 5400 4050 50 
+$EndSheet
+$Sheet
+S 6850 3950 1100 300 
+U 60B3E46F
+F0 "MX_B_9" 50
+F1 "MX_LED_Underneath.sch" 50
+F2 "DI" I L 6850 4150 50 
+F3 "DO" O R 7950 4150 50 
+F4 "SW_COL" O R 7950 4050 50 
+F5 "SW_ROW" I L 6850 4050 50 
+$EndSheet
+$Sheet
+S 8350 3950 1100 300 
+U 60B3E4B2
+F0 "MX_B_10" 50
+F1 "MX_LED_Underneath.sch" 50
+F2 "DI" I L 8350 4150 50 
+F3 "DO" O R 9450 4150 50 
+F4 "SW_COL" O R 9450 4050 50 
+F5 "SW_ROW" I L 8350 4050 50 
+$EndSheet
+Wire Wire Line
+	2500 3450 2400 3450
+Wire Wire Line
+	2400 3800 3850 3800
+Wire Wire Line
+	3600 3450 3700 3450
+Wire Wire Line
+	3700 3450 3700 3200
+Wire Wire Line
+	3700 3450 3700 4050
+Wire Wire Line
+	3700 4050 3600 4050
+Connection ~ 3700 3450
+Wire Wire Line
+	3850 3450 3850 3800
+Connection ~ 3850 3800
+Wire Wire Line
+	3850 3450 3950 3450
+Wire Wire Line
+	3950 3550 3600 3550
+Wire Wire Line
+	5050 4050 5150 4050
+Wire Wire Line
+	5150 4050 5150 3450
+Wire Wire Line
+	5150 3450 5050 3450
+Wire Wire Line
+	5150 3450 5150 3200
+Connection ~ 5150 3450
+Wire Wire Line
+	3850 3800 5300 3800
+Wire Wire Line
+	5300 3800 5300 3450
+Wire Wire Line
+	5300 3450 5400 3450
+Connection ~ 5300 3800
+Wire Wire Line
+	8250 3800 8250 3450
+Wire Wire Line
+	8250 3450 8350 3450
+Wire Wire Line
+	5300 3800 6750 3800
+Wire Wire Line
+	8350 3550 7950 3550
+Wire Wire Line
+	6850 3450 6750 3450
+Wire Wire Line
+	6750 3450 6750 3800
+Connection ~ 6750 3800
+Wire Wire Line
+	6750 3800 8250 3800
+Wire Wire Line
+	6850 3550 6500 3550
+Wire Wire Line
+	5400 3550 5050 3550
+Wire Wire Line
+	6500 3450 6600 3450
+Wire Wire Line
+	6600 4050 6500 4050
+Wire Wire Line
+	6600 3200 6600 3450
+Connection ~ 6600 3450
+Wire Wire Line
+	6600 3450 6600 4050
+Wire Wire Line
+	6500 4150 6850 4150
+Wire Wire Line
+	7950 4150 8350 4150
+Wire Wire Line
+	8350 4050 8250 4050
+Wire Wire Line
+	8250 4050 8250 4400
+Wire Wire Line
+	8250 4400 6750 4400
+Wire Wire Line
+	2400 4400 2400 4050
+Wire Wire Line
+	2400 4050 2500 4050
+Wire Wire Line
+	3600 4150 3950 4150
+Wire Wire Line
+	3950 4050 3850 4050
+Wire Wire Line
+	3850 4050 3850 4400
+Connection ~ 3850 4400
+Wire Wire Line
+	3850 4400 2400 4400
+Wire Wire Line
+	5050 4150 5400 4150
+Wire Wire Line
+	5400 4050 5300 4050
+Wire Wire Line
+	5300 4050 5300 4400
+Connection ~ 5300 4400
+Wire Wire Line
+	5300 4400 3850 4400
+Wire Wire Line
+	6850 4050 6750 4050
+Wire Wire Line
+	6750 4050 6750 4400
+Connection ~ 6750 4400
+Wire Wire Line
+	6750 4400 5300 4400
+Wire Wire Line
+	7950 4050 8050 4050
+Wire Wire Line
+	8050 4050 8050 3450
+Wire Wire Line
+	8050 3450 7950 3450
+Wire Wire Line
+	8050 3450 8050 3200
+Connection ~ 8050 3450
+Wire Wire Line
+	9450 4050 9550 4050
+Wire Wire Line
+	9550 4050 9550 3450
+Wire Wire Line
+	9550 3450 9450 3450
+Wire Wire Line
+	9550 3450 9550 3200
+Connection ~ 9550 3450
+Text HLabel 1950 3800 0    50   Input ~ 0
+R5
+Wire Wire Line
+	2400 3450 2400 3800
+Wire Wire Line
+	2400 3800 1950 3800
+Connection ~ 2400 3800
+Text HLabel 1950 4400 0    50   Input ~ 0
+R6
+Wire Wire Line
+	1950 4400 2400 4400
+Connection ~ 2400 4400
+Text HLabel 1950 3550 0    50   Input ~ 0
+DI5
+Text HLabel 1950 4150 0    50   Input ~ 0
+DI6
+Wire Wire Line
+	1950 4150 2500 4150
+Wire Wire Line
+	1950 3550 2500 3550
+Text HLabel 9850 3550 2    50   Output ~ 0
+DO5
+Text HLabel 9850 4150 2    50   Output ~ 0
+DO6
+Wire Wire Line
+	9850 4150 9450 4150
+Wire Wire Line
+	9450 3550 9850 3550
+Text HLabel 3700 3200 1    50   Output ~ 0
+C1
+Text HLabel 5150 3200 1    50   Output ~ 0
+C2
+Text HLabel 6600 3200 1    50   Output ~ 0
+C3
+Text HLabel 8050 3200 1    50   Output ~ 0
+C4
+Text HLabel 9550 3200 1    50   Output ~ 0
+C5
+$EndSCHEMATC

@@ -1,96 +1,131 @@
-03-12 23:31:06 replicate_layout.action_replicate_layout 305:Plugin executed on: 'linux'
-03-12 23:31:06 replicate_layout.action_replicate_layout 306:Plugin executed with python version: '3.8.5 (default, Jan 27 2021, 15:41:15) \n[GCC 9.3.0]'
-03-12 23:31:06 replicate_layout.action_replicate_layout 307:KiCad build version: 5.1.9-73d0e3b20d~88~ubuntu20.04.1
-03-12 23:31:06 replicate_layout.action_replicate_layout 308:Replicate layout plugin version: 70 started
-03-12 23:31:06 replicate_layout.action_replicate_layout 340:Preparing replicator with SW1 as a reference
-03-12 23:31:06 replicate_layout.replicatelayout 215:getting project hierarchy from schematics
-03-12 23:31:06 replicate_layout.replicatelayout 217:Project hierarchy looks like:
-{'60900772': ['TopSection_1', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/woodpecker/TopSection.sch'], '60906151': ['MX_1', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/woodpecker/MX_LED_Underneath.sch'], '60906159': ['PELT21T_1', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/woodpecker/PEL12T_w_Driver.sch'], '60906161': ['PEL12T_6', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/woodpecker/PEL12T_w_Driver.sch'], '6090616D': ['MX_2', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/woodpecker/MX_LED_Underneath.sch'], '60906175': ['PEL12T_2', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/woodpecker/PEL12T_w_Driver.sch'], '6090617D': ['PEL12T_7', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/woodpecker/PEL12T_w_Driver.sch'], '60906186': ['MX_3', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/woodpecker/MX_LED_Underneath.sch'], '6090618E': ['PEL12T_3', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/woodpecker/PEL12T_w_Driver.sch'], '60906196': ['PEL12T_8', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/woodpecker/PEL12T_w_Driver.sch'], '6090619C': ['MX_4', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/woodpecker/MX_LED_Underneath.sch'], '609061A4': ['PEL12T_4', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/woodpecker/PEL12T_w_Driver.sch'], '609061AC': ['PEL12T_9', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/woodpecker/PEL12T_w_Driver.sch'], '609061B2': ['MX_5', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/woodpecker/MX_LED_Underneath.sch'], '609061BA': ['PEL12T_5', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/woodpecker/PEL12T_w_Driver.sch'], '609061C8': ['MX_10', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/woodpecker/MX_LED_Underneath.sch'], '609061CE': ['MX_9', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/woodpecker/MX_LED_Underneath.sch'], '609061D4': ['MX_8', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/woodpecker/MX_LED_Underneath.sch'], '609061DA': ['MX_7', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/woodpecker/MX_LED_Underneath.sch'], '609061E3': ['MX_6', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/woodpecker/MX_LED_Underneath.sch'], '609061C2': ['PEL12T_10', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/woodpecker/PEL12T_w_Driver.sch']}
-03-12 23:31:06 replicate_layout.replicatelayout 225:getting a list of all footprints on board
-03-12 23:31:06 replicate_layout.action_replicate_layout 366:source anchor footprint is 'SW1'
-Located on:['TopSection_1', 'MX_1']
+03-13 01:03:22 replicate_layout.action_replicate_layout 305:Plugin executed on: 'linux'
+03-13 01:03:22 replicate_layout.action_replicate_layout 306:Plugin executed with python version: '3.8.5 (default, Jan 27 2021, 15:41:15) \n[GCC 9.3.0]'
+03-13 01:03:22 replicate_layout.action_replicate_layout 307:KiCad build version: 5.1.9-73d0e3b20d~88~ubuntu20.04.1
+03-13 01:03:22 replicate_layout.action_replicate_layout 308:Replicate layout plugin version: 70 started
+03-13 01:03:22 replicate_layout.action_replicate_layout 340:Preparing replicator with SW19 as a reference
+03-13 01:03:22 replicate_layout.replicatelayout 215:getting project hierarchy from schematics
+03-13 01:03:22 replicate_layout.replicatelayout 217:Project hierarchy looks like:
+{'60900772': ['TopSection_1', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/woodpecker/TopSection.sch'], '60906151': ['MX_1', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/woodpecker/MX_LED_Underneath.sch'], '60906159': ['PELT21T_1', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/woodpecker/PEL12T_w_Driver.sch'], '60906161': ['PEL12T_6', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/woodpecker/PEL12T_w_Driver.sch'], '6090616D': ['MX_2', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/woodpecker/MX_LED_Underneath.sch'], '60906175': ['PEL12T_2', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/woodpecker/PEL12T_w_Driver.sch'], '6090617D': ['PEL12T_7', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/woodpecker/PEL12T_w_Driver.sch'], '60906186': ['MX_3', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/woodpecker/MX_LED_Underneath.sch'], '6090618E': ['PEL12T_3', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/woodpecker/PEL12T_w_Driver.sch'], '60906196': ['PEL12T_8', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/woodpecker/PEL12T_w_Driver.sch'], '6090619C': ['MX_4', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/woodpecker/MX_LED_Underneath.sch'], '609061A4': ['PEL12T_4', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/woodpecker/PEL12T_w_Driver.sch'], '609061AC': ['PEL12T_9', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/woodpecker/PEL12T_w_Driver.sch'], '609061B2': ['MX_5', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/woodpecker/MX_LED_Underneath.sch'], '609061BA': ['PEL12T_5', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/woodpecker/PEL12T_w_Driver.sch'], '609061C8': ['MX_10', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/woodpecker/MX_LED_Underneath.sch'], '609061CE': ['MX_9', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/woodpecker/MX_LED_Underneath.sch'], '609061D4': ['MX_8', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/woodpecker/MX_LED_Underneath.sch'], '609061DA': ['MX_7', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/woodpecker/MX_LED_Underneath.sch'], '609061E3': ['MX_6', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/woodpecker/MX_LED_Underneath.sch'], '609061C2': ['PEL12T_10', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/woodpecker/PEL12T_w_Driver.sch'], '60B3CBC1': ['BottomSection_1', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/woodpecker/BottomSection.sch'], '60B3CF36': ['MX_B_1', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/woodpecker/MX_LED_Underneath.sch'], '60B3D212': ['MX_B_2', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/woodpecker/MX_LED_Underneath.sch'], '60B3D2C3': ['MX_B_3', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/woodpecker/MX_LED_Underneath.sch'], '60B3D329': ['MX_B_4', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/woodpecker/MX_LED_Underneath.sch'], '60B3D38F': ['MX_B_5', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/woodpecker/MX_LED_Underneath.sch'], '60B3E33D': ['MX_B_6', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/woodpecker/MX_LED_Underneath.sch'], '60B3E39E': ['MX_B_7', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/woodpecker/MX_LED_Underneath.sch'], '60B3E431': ['MX_B_8', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/woodpecker/MX_LED_Underneath.sch'], '60B3E46F': ['MX_B_9', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/woodpecker/MX_LED_Underneath.sch'], '60B3E4B2': ['MX_B_10', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/woodpecker/MX_LED_Underneath.sch'], '60B67560': ['TopSection_2', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/woodpecker/TopSection.sch'], '60B67B63': ['BottomSection_2', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/woodpecker/BottomSection.sch'], '60B69076': ['TopSection_3', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/woodpecker/TopSection.sch'], '60B694C9': ['BottomSection_3', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/woodpecker/BottomSection.sch']}
+03-13 01:03:22 replicate_layout.replicatelayout 225:getting a list of all footprints on board
+03-13 01:03:22 replicate_layout.action_replicate_layout 366:source anchor footprint is 'SW19'
+Located on:['TopSection_1', 'MX_6']
 With filenames:['TopSection.sch', 'MX_LED_Underneath.sch']
-With sheet_id:['TopSection_1', 'MX_1']
-03-12 23:31:06 replicate_layout.action_replicate_layout 371:Corresponding footprints are 
-[('SW19', ['TopSection_1', 'MX_6']), ('SW18', ['TopSection_1', 'MX_7']), ('SW17', ['TopSection_1', 'MX_8']), ('SW16', ['TopSection_1', 'MX_9']), ('SW15', ['TopSection_1', 'MX_10']), ('SW13', ['TopSection_1', 'MX_5']), ('SW10', ['TopSection_1', 'MX_4']), ('SW7', ['TopSection_1', 'MX_3']), ('SW4', ['TopSection_1', 'MX_2']), ('SW1', ['TopSection_1', 'MX_1'])]
-03-12 23:31:06 replicate_layout.action_replicate_layout 384:Showing dialog
-03-12 23:31:06 replicate_layout.action_replicate_layout 388:Pcbnew position: wx.Point(0, 27)
-03-12 23:31:06 replicate_layout.action_replicate_layout 394:Display 0: wx.Rect(1920, 0, 1920, 1080)
-03-12 23:31:06 replicate_layout.action_replicate_layout 394:Display 1: wx.Rect(0, 0, 1920, 1080)
-03-12 23:31:06 replicate_layout.action_replicate_layout 398:Toolbar position: wx.Point(3804, 98)
-03-12 23:31:06 replicate_layout.action_replicate_layout 405:Dialog position: wx.Point(3491, 98)
-03-12 23:31:06 replicate_layout.replicatelayout 249:construcing a list of sheets suitable for replication on level:'TopSection_1', file:'TopSection.sch'
-03-12 23:31:06 replicate_layout.replicatelayout 256:Source sheet path up to the level:['TopSection_1']
-03-12 23:31:06 replicate_layout.replicatelayout 260:Footprints on the sheets:
-['SW19', 'SW18', 'SW17', 'SW16', 'SW15', 'SW13', 'SW10', 'SW7', 'SW4', 'SW1']
-03-12 23:31:06 replicate_layout.replicatelayout 263:Footprints raw sheet ids:
-['/60900772/609061E3/604B48F1', '/60900772/609061DA/604B48F1', '/60900772/609061D4/604B48F1', '/60900772/609061CE/604B48F1', '/60900772/609061C8/604B48F1', '/60900772/609061B2/604B48F1', '/60900772/6090619C/604B48F1', '/60900772/60906186/604B48F1', '/60900772/6090616D/604B48F1', '/60900772/60906151/604B48F1']
-03-12 23:31:06 replicate_layout.replicatelayout 279:All sheets to replicate:
-[['TopSection_1'], ['TopSection_1'], ['TopSection_1'], ['TopSection_1'], ['TopSection_1'], ['TopSection_1'], ['TopSection_1'], ['TopSection_1'], ['TopSection_1'], ['TopSection_1']]
-03-12 23:31:06 replicate_layout.replicatelayout 284:All sheets to replicate sorted:
-[['TopSection_1']]
-03-12 23:31:06 replicate_layout.replicatelayout 290:All sheets to replicate sorted and without source sheet:
-[]
-03-12 23:31:10 replicate_layout.replicatelayout 249:construcing a list of sheets suitable for replication on level:'MX_1', file:'MX_LED_Underneath.sch'
-03-12 23:31:10 replicate_layout.replicatelayout 256:Source sheet path up to the level:['TopSection_1', 'MX_1']
-03-12 23:31:10 replicate_layout.replicatelayout 260:Footprints on the sheets:
-['SW19', 'SW18', 'SW17', 'SW16', 'SW15', 'SW13', 'SW10', 'SW7', 'SW4', 'SW1']
-03-12 23:31:10 replicate_layout.replicatelayout 263:Footprints raw sheet ids:
-['/60900772/609061E3/604B48F1', '/60900772/609061DA/604B48F1', '/60900772/609061D4/604B48F1', '/60900772/609061CE/604B48F1', '/60900772/609061C8/604B48F1', '/60900772/609061B2/604B48F1', '/60900772/6090619C/604B48F1', '/60900772/60906186/604B48F1', '/60900772/6090616D/604B48F1', '/60900772/60906151/604B48F1']
-03-12 23:31:10 replicate_layout.replicatelayout 279:All sheets to replicate:
-[['TopSection_1', 'MX_6'], ['TopSection_1', 'MX_7'], ['TopSection_1', 'MX_8'], ['TopSection_1', 'MX_9'], ['TopSection_1', 'MX_10'], ['TopSection_1', 'MX_5'], ['TopSection_1', 'MX_4'], ['TopSection_1', 'MX_3'], ['TopSection_1', 'MX_2'], ['TopSection_1', 'MX_1']]
-03-12 23:31:10 replicate_layout.replicatelayout 284:All sheets to replicate sorted:
-[['TopSection_1', 'MX_1'], ['TopSection_1', 'MX_10'], ['TopSection_1', 'MX_2'], ['TopSection_1', 'MX_3'], ['TopSection_1', 'MX_4'], ['TopSection_1', 'MX_5'], ['TopSection_1', 'MX_6'], ['TopSection_1', 'MX_7'], ['TopSection_1', 'MX_8'], ['TopSection_1', 'MX_9']]
-03-12 23:31:10 replicate_layout.replicatelayout 290:All sheets to replicate sorted and without source sheet:
-[['TopSection_1', 'MX_10'], ['TopSection_1', 'MX_2'], ['TopSection_1', 'MX_3'], ['TopSection_1', 'MX_4'], ['TopSection_1', 'MX_5'], ['TopSection_1', 'MX_6'], ['TopSection_1', 'MX_7'], ['TopSection_1', 'MX_8'], ['TopSection_1', 'MX_9']]
-03-12 23:31:13 replicate_layout.replicatelayout 249:construcing a list of sheets suitable for replication on level:'MX_1', file:'MX_LED_Underneath.sch'
-03-12 23:31:13 replicate_layout.replicatelayout 256:Source sheet path up to the level:['TopSection_1', 'MX_1']
-03-12 23:31:13 replicate_layout.replicatelayout 260:Footprints on the sheets:
-['SW19', 'SW18', 'SW17', 'SW16', 'SW15', 'SW13', 'SW10', 'SW7', 'SW4', 'SW1']
-03-12 23:31:13 replicate_layout.replicatelayout 263:Footprints raw sheet ids:
-['/60900772/609061E3/604B48F1', '/60900772/609061DA/604B48F1', '/60900772/609061D4/604B48F1', '/60900772/609061CE/604B48F1', '/60900772/609061C8/604B48F1', '/60900772/609061B2/604B48F1', '/60900772/6090619C/604B48F1', '/60900772/60906186/604B48F1', '/60900772/6090616D/604B48F1', '/60900772/60906151/604B48F1']
-03-12 23:31:13 replicate_layout.replicatelayout 279:All sheets to replicate:
-[['TopSection_1', 'MX_6'], ['TopSection_1', 'MX_7'], ['TopSection_1', 'MX_8'], ['TopSection_1', 'MX_9'], ['TopSection_1', 'MX_10'], ['TopSection_1', 'MX_5'], ['TopSection_1', 'MX_4'], ['TopSection_1', 'MX_3'], ['TopSection_1', 'MX_2'], ['TopSection_1', 'MX_1']]
-03-12 23:31:13 replicate_layout.replicatelayout 284:All sheets to replicate sorted:
-[['TopSection_1', 'MX_1'], ['TopSection_1', 'MX_10'], ['TopSection_1', 'MX_2'], ['TopSection_1', 'MX_3'], ['TopSection_1', 'MX_4'], ['TopSection_1', 'MX_5'], ['TopSection_1', 'MX_6'], ['TopSection_1', 'MX_7'], ['TopSection_1', 'MX_8'], ['TopSection_1', 'MX_9']]
-03-12 23:31:13 replicate_layout.replicatelayout 290:All sheets to replicate sorted and without source sheet:
-[['TopSection_1', 'MX_10'], ['TopSection_1', 'MX_2'], ['TopSection_1', 'MX_3'], ['TopSection_1', 'MX_4'], ['TopSection_1', 'MX_5'], ['TopSection_1', 'MX_6'], ['TopSection_1', 'MX_7'], ['TopSection_1', 'MX_8'], ['TopSection_1', 'MX_9']]
-03-12 23:31:13 replicate_layout.action_replicate_layout 179:Replicating layout
-03-12 23:31:13 replicate_layout.replicatelayout 991:Starting replication of sheets: [['TopSection_1', 'MX_10'], ['TopSection_1', 'MX_2'], ['TopSection_1', 'MX_3'], ['TopSection_1', 'MX_4'], ['TopSection_1', 'MX_5'], ['TopSection_1', 'MX_6'], ['TopSection_1', 'MX_7'], ['TopSection_1', 'MX_8'], ['TopSection_1', 'MX_9']]
-on level: ['TopSection_1', 'MX_1']
-with tracks=False, zone=False, text=False, containing=True, remove=False, locked=False
-03-12 23:31:13 root 261:updating GUI message: 'Preparing for replication'
-03-12 23:31:13 replicate_layout.replicatelayout 556:Getting the list of source footprints
-03-12 23:31:13 root 266:updating GUI with: 0
-03-12 23:31:13 replicate_layout.replicatelayout 560:Getting the list of all the remaining footprints
-03-12 23:31:13 replicate_layout.replicatelayout 564:Getting nets local to source footprints
-03-12 23:31:13 replicate_layout.replicatelayout 568:Getting source bounding box
-03-12 23:31:13 root 266:updating GUI with: 37
-03-12 23:31:13 replicate_layout.replicatelayout 572:Getting source tracks
-03-12 23:31:13 root 266:updating GUI with: 50
-03-12 23:31:13 replicate_layout.replicatelayout 576:Getting source zones
-03-12 23:31:13 root 266:updating GUI with: 62
-03-12 23:31:13 replicate_layout.replicatelayout 580:Getting source text items
-03-12 23:31:13 root 266:updating GUI with: 75
-03-12 23:31:13 replicate_layout.replicatelayout 584:Getting source text items
-03-12 23:31:13 root 266:updating GUI with: 87
-03-12 23:31:13 root 261:updating GUI message: 'Replicating footprints'
-03-12 23:31:13 replicate_layout.replicatelayout 590:Replicating footprints
-03-12 23:31:13 replicate_layout.replicatelayout 596:Replicating footprints on sheet ['TopSection_1', 'MX_10']
-03-12 23:31:13 replicate_layout.replicatelayout 596:Replicating footprints on sheet ['TopSection_1', 'MX_2']
-03-12 23:31:13 root 266:updating GUI with: 16
-03-12 23:31:13 root 266:updating GUI with: 18
-03-12 23:31:14 root 266:updating GUI with: 20
-03-12 23:31:14 replicate_layout.replicatelayout 596:Replicating footprints on sheet ['TopSection_1', 'MX_3']
-03-12 23:31:14 root 266:updating GUI with: 33
-03-12 23:31:14 replicate_layout.replicatelayout 596:Replicating footprints on sheet ['TopSection_1', 'MX_4']
-03-12 23:31:14 root 266:updating GUI with: 35
-03-12 23:31:14 replicate_layout.replicatelayout 596:Replicating footprints on sheet ['TopSection_1', 'MX_5']
-03-12 23:31:14 root 266:updating GUI with: 49
-03-12 23:31:14 replicate_layout.replicatelayout 596:Replicating footprints on sheet ['TopSection_1', 'MX_6']
-03-12 23:31:14 root 266:updating GUI with: 64
-03-12 23:31:14 replicate_layout.replicatelayout 596:Replicating footprints on sheet ['TopSection_1', 'MX_7']
-03-12 23:31:14 replicate_layout.replicatelayout 596:Replicating footprints on sheet ['TopSection_1', 'MX_8']
-03-12 23:31:14 replicate_layout.replicatelayout 596:Replicating footprints on sheet ['TopSection_1', 'MX_9']
-03-12 23:31:14 root 266:updating GUI with: 94
-03-12 23:31:14 replicate_layout.action_replicate_layout 201:Replication complete
+With sheet_id:['TopSection_1', 'MX_6']
+03-13 01:03:22 replicate_layout.action_replicate_layout 371:Corresponding footprints are 
+[('SW90', ['BottomSection_3', 'MX_B_10']), ('SW89', ['BottomSection_3', 'MX_B_9']), ('SW88', ['BottomSection_3', 'MX_B_8']), ('SW87', ['BottomSection_3', 'MX_B_7']), ('SW86', ['BottomSection_3', 'MX_B_6']), ('SW85', ['BottomSection_3', 'MX_B_5']), ('SW84', ['BottomSection_3', 'MX_B_4']), ('SW83', ['BottomSection_3', 'MX_B_3']), ('SW82', ['BottomSection_3', 'MX_B_2']), ('SW81', ['BottomSection_3', 'MX_B_1']), ('SW79', ['TopSection_3', 'MX_6']), ('SW78', ['TopSection_3', 'MX_7']), ('SW77', ['TopSection_3', 'MX_8']), ('SW76', ['TopSection_3', 'MX_9']), ('SW75', ['TopSection_3', 'MX_10']), ('SW73', ['TopSection_3', 'MX_5']), ('SW70', ['TopSection_3', 'MX_4']), ('SW67', ['TopSection_3', 'MX_3']), ('SW64', ['TopSection_3', 'MX_2']), ('SW61', ['TopSection_3', 'MX_1']), ('SW60', ['BottomSection_2', 'MX_B_10']), ('SW59', ['BottomSection_2', 'MX_B_9']), ('SW58', ['BottomSection_2', 'MX_B_8']), ('SW57', ['BottomSection_2', 'MX_B_7']), ('SW56', ['BottomSection_2', 'MX_B_6']), ('SW55', ['BottomSection_2', 'MX_B_5']), ('SW54', ['BottomSection_2', 'MX_B_4']), ('SW53', ['BottomSection_2', 'MX_B_3']), ('SW52', ['BottomSection_2', 'MX_B_2']), ('SW51', ['BottomSection_2', 'MX_B_1']), ('SW49', ['TopSection_2', 'MX_6']), ('SW48', ['TopSection_2', 'MX_7']), ('SW47', ['TopSection_2', 'MX_8']), ('SW46', ['TopSection_2', 'MX_9']), ('SW45', ['TopSection_2', 'MX_10']), ('SW43', ['TopSection_2', 'MX_5']), ('SW40', ['TopSection_2', 'MX_4']), ('SW37', ['TopSection_2', 'MX_3']), ('SW34', ['TopSection_2', 'MX_2']), ('SW31', ['TopSection_2', 'MX_1']), ('SW30', ['BottomSection_1', 'MX_B_10']), ('SW29', ['BottomSection_1', 'MX_B_9']), ('SW28', ['BottomSection_1', 'MX_B_8']), ('SW27', ['BottomSection_1', 'MX_B_7']), ('SW26', ['BottomSection_1', 'MX_B_6']), ('SW25', ['BottomSection_1', 'MX_B_5']), ('SW24', ['BottomSection_1', 'MX_B_4']), ('SW23', ['BottomSection_1', 'MX_B_3']), ('SW22', ['BottomSection_1', 'MX_B_2']), ('SW21', ['BottomSection_1', 'MX_B_1']), ('SW19', ['TopSection_1', 'MX_6']), ('SW18', ['TopSection_1', 'MX_7']), ('SW17', ['TopSection_1', 'MX_8']), ('SW16', ['TopSection_1', 'MX_9']), ('SW15', ['TopSection_1', 'MX_10']), ('SW13', ['TopSection_1', 'MX_5']), ('SW10', ['TopSection_1', 'MX_4']), ('SW7', ['TopSection_1', 'MX_3']), ('SW4', ['TopSection_1', 'MX_2']), ('SW1', ['TopSection_1', 'MX_1'])]
+03-13 01:03:22 replicate_layout.action_replicate_layout 384:Showing dialog
+03-13 01:03:22 replicate_layout.action_replicate_layout 388:Pcbnew position: wx.Point(0, 27)
+03-13 01:03:22 replicate_layout.action_replicate_layout 394:Display 0: wx.Rect(1920, 0, 1920, 1080)
+03-13 01:03:22 replicate_layout.action_replicate_layout 394:Display 1: wx.Rect(0, 0, 1920, 1080)
+03-13 01:03:22 replicate_layout.action_replicate_layout 398:Toolbar position: wx.Point(3804, 98)
+03-13 01:03:22 replicate_layout.action_replicate_layout 405:Dialog position: wx.Point(3491, 98)
+03-13 01:03:22 replicate_layout.replicatelayout 249:construcing a list of sheets suitable for replication on level:'TopSection_1', file:'TopSection.sch'
+03-13 01:03:22 replicate_layout.replicatelayout 256:Source sheet path up to the level:['TopSection_1']
+03-13 01:03:22 replicate_layout.replicatelayout 260:Footprints on the sheets:
+['SW90', 'SW89', 'SW88', 'SW87', 'SW86', 'SW85', 'SW84', 'SW83', 'SW82', 'SW81', 'SW79', 'SW78', 'SW77', 'SW76', 'SW75', 'SW73', 'SW70', 'SW67', 'SW64', 'SW61', 'SW60', 'SW59', 'SW58', 'SW57', 'SW56', 'SW55', 'SW54', 'SW53', 'SW52', 'SW51', 'SW49', 'SW48', 'SW47', 'SW46', 'SW45', 'SW43', 'SW40', 'SW37', 'SW34', 'SW31', 'SW30', 'SW29', 'SW28', 'SW27', 'SW26', 'SW25', 'SW24', 'SW23', 'SW22', 'SW21', 'SW19', 'SW18', 'SW17', 'SW16', 'SW15', 'SW13', 'SW10', 'SW7', 'SW4', 'SW1']
+03-13 01:03:22 replicate_layout.replicatelayout 263:Footprints raw sheet ids:
+['/60B694C9/60B3E4B2/604B48F1', '/60B694C9/60B3E46F/604B48F1', '/60B694C9/60B3E431/604B48F1', '/60B694C9/60B3E39E/604B48F1', '/60B694C9/60B3E33D/604B48F1', '/60B694C9/60B3D38F/604B48F1', '/60B694C9/60B3D329/604B48F1', '/60B694C9/60B3D2C3/604B48F1', '/60B694C9/60B3D212/604B48F1', '/60B694C9/60B3CF36/604B48F1', '/60B69076/609061E3/604B48F1', '/60B69076/609061DA/604B48F1', '/60B69076/609061D4/604B48F1', '/60B69076/609061CE/604B48F1', '/60B69076/609061C8/604B48F1', '/60B69076/609061B2/604B48F1', '/60B69076/6090619C/604B48F1', '/60B69076/60906186/604B48F1', '/60B69076/6090616D/604B48F1', '/60B69076/60906151/604B48F1', '/60B67B63/60B3E4B2/604B48F1', '/60B67B63/60B3E46F/604B48F1', '/60B67B63/60B3E431/604B48F1', '/60B67B63/60B3E39E/604B48F1', '/60B67B63/60B3E33D/604B48F1', '/60B67B63/60B3D38F/604B48F1', '/60B67B63/60B3D329/604B48F1', '/60B67B63/60B3D2C3/604B48F1', '/60B67B63/60B3D212/604B48F1', '/60B67B63/60B3CF36/604B48F1', '/60B67560/609061E3/604B48F1', '/60B67560/609061DA/604B48F1', '/60B67560/609061D4/604B48F1', '/60B67560/609061CE/604B48F1', '/60B67560/609061C8/604B48F1', '/60B67560/609061B2/604B48F1', '/60B67560/6090619C/604B48F1', '/60B67560/60906186/604B48F1', '/60B67560/6090616D/604B48F1', '/60B67560/60906151/604B48F1', '/60B3CBC1/60B3E4B2/604B48F1', '/60B3CBC1/60B3E46F/604B48F1', '/60B3CBC1/60B3E431/604B48F1', '/60B3CBC1/60B3E39E/604B48F1', '/60B3CBC1/60B3E33D/604B48F1', '/60B3CBC1/60B3D38F/604B48F1', '/60B3CBC1/60B3D329/604B48F1', '/60B3CBC1/60B3D2C3/604B48F1', '/60B3CBC1/60B3D212/604B48F1', '/60B3CBC1/60B3CF36/604B48F1', '/60900772/609061E3/604B48F1', '/60900772/609061DA/604B48F1', '/60900772/609061D4/604B48F1', '/60900772/609061CE/604B48F1', '/60900772/609061C8/604B48F1', '/60900772/609061B2/604B48F1', '/60900772/6090619C/604B48F1', '/60900772/60906186/604B48F1', '/60900772/6090616D/604B48F1', '/60900772/60906151/604B48F1']
+03-13 01:03:22 replicate_layout.replicatelayout 279:All sheets to replicate:
+[['TopSection_3'], ['TopSection_3'], ['TopSection_3'], ['TopSection_3'], ['TopSection_3'], ['TopSection_3'], ['TopSection_3'], ['TopSection_3'], ['TopSection_3'], ['TopSection_3'], ['TopSection_2'], ['TopSection_2'], ['TopSection_2'], ['TopSection_2'], ['TopSection_2'], ['TopSection_2'], ['TopSection_2'], ['TopSection_2'], ['TopSection_2'], ['TopSection_2'], ['TopSection_1'], ['TopSection_1'], ['TopSection_1'], ['TopSection_1'], ['TopSection_1'], ['TopSection_1'], ['TopSection_1'], ['TopSection_1'], ['TopSection_1'], ['TopSection_1']]
+03-13 01:03:22 replicate_layout.replicatelayout 284:All sheets to replicate sorted:
+[['TopSection_1'], ['TopSection_2'], ['TopSection_3']]
+03-13 01:03:22 replicate_layout.replicatelayout 290:All sheets to replicate sorted and without source sheet:
+[['TopSection_2'], ['TopSection_3']]
+03-13 01:03:32 replicate_layout.replicatelayout 249:construcing a list of sheets suitable for replication on level:'TopSection_1', file:'TopSection.sch'
+03-13 01:03:32 replicate_layout.replicatelayout 256:Source sheet path up to the level:['TopSection_1']
+03-13 01:03:32 replicate_layout.replicatelayout 260:Footprints on the sheets:
+['SW90', 'SW89', 'SW88', 'SW87', 'SW86', 'SW85', 'SW84', 'SW83', 'SW82', 'SW81', 'SW79', 'SW78', 'SW77', 'SW76', 'SW75', 'SW73', 'SW70', 'SW67', 'SW64', 'SW61', 'SW60', 'SW59', 'SW58', 'SW57', 'SW56', 'SW55', 'SW54', 'SW53', 'SW52', 'SW51', 'SW49', 'SW48', 'SW47', 'SW46', 'SW45', 'SW43', 'SW40', 'SW37', 'SW34', 'SW31', 'SW30', 'SW29', 'SW28', 'SW27', 'SW26', 'SW25', 'SW24', 'SW23', 'SW22', 'SW21', 'SW19', 'SW18', 'SW17', 'SW16', 'SW15', 'SW13', 'SW10', 'SW7', 'SW4', 'SW1']
+03-13 01:03:32 replicate_layout.replicatelayout 263:Footprints raw sheet ids:
+['/60B694C9/60B3E4B2/604B48F1', '/60B694C9/60B3E46F/604B48F1', '/60B694C9/60B3E431/604B48F1', '/60B694C9/60B3E39E/604B48F1', '/60B694C9/60B3E33D/604B48F1', '/60B694C9/60B3D38F/604B48F1', '/60B694C9/60B3D329/604B48F1', '/60B694C9/60B3D2C3/604B48F1', '/60B694C9/60B3D212/604B48F1', '/60B694C9/60B3CF36/604B48F1', '/60B69076/609061E3/604B48F1', '/60B69076/609061DA/604B48F1', '/60B69076/609061D4/604B48F1', '/60B69076/609061CE/604B48F1', '/60B69076/609061C8/604B48F1', '/60B69076/609061B2/604B48F1', '/60B69076/6090619C/604B48F1', '/60B69076/60906186/604B48F1', '/60B69076/6090616D/604B48F1', '/60B69076/60906151/604B48F1', '/60B67B63/60B3E4B2/604B48F1', '/60B67B63/60B3E46F/604B48F1', '/60B67B63/60B3E431/604B48F1', '/60B67B63/60B3E39E/604B48F1', '/60B67B63/60B3E33D/604B48F1', '/60B67B63/60B3D38F/604B48F1', '/60B67B63/60B3D329/604B48F1', '/60B67B63/60B3D2C3/604B48F1', '/60B67B63/60B3D212/604B48F1', '/60B67B63/60B3CF36/604B48F1', '/60B67560/609061E3/604B48F1', '/60B67560/609061DA/604B48F1', '/60B67560/609061D4/604B48F1', '/60B67560/609061CE/604B48F1', '/60B67560/609061C8/604B48F1', '/60B67560/609061B2/604B48F1', '/60B67560/6090619C/604B48F1', '/60B67560/60906186/604B48F1', '/60B67560/6090616D/604B48F1', '/60B67560/60906151/604B48F1', '/60B3CBC1/60B3E4B2/604B48F1', '/60B3CBC1/60B3E46F/604B48F1', '/60B3CBC1/60B3E431/604B48F1', '/60B3CBC1/60B3E39E/604B48F1', '/60B3CBC1/60B3E33D/604B48F1', '/60B3CBC1/60B3D38F/604B48F1', '/60B3CBC1/60B3D329/604B48F1', '/60B3CBC1/60B3D2C3/604B48F1', '/60B3CBC1/60B3D212/604B48F1', '/60B3CBC1/60B3CF36/604B48F1', '/60900772/609061E3/604B48F1', '/60900772/609061DA/604B48F1', '/60900772/609061D4/604B48F1', '/60900772/609061CE/604B48F1', '/60900772/609061C8/604B48F1', '/60900772/609061B2/604B48F1', '/60900772/6090619C/604B48F1', '/60900772/60906186/604B48F1', '/60900772/6090616D/604B48F1', '/60900772/60906151/604B48F1']
+03-13 01:03:32 replicate_layout.replicatelayout 279:All sheets to replicate:
+[['TopSection_3'], ['TopSection_3'], ['TopSection_3'], ['TopSection_3'], ['TopSection_3'], ['TopSection_3'], ['TopSection_3'], ['TopSection_3'], ['TopSection_3'], ['TopSection_3'], ['TopSection_2'], ['TopSection_2'], ['TopSection_2'], ['TopSection_2'], ['TopSection_2'], ['TopSection_2'], ['TopSection_2'], ['TopSection_2'], ['TopSection_2'], ['TopSection_2'], ['TopSection_1'], ['TopSection_1'], ['TopSection_1'], ['TopSection_1'], ['TopSection_1'], ['TopSection_1'], ['TopSection_1'], ['TopSection_1'], ['TopSection_1'], ['TopSection_1']]
+03-13 01:03:32 replicate_layout.replicatelayout 284:All sheets to replicate sorted:
+[['TopSection_1'], ['TopSection_2'], ['TopSection_3']]
+03-13 01:03:32 replicate_layout.replicatelayout 290:All sheets to replicate sorted and without source sheet:
+[['TopSection_2'], ['TopSection_3']]
+03-13 01:03:32 replicate_layout.action_replicate_layout 179:Replicating layout
+03-13 01:03:32 replicate_layout.replicatelayout 991:Starting replication of sheets: [['TopSection_2'], ['TopSection_3']]
+on level: ['TopSection_1']
+with tracks=True, zone=True, text=True, containing=True, remove=False, locked=False
+03-13 01:03:32 root 261:updating GUI message: 'Preparing for replication'
+03-13 01:03:33 replicate_layout.replicatelayout 556:Getting the list of source footprints
+03-13 01:03:33 root 266:updating GUI with: 0
+03-13 01:03:33 replicate_layout.replicatelayout 560:Getting the list of all the remaining footprints
+03-13 01:03:33 replicate_layout.replicatelayout 564:Getting nets local to source footprints
+03-13 01:03:33 replicate_layout.replicatelayout 568:Getting source bounding box
+03-13 01:03:33 root 266:updating GUI with: 37
+03-13 01:03:33 replicate_layout.replicatelayout 572:Getting source tracks
+03-13 01:03:33 root 266:updating GUI with: 50
+03-13 01:03:33 replicate_layout.replicatelayout 576:Getting source zones
+03-13 01:03:33 root 266:updating GUI with: 62
+03-13 01:03:33 replicate_layout.replicatelayout 580:Getting source text items
+03-13 01:03:33 replicate_layout.replicatelayout 584:Getting source text items
+03-13 01:03:33 root 261:updating GUI message: 'Replicating footprints'
+03-13 01:03:33 replicate_layout.replicatelayout 590:Replicating footprints
+03-13 01:03:33 replicate_layout.replicatelayout 596:Replicating footprints on sheet ['TopSection_2']
+03-13 01:03:33 root 266:updating GUI with: 2
+03-13 01:03:33 root 266:updating GUI with: 6
+03-13 01:03:33 root 266:updating GUI with: 9
+03-13 01:03:33 root 266:updating GUI with: 13
+03-13 01:03:33 root 266:updating GUI with: 17
+03-13 01:03:33 root 266:updating GUI with: 22
+03-13 01:03:33 root 266:updating GUI with: 26
+03-13 01:03:33 root 266:updating GUI with: 30
+03-13 01:03:33 root 266:updating GUI with: 33
+03-13 01:03:33 root 266:updating GUI with: 35
+03-13 01:03:33 root 266:updating GUI with: 38
+03-13 01:03:33 root 266:updating GUI with: 43
+03-13 01:03:33 root 266:updating GUI with: 47
+03-13 01:03:33 replicate_layout.replicatelayout 596:Replicating footprints on sheet ['TopSection_3']
+03-13 01:03:33 root 266:updating GUI with: 51
+03-13 01:03:33 root 266:updating GUI with: 54
+03-13 01:03:33 root 266:updating GUI with: 57
+03-13 01:03:33 root 266:updating GUI with: 61
+03-13 01:03:33 root 266:updating GUI with: 65
+03-13 01:03:33 root 266:updating GUI with: 70
+03-13 01:03:33 root 266:updating GUI with: 74
+03-13 01:03:33 root 266:updating GUI with: 78
+03-13 01:03:33 root 266:updating GUI with: 81
+03-13 01:03:33 root 266:updating GUI with: 84
+03-13 01:03:33 root 266:updating GUI with: 88
+03-13 01:03:33 root 266:updating GUI with: 92
+03-13 01:03:33 root 266:updating GUI with: 97
+03-13 01:03:33 root 261:updating GUI message: 'Replicating tracks'
+03-13 01:03:33 replicate_layout.replicatelayout 720:Replicating tracks
+03-13 01:03:33 replicate_layout.replicatelayout 726:Replicating tracks on sheet ['TopSection_2']
+03-13 01:03:33 root 266:updating GUI with: 0
+03-13 01:03:33 root 266:updating GUI with: 3
+03-13 01:03:33 root 266:updating GUI with: 6
+03-13 01:03:33 root 266:updating GUI with: 10
+03-13 01:03:33 root 266:updating GUI with: 14
+03-13 01:03:33 root 266:updating GUI with: 18
+03-13 01:03:33 root 266:updating GUI with: 24
+03-13 01:03:33 root 266:updating GUI with: 34
+03-13 01:03:33 root 266:updating GUI with: 43
+03-13 01:03:33 replicate_layout.replicatelayout 726:Replicating tracks on sheet ['TopSection_3']
+03-13 01:03:33 root 266:updating GUI with: 50
+03-13 01:03:33 root 266:updating GUI with: 52
+03-13 01:03:33 root 266:updating GUI with: 55
+03-13 01:03:33 root 266:updating GUI with: 58
+03-13 01:03:33 root 266:updating GUI with: 61
+03-13 01:03:33 root 266:updating GUI with: 64
+03-13 01:03:33 root 266:updating GUI with: 67
+03-13 01:03:33 root 266:updating GUI with: 70
+03-13 01:03:33 root 266:updating GUI with: 77
+03-13 01:03:33 root 266:updating GUI with: 87
+03-13 01:03:33 root 266:updating GUI with: 94
+03-13 01:03:33 root 261:updating GUI message: 'Replicating zones'
+03-13 01:03:33 replicate_layout.replicatelayout 771:Replicating zones
+03-13 01:03:33 replicate_layout.replicatelayout 778:Replicating zones on sheet ['TopSection_2']
+03-13 01:03:34 root 266:updating GUI with: 50
+03-13 01:03:34 replicate_layout.replicatelayout 778:Replicating zones on sheet ['TopSection_3']
+03-13 01:03:34 root 261:updating GUI message: 'Replicating text'
+03-13 01:03:34 root 266:updating GUI with: 0
+03-13 01:03:34 replicate_layout.replicatelayout 837:Replicating text
+03-13 01:03:34 replicate_layout.replicatelayout 844:Replicating text on sheet ['TopSection_2']
+03-13 01:03:34 replicate_layout.replicatelayout 844:Replicating text on sheet ['TopSection_3']
+03-13 01:03:34 root 261:updating GUI message: 'Replicating drawings'
+03-13 01:03:34 replicate_layout.replicatelayout 868:Replicating drawings
+03-13 01:03:34 replicate_layout.replicatelayout 874:Replicating drawings on sheet ['TopSection_2']
+03-13 01:03:34 replicate_layout.replicatelayout 874:Replicating drawings on sheet ['TopSection_3']
+03-13 01:03:34 replicate_layout.action_replicate_layout 201:Replication complete
