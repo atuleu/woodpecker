@@ -1,0 +1,3 @@
+(fp_lib_table
+  (lib (name woodpecker)(type KiCad)(uri /home/atuleu/devel/github.com/atuleu/woodpecker/ecad/libs/woodpecker.pretty)(options "")(descr ""))
+)
