@@ -1,0 +1,79 @@
+03-16 23:47:19 replicate_layout.action_replicate_layout 305:Plugin executed on: 'linux'
+03-16 23:47:19 replicate_layout.action_replicate_layout 306:Plugin executed with python version: '3.8.5 (default, Jan 27 2021, 15:41:15) \n[GCC 9.3.0]'
+03-16 23:47:19 replicate_layout.action_replicate_layout 307:KiCad build version: 5.1.9-73d0e3b20d~88~ubuntu20.04.1
+03-16 23:47:19 replicate_layout.action_replicate_layout 308:Replicate layout plugin version: 70 started
+03-16 23:47:19 replicate_layout.action_replicate_layout 340:Preparing replicator with SW1 as a reference
+03-16 23:47:19 replicate_layout.replicatelayout 215:getting project hierarchy from schematics
+03-16 23:47:19 replicate_layout.replicatelayout 217:Project hierarchy looks like:
+{'60511E58': ['MX_1', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/common/MX_LED_Underneath.sch'], '60512155': ['MX_2', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/common/MX_LED_Underneath.sch'], '60513307': ['MX_3', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/common/MX_LED_Underneath.sch'], '605135D9': ['MX_4', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/common/MX_LED_Underneath.sch'], '60513A54': ['MX_5', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/common/MX_LED_Underneath.sch'], '60513BFF': ['MX_6', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/common/MX_LED_Underneath.sch'], '60513E0E': ['MX_7', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/common/MX_LED_Underneath.sch'], '60513FD7': ['MX_8', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/common/MX_LED_Underneath.sch'], '605140AB': ['MX_9', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/common/MX_LED_Underneath.sch'], '605141E8': ['MX_10', '/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/common/MX_LED_Underneath.sch']}
+03-16 23:47:19 replicate_layout.replicatelayout 225:getting a list of all footprints on board
+03-16 23:47:19 replicate_layout.action_replicate_layout 366:source anchor footprint is 'SW1'
+Located on:['MX_1']
+With filenames:['../common/MX_LED_Underneath.sch']
+With sheet_id:['MX_1']
+03-16 23:47:19 replicate_layout.action_replicate_layout 371:Corresponding footprints are 
+[('SW10', ['MX_10']), ('SW9', ['MX_9']), ('SW8', ['MX_8']), ('SW7', ['MX_7']), ('SW6', ['MX_6']), ('SW5', ['MX_5']), ('SW4', ['MX_4']), ('SW3', ['MX_3']), ('SW2', ['MX_2']), ('SW1', ['MX_1'])]
+03-16 23:47:19 replicate_layout.action_replicate_layout 384:Showing dialog
+03-16 23:47:19 replicate_layout.action_replicate_layout 388:Pcbnew position: wx.Point(0, 27)
+03-16 23:47:19 replicate_layout.action_replicate_layout 394:Display 0: wx.Rect(0, 0, 1920, 1080)
+03-16 23:47:19 replicate_layout.action_replicate_layout 394:Display 1: wx.Rect(1920, 0, 1920, 1080)
+03-16 23:47:19 replicate_layout.action_replicate_layout 398:Toolbar position: wx.Point(1680, 165)
+03-16 23:47:19 replicate_layout.action_replicate_layout 405:Dialog position: wx.Point(1367, 165)
+03-16 23:47:19 replicate_layout.replicatelayout 249:construcing a list of sheets suitable for replication on level:'MX_1', file:'../common/MX_LED_Underneath.sch'
+03-16 23:47:19 replicate_layout.replicatelayout 256:Source sheet path up to the level:['MX_1']
+03-16 23:47:19 replicate_layout.replicatelayout 260:Footprints on the sheets:
+['SW10', 'SW9', 'SW8', 'SW7', 'SW6', 'SW5', 'SW4', 'SW3', 'SW2', 'SW1']
+03-16 23:47:19 replicate_layout.replicatelayout 263:Footprints raw sheet ids:
+['/605141E8/604B519A', '/605140AB/604B519A', '/60513FD7/604B519A', '/60513E0E/604B519A', '/60513BFF/604B519A', '/60513A54/604B519A', '/605135D9/604B519A', '/60513307/604B519A', '/60512155/604B519A', '/60511E58/604B519A']
+03-16 23:47:19 replicate_layout.replicatelayout 279:All sheets to replicate:
+[['MX_10'], ['MX_9'], ['MX_8'], ['MX_7'], ['MX_6'], ['MX_5'], ['MX_4'], ['MX_3'], ['MX_2'], ['MX_1']]
+03-16 23:47:19 replicate_layout.replicatelayout 284:All sheets to replicate sorted:
+[['MX_1'], ['MX_10'], ['MX_2'], ['MX_3'], ['MX_4'], ['MX_5'], ['MX_6'], ['MX_7'], ['MX_8'], ['MX_9']]
+03-16 23:47:19 replicate_layout.replicatelayout 290:All sheets to replicate sorted and without source sheet:
+[['MX_10'], ['MX_2'], ['MX_3'], ['MX_4'], ['MX_5'], ['MX_6'], ['MX_7'], ['MX_8'], ['MX_9']]
+03-16 23:47:25 replicate_layout.replicatelayout 249:construcing a list of sheets suitable for replication on level:'MX_1', file:'../common/MX_LED_Underneath.sch'
+03-16 23:47:25 replicate_layout.replicatelayout 256:Source sheet path up to the level:['MX_1']
+03-16 23:47:25 replicate_layout.replicatelayout 260:Footprints on the sheets:
+['SW10', 'SW9', 'SW8', 'SW7', 'SW6', 'SW5', 'SW4', 'SW3', 'SW2', 'SW1']
+03-16 23:47:25 replicate_layout.replicatelayout 263:Footprints raw sheet ids:
+['/605141E8/604B519A', '/605140AB/604B519A', '/60513FD7/604B519A', '/60513E0E/604B519A', '/60513BFF/604B519A', '/60513A54/604B519A', '/605135D9/604B519A', '/60513307/604B519A', '/60512155/604B519A', '/60511E58/604B519A']
+03-16 23:47:25 replicate_layout.replicatelayout 279:All sheets to replicate:
+[['MX_10'], ['MX_9'], ['MX_8'], ['MX_7'], ['MX_6'], ['MX_5'], ['MX_4'], ['MX_3'], ['MX_2'], ['MX_1']]
+03-16 23:47:25 replicate_layout.replicatelayout 284:All sheets to replicate sorted:
+[['MX_1'], ['MX_10'], ['MX_2'], ['MX_3'], ['MX_4'], ['MX_5'], ['MX_6'], ['MX_7'], ['MX_8'], ['MX_9']]
+03-16 23:47:25 replicate_layout.replicatelayout 290:All sheets to replicate sorted and without source sheet:
+[['MX_10'], ['MX_2'], ['MX_3'], ['MX_4'], ['MX_5'], ['MX_6'], ['MX_7'], ['MX_8'], ['MX_9']]
+03-16 23:47:25 replicate_layout.action_replicate_layout 179:Replicating layout
+03-16 23:47:25 replicate_layout.replicatelayout 991:Starting replication of sheets: [['MX_10'], ['MX_2'], ['MX_3'], ['MX_4'], ['MX_5'], ['MX_6'], ['MX_7'], ['MX_8'], ['MX_9']]
+on level: ['MX_1']
+with tracks=False, zone=False, text=False, containing=True, remove=False, locked=False
+03-16 23:47:25 root 261:updating GUI message: 'Preparing for replication'
+03-16 23:47:25 replicate_layout.replicatelayout 556:Getting the list of source footprints
+03-16 23:47:25 root 266:updating GUI with: 0
+03-16 23:47:25 replicate_layout.replicatelayout 560:Getting the list of all the remaining footprints
+03-16 23:47:25 root 266:updating GUI with: 12
+03-16 23:47:25 replicate_layout.replicatelayout 564:Getting nets local to source footprints
+03-16 23:47:25 root 266:updating GUI with: 25
+03-16 23:47:25 replicate_layout.replicatelayout 568:Getting source bounding box
+03-16 23:47:25 root 266:updating GUI with: 37
+03-16 23:47:25 replicate_layout.replicatelayout 572:Getting source tracks
+03-16 23:47:25 root 266:updating GUI with: 50
+03-16 23:47:25 replicate_layout.replicatelayout 576:Getting source zones
+03-16 23:47:25 root 266:updating GUI with: 62
+03-16 23:47:25 replicate_layout.replicatelayout 580:Getting source text items
+03-16 23:47:25 replicate_layout.replicatelayout 584:Getting source text items
+03-16 23:47:25 root 261:updating GUI message: 'Replicating footprints'
+03-16 23:47:25 replicate_layout.replicatelayout 590:Replicating footprints
+03-16 23:47:25 replicate_layout.replicatelayout 596:Replicating footprints on sheet ['MX_10']
+03-16 23:47:25 replicate_layout.replicatelayout 596:Replicating footprints on sheet ['MX_2']
+03-16 23:47:25 root 266:updating GUI with: 22
+03-16 23:47:25 replicate_layout.replicatelayout 596:Replicating footprints on sheet ['MX_3']
+03-16 23:47:25 replicate_layout.replicatelayout 596:Replicating footprints on sheet ['MX_4']
+03-16 23:47:25 replicate_layout.replicatelayout 596:Replicating footprints on sheet ['MX_5']
+03-16 23:47:25 root 266:updating GUI with: 55
+03-16 23:47:25 replicate_layout.replicatelayout 596:Replicating footprints on sheet ['MX_6']
+03-16 23:47:25 replicate_layout.replicatelayout 596:Replicating footprints on sheet ['MX_7']
+03-16 23:47:25 replicate_layout.replicatelayout 596:Replicating footprints on sheet ['MX_8']
+03-16 23:47:25 root 266:updating GUI with: 87
+03-16 23:47:25 replicate_layout.replicatelayout 596:Replicating footprints on sheet ['MX_9']
+03-16 23:47:25 replicate_layout.action_replicate_layout 201:Replication complete

@@ -1,0 +1,683 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A3 16535 11693
+encoding utf-8
+Sheet 1 11
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Sheet
+S 3500 2700 1600 350 
+U 60511E58
+F0 "MX_1" 50
+F1 "../common/MX_LED_Underneath.sch" 50
+F2 "SW_COL" I R 5100 2800 50 
+F3 "SW_ROW" O L 3500 2800 50 
+F4 "DI" I L 3500 2950 50 
+F5 "DO" O R 5100 2950 50 
+$EndSheet
+$Sheet
+S 5600 2700 1600 350 
+U 60512155
+F0 "MX_2" 50
+F1 "../common/MX_LED_Underneath.sch" 50
+F2 "SW_COL" I R 7200 2800 50 
+F3 "SW_ROW" O L 5600 2800 50 
+F4 "DI" I L 5600 2950 50 
+F5 "DO" O R 7200 2950 50 
+$EndSheet
+Wire Wire Line
+	5100 2800 5300 2800
+Wire Wire Line
+	5600 2800 5400 2800
+Wire Wire Line
+	5400 2800 5400 3200
+Wire Wire Line
+	5400 3200 3300 3200
+$Sheet
+S 7700 2700 1600 350 
+U 60513307
+F0 "MX_3" 50
+F1 "../common/MX_LED_Underneath.sch" 50
+F2 "SW_COL" I R 9300 2800 50 
+F3 "SW_ROW" O L 7700 2800 50 
+F4 "DI" I L 7700 2950 50 
+F5 "DO" O R 9300 2950 50 
+$EndSheet
+$Sheet
+S 9800 2700 1600 350 
+U 605135D9
+F0 "MX_4" 50
+F1 "../common/MX_LED_Underneath.sch" 50
+F2 "SW_COL" I R 11400 2800 50 
+F3 "SW_ROW" O L 9800 2800 50 
+F4 "DI" I L 9800 2950 50 
+F5 "DO" O R 11400 2950 50 
+$EndSheet
+$Sheet
+S 11900 2700 1600 350 
+U 60513A54
+F0 "MX_5" 50
+F1 "../common/MX_LED_Underneath.sch" 50
+F2 "SW_COL" I R 13500 2800 50 
+F3 "SW_ROW" O L 11900 2800 50 
+F4 "DI" I L 11900 2950 50 
+F5 "DO" O R 13500 2950 50 
+$EndSheet
+$Sheet
+S 3500 3450 1600 350 
+U 60513BFF
+F0 "MX_6" 50
+F1 "../common/MX_LED_Underneath.sch" 50
+F2 "SW_COL" I R 5100 3550 50 
+F3 "SW_ROW" O L 3500 3550 50 
+F4 "DI" I L 3500 3700 50 
+F5 "DO" O R 5100 3700 50 
+$EndSheet
+$Sheet
+S 5600 3450 1600 350 
+U 60513E0E
+F0 "MX_7" 50
+F1 "../common/MX_LED_Underneath.sch" 50
+F2 "SW_COL" I R 7200 3550 50 
+F3 "SW_ROW" O L 5600 3550 50 
+F4 "DI" I L 5600 3700 50 
+F5 "DO" O R 7200 3700 50 
+$EndSheet
+$Sheet
+S 7700 3450 1600 350 
+U 60513FD7
+F0 "MX_8" 50
+F1 "../common/MX_LED_Underneath.sch" 50
+F2 "SW_COL" I R 9300 3550 50 
+F3 "SW_ROW" O L 7700 3550 50 
+F4 "DI" I L 7700 3700 50 
+F5 "DO" O R 9300 3700 50 
+$EndSheet
+$Sheet
+S 9800 3450 1600 350 
+U 605140AB
+F0 "MX_9" 50
+F1 "../common/MX_LED_Underneath.sch" 50
+F2 "SW_COL" I R 11400 3550 50 
+F3 "SW_ROW" O L 9800 3550 50 
+F4 "DI" I L 9800 3700 50 
+F5 "DO" O R 11400 3700 50 
+$EndSheet
+$Sheet
+S 11900 3450 1600 350 
+U 605141E8
+F0 "MX_10" 50
+F1 "../common/MX_LED_Underneath.sch" 50
+F2 "SW_COL" I R 13500 3550 50 
+F3 "SW_ROW" O L 11900 3550 50 
+F4 "DI" I L 11900 3700 50 
+F5 "DO" O R 13500 3700 50 
+$EndSheet
+Wire Wire Line
+	5100 3550 5300 3550
+Wire Wire Line
+	5300 2800 5300 3550
+Wire Wire Line
+	5100 2950 5600 2950
+Wire Wire Line
+	5400 3200 7500 3200
+Wire Wire Line
+	9600 3200 9600 2800
+Wire Wire Line
+	9600 2800 9800 2800
+Connection ~ 5400 3200
+Wire Wire Line
+	7700 2800 7500 2800
+Wire Wire Line
+	7500 2800 7500 3200
+Connection ~ 7500 3200
+Wire Wire Line
+	9600 3200 11700 3200
+Wire Wire Line
+	11700 3200 11700 2800
+Wire Wire Line
+	11700 2800 11900 2800
+Connection ~ 9600 3200
+Wire Wire Line
+	7200 2800 7400 2800
+Wire Wire Line
+	7400 2800 7400 3550
+Wire Wire Line
+	7400 3550 7200 3550
+Wire Wire Line
+	7500 3200 9600 3200
+Wire Wire Line
+	9300 2800 9500 2800
+Wire Wire Line
+	9500 2800 9500 3550
+Wire Wire Line
+	9500 3550 9300 3550
+Wire Wire Line
+	11400 2800 11600 2800
+Wire Wire Line
+	11600 2800 11600 3550
+Wire Wire Line
+	11600 3550 11400 3550
+Wire Wire Line
+	5400 3950 5400 3550
+Wire Wire Line
+	7500 3950 7500 3550
+Wire Wire Line
+	7500 3550 7700 3550
+Wire Wire Line
+	7500 3950 9600 3950
+Wire Wire Line
+	9600 3950 9600 3550
+Wire Wire Line
+	9600 3550 9800 3550
+Connection ~ 7500 3950
+Wire Wire Line
+	9600 3950 11700 3950
+Wire Wire Line
+	11700 3950 11700 3550
+Wire Wire Line
+	11700 3550 11900 3550
+Connection ~ 9600 3950
+Connection ~ 5400 3950
+Wire Wire Line
+	5400 3950 7500 3950
+Wire Wire Line
+	5400 3550 5600 3550
+Wire Wire Line
+	7200 3700 7700 3700
+Wire Wire Line
+	7200 2950 7700 2950
+Wire Wire Line
+	9300 2950 9800 2950
+Wire Wire Line
+	11400 2950 11900 2950
+Wire Wire Line
+	13600 3300 3400 3300
+Wire Wire Line
+	3400 3300 3400 3700
+Wire Wire Line
+	3400 3700 3500 3700
+Wire Wire Line
+	3500 2800 3300 2800
+Wire Wire Line
+	3300 2800 3300 3200
+Connection ~ 3300 3200
+Wire Wire Line
+	3500 3550 3300 3550
+Wire Wire Line
+	3300 3550 3300 3950
+Connection ~ 3300 3950
+Wire Wire Line
+	3300 3950 5400 3950
+Wire Wire Line
+	3100 2950 3500 2950
+Wire Wire Line
+	3100 3200 3300 3200
+Wire Wire Line
+	3100 3950 3300 3950
+Wire Wire Line
+	5100 3700 5600 3700
+Wire Wire Line
+	9300 3700 9800 3700
+Wire Wire Line
+	11400 3700 11900 3700
+Wire Wire Line
+	13500 3700 13700 3700
+Wire Wire Line
+	13700 3700 13700 4050
+Wire Wire Line
+	13700 4050 3100 4050
+Wire Wire Line
+	5300 2800 5300 2500
+Connection ~ 5300 2800
+Wire Wire Line
+	7400 2800 7400 2550
+Connection ~ 7400 2800
+Wire Wire Line
+	9500 2800 9500 2550
+Connection ~ 9500 2800
+Wire Wire Line
+	11600 2800 11600 2600
+Connection ~ 11600 2800
+Text Label 5300 2500 0    50   ~ 0
+C1
+Text Label 7400 2550 0    50   ~ 0
+C2
+Text Label 9500 2550 0    50   ~ 0
+C3
+Text Label 11600 2600 0    50   ~ 0
+C4
+Text Label 13700 2600 0    50   ~ 0
+C5
+Text Label 3100 3200 2    50   ~ 0
+R1
+Text Label 3100 3950 2    50   ~ 0
+R2
+Text Label 3100 2950 2    50   ~ 0
+DI
+Text Label 3100 4050 2    50   ~ 0
+DO
+NoConn ~ 5900 6000
+$Comp
+L power:GND #PWR0101
+U 1 1 6052F972
+P 6250 5300
+F 0 "#PWR0101" H 6250 5050 50  0001 C CNN
+F 1 "GND" V 6255 5172 50  0000 R CNN
+F 2 "" H 6250 5300 50  0001 C CNN
+F 3 "" H 6250 5300 50  0001 C CNN
+	1    6250 5300
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	5900 5300 6250 5300
+$Comp
+L power:+3.3V #PWR0102
+U 1 1 6052F986
+P 5400 4950
+F 0 "#PWR0102" H 5400 4800 50  0001 C CNN
+F 1 "+3.3V" H 5415 5123 50  0000 C CNN
+F 2 "" H 5400 4950 50  0001 C CNN
+F 3 "" H 5400 4950 50  0001 C CNN
+	1    5400 4950
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5400 4950 5400 5100
+$Comp
+L Device:C C?
+U 1 1 6052F99B
+P 3650 5650
+AR Path="/604B4498/6052F99B" Ref="C?"  Part="1" 
+AR Path="/6057F9D3/6052F99B" Ref="C?"  Part="1" 
+AR Path="/6057FBE3/6052F99B" Ref="C?"  Part="1" 
+AR Path="/6057FCA8/6052F99B" Ref="C?"  Part="1" 
+AR Path="/6059A8EA/6052F99B" Ref="C?"  Part="1" 
+AR Path="/6059A8F8/6052F99B" Ref="C?"  Part="1" 
+AR Path="/6059A906/6052F99B" Ref="C?"  Part="1" 
+AR Path="/6059A90C/6052F99B" Ref="C?"  Part="1" 
+AR Path="/605A1BCD/6052F99B" Ref="C?"  Part="1" 
+AR Path="/605A1BDB/6052F99B" Ref="C?"  Part="1" 
+AR Path="/605A1BE9/6052F99B" Ref="C?"  Part="1" 
+AR Path="/605A1BEF/6052F99B" Ref="C?"  Part="1" 
+AR Path="/605A28C5/6052F99B" Ref="C?"  Part="1" 
+AR Path="/605A28D3/6052F99B" Ref="C?"  Part="1" 
+AR Path="/605A28E1/6052F99B" Ref="C?"  Part="1" 
+AR Path="/605A28E7/6052F99B" Ref="C?"  Part="1" 
+AR Path="/605B6306/6052F99B" Ref="C?"  Part="1" 
+AR Path="/605B6314/6052F99B" Ref="C?"  Part="1" 
+AR Path="/605B6322/6052F99B" Ref="C?"  Part="1" 
+AR Path="/605B6328/6052F99B" Ref="C?"  Part="1" 
+AR Path="/605E1DC3/6052F99B" Ref="C?"  Part="1" 
+AR Path="/605E1DD1/6052F99B" Ref="C?"  Part="1" 
+AR Path="/605E1DDF/6052F99B" Ref="C?"  Part="1" 
+AR Path="/605E1DE5/6052F99B" Ref="C?"  Part="1" 
+AR Path="/605E98A7/6052F99B" Ref="C?"  Part="1" 
+AR Path="/605E98B5/6052F99B" Ref="C?"  Part="1" 
+AR Path="/605E98C3/6052F99B" Ref="C?"  Part="1" 
+AR Path="/605E98C9/6052F99B" Ref="C?"  Part="1" 
+AR Path="/605F434F/6052F99B" Ref="C?"  Part="1" 
+AR Path="/605F435D/6052F99B" Ref="C?"  Part="1" 
+AR Path="/605F436B/6052F99B" Ref="C?"  Part="1" 
+AR Path="/605F4371/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60900772/60906151/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60900772/6090616D/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60900772/60906186/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60900772/6090619C/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60900772/609061B2/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60900772/609061C8/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60900772/609061CE/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60900772/609061D4/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60900772/609061DA/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60900772/609061E3/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B3CBC1/60B3CF36/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B3CBC1/60B3D212/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B3CBC1/60B3D2C3/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B3CBC1/60B3D329/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B3CBC1/60B3D38F/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B3CBC1/60B3E33D/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B3CBC1/60B3E39E/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B3CBC1/60B3E431/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B3CBC1/60B3E46F/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B3CBC1/60B3E4B2/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B62C6B/60906151/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B62C6B/6090616D/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B62C6B/60906186/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B62C6B/6090619C/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B62C6B/609061B2/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B62C6B/609061C8/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B62C6B/609061CE/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B62C6B/609061D4/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B62C6B/609061DA/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B62C6B/609061E3/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B62C78/60B3CF36/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B62C78/60B3D212/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B62C78/60B3D2C3/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B62C78/60B3D329/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B62C78/60B3D38F/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B62C78/60B3E33D/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B62C78/60B3E39E/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B62C78/60B3E431/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B62C78/60B3E46F/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B62C78/60B3E4B2/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B67560/60906151/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B67560/6090616D/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B67560/60906186/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B67560/6090619C/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B67560/609061B2/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B67560/609061C8/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B67560/609061CE/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B67560/609061D4/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B67560/609061DA/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B67560/609061E3/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B67B63/60B3CF36/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B67B63/60B3D212/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B67B63/60B3D2C3/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B67B63/60B3D329/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B67B63/60B3D38F/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B67B63/60B3E33D/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B67B63/60B3E39E/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B67B63/60B3E431/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B67B63/60B3E46F/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B67B63/60B3E4B2/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B69076/60906151/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B69076/6090616D/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B69076/60906186/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B69076/6090619C/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B69076/609061B2/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B69076/609061C8/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B69076/609061CE/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B69076/609061D4/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B69076/609061DA/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B69076/609061E3/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B694C9/60B3CF36/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B694C9/60B3D212/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B694C9/60B3D2C3/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B694C9/60B3D329/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B694C9/60B3D38F/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B694C9/60B3E33D/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B694C9/60B3E39E/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B694C9/60B3E431/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B694C9/60B3E46F/6052F99B" Ref="C?"  Part="1" 
+AR Path="/60B694C9/60B3E4B2/6052F99B" Ref="C?"  Part="1" 
+AR Path="/604E279F/6052F99B" Ref="C?"  Part="1" 
+AR Path="/604E2E0B/6052F99B" Ref="C?"  Part="1" 
+AR Path="/604E2EAD/6052F99B" Ref="C?"  Part="1" 
+AR Path="/604E30DA/6052F99B" Ref="C?"  Part="1" 
+AR Path="/604E3276/6052F99B" Ref="C?"  Part="1" 
+AR Path="/604E3363/6052F99B" Ref="C?"  Part="1" 
+AR Path="/604E34B4/6052F99B" Ref="C?"  Part="1" 
+AR Path="/604E5003/6052F99B" Ref="C?"  Part="1" 
+AR Path="/604E511D/6052F99B" Ref="C?"  Part="1" 
+AR Path="/604E52D2/6052F99B" Ref="C?"  Part="1" 
+AR Path="/604E5455/6052F99B" Ref="C?"  Part="1" 
+AR Path="/604E5501/6052F99B" Ref="C?"  Part="1" 
+AR Path="/6052F99B" Ref="C1"  Part="1" 
+F 0 "C1" H 3765 5696 50  0000 L CNN
+F 1 "100nF" H 3765 5605 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric_Pad1.08x0.95mm_HandSolder" H 3688 5500 50  0001 C CNN
+F 3 "~" H 3650 5650 50  0001 C CNN
+	1    3650 5650
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0103
+U 1 1 6052F9A1
+P 3650 5900
+F 0 "#PWR0103" H 3650 5650 50  0001 C CNN
+F 1 "GND" H 3655 5727 50  0000 C CNN
+F 2 "" H 3650 5900 50  0001 C CNN
+F 3 "" H 3650 5900 50  0001 C CNN
+	1    3650 5900
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+3.3V #PWR0104
+U 1 1 6052F9A7
+P 3650 5400
+F 0 "#PWR0104" H 3650 5250 50  0001 C CNN
+F 1 "+3.3V" H 3665 5573 50  0000 C CNN
+F 2 "" H 3650 5400 50  0001 C CNN
+F 3 "" H 3650 5400 50  0001 C CNN
+	1    3650 5400
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3650 5400 3650 5500
+Wire Wire Line
+	3650 5800 3650 5900
+Wire Wire Line
+	4900 5300 4550 5300
+Wire Wire Line
+	4900 5400 4550 5400
+Wire Wire Line
+	4900 5900 4550 5900
+Wire Wire Line
+	4900 5800 4550 5800
+Wire Wire Line
+	4900 5700 4550 5700
+Wire Wire Line
+	4900 5600 4550 5600
+Wire Wire Line
+	4900 5500 4550 5500
+$Comp
+L power:GND #PWR0105
+U 1 1 6052F9BE
+P 5400 6450
+F 0 "#PWR0105" H 5400 6200 50  0001 C CNN
+F 1 "GND" H 5405 6277 50  0000 C CNN
+F 2 "" H 5400 6450 50  0001 C CNN
+F 3 "" H 5400 6450 50  0001 C CNN
+	1    5400 6450
+	1    0    0    -1  
+$EndComp
+Text Label 4550 5400 2    50   ~ 0
+R1
+Text Label 4550 5300 2    50   ~ 0
+R2
+$Comp
+L power:GND #PWR0106
+U 1 1 6052F9DB
+P 7650 5500
+F 0 "#PWR0106" H 7650 5250 50  0001 C CNN
+F 1 "GND" V 7650 5250 50  0000 C CNN
+F 2 "" H 7650 5500 50  0001 C CNN
+F 3 "" H 7650 5500 50  0001 C CNN
+	1    7650 5500
+	0    1    1    0   
+$EndComp
+$Comp
+L woodpecker:VLED #PWR0107
+U 1 1 6052F9E1
+P 9350 5500
+F 0 "#PWR0107" H 9150 5350 50  0001 C CNN
+F 1 "VLED" V 9350 5750 50  0000 C CNN
+F 2 "" H 9350 5500 50  0001 C CNN
+F 3 "" H 9350 5500 50  0001 C CNN
+	1    9350 5500
+	0    1    1    0   
+$EndComp
+$Comp
+L power:+3V3 #PWR0108
+U 1 1 6052F9E7
+P 9350 5600
+F 0 "#PWR0108" H 9350 5450 50  0001 C CNN
+F 1 "+3V3" V 9350 5850 50  0000 C CNN
+F 2 "" H 9350 5600 50  0001 C CNN
+F 3 "" H 9350 5600 50  0001 C CNN
+	1    9350 5600
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	8800 5500 9350 5500
+Wire Wire Line
+	8800 5600 9350 5600
+Wire Wire Line
+	5900 5500 6250 5500
+Wire Wire Line
+	5900 5600 6250 5600
+Wire Wire Line
+	5900 5700 6250 5700
+Wire Wire Line
+	5900 5800 6250 5800
+Text Label 6250 5500 0    50   ~ 0
+~CS_ROW
+Text Label 6250 5600 0    50   ~ 0
+MISO
+Text Label 6250 5800 0    50   ~ 0
+MOSI
+Text Label 6250 5700 0    50   ~ 0
+SCK
+Text Label 9000 5800 0    50   ~ 0
+~CS_ROW
+Text Label 8150 5700 2    50   ~ 0
+MOSI
+Text Label 9000 5700 0    50   ~ 0
+~CS_COL
+Wire Wire Line
+	8300 5500 7650 5500
+Wire Wire Line
+	8150 5600 8300 5600
+Wire Wire Line
+	8300 5700 8150 5700
+Wire Wire Line
+	8300 5800 8150 5800
+Wire Wire Line
+	8800 5700 9000 5700
+Wire Wire Line
+	8800 5800 9000 5800
+Text Label 8150 5600 2    50   ~ 0
+MISO
+Text Label 8150 5800 2    50   ~ 0
+SCK
+Wire Wire Line
+	5400 6300 5400 6450
+$Comp
+L woodpecker:MCP23S09-xP U1
+U 1 1 6052FA10
+P 5400 5700
+F 0 "U1" H 5750 6250 50  0000 C CNN
+F 1 "MCP23S09-xP" H 5050 5150 50  0000 C CNN
+F 2 "Package_DIP:DIP-18_W7.62mm" H 5400 4650 50  0001 C CNN
+F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/MCP23008-MCP23S08-Data-Sheet-20001919F.pdf" H 6700 4500 50  0001 C CNN
+	1    5400 5700
+	-1   0    0    -1  
+$EndComp
+$Comp
+L Connector_Generic:Conn_02x05_Odd_Even J1
+U 1 1 6052FA1C
+P 8600 5700
+AR Path="/6052FA1C" Ref="J1"  Part="1" 
+AR Path="/604E511D/6052FA1C" Ref="J?"  Part="1" 
+F 0 "J1" H 8650 6117 50  0000 C CNN
+F 1 "Conn_02x05_Odd_Even" H 8650 6026 50  0000 C CNN
+F 2 "woodpecker:ConnectorMicromatch-10" H 8600 5700 50  0001 C CNN
+F 3 "~" H 8600 5700 50  0001 C CNN
+	1    8600 5700
+	-1   0    0    -1  
+$EndComp
+Wire Wire Line
+	8800 5900 9000 5900
+Wire Wire Line
+	8300 5900 8150 5900
+Text Label 9000 5900 0    50   ~ 0
+DI
+Text Label 8150 5900 2    50   ~ 0
+DO
+$Comp
+L Mechanical:MountingHole_Pad H3
+U 1 1 6052FA26
+P 12750 5300
+F 0 "H3" V 12987 5303 50  0000 C CNN
+F 1 "MountingHole_Pad" V 12896 5303 50  0000 C CNN
+F 2 "MountingHole:MountingHole_3.2mm_M3_DIN965_Pad" H 12750 5300 50  0001 C CNN
+F 3 "~" H 12750 5300 50  0001 C CNN
+	1    12750 5300
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	12850 5300 13200 5300
+Wire Wire Line
+	13200 5300 13200 5700
+Wire Wire Line
+	12850 5700 13200 5700
+Connection ~ 13200 5700
+Wire Wire Line
+	13200 5700 13200 5950
+$Comp
+L power:GND #PWR0109
+U 1 1 6052FA31
+P 13200 5950
+F 0 "#PWR0109" H 13200 5700 50  0001 C CNN
+F 1 "GND" H 13205 5777 50  0000 C CNN
+F 2 "" H 13200 5950 50  0001 C CNN
+F 3 "" H 13200 5950 50  0001 C CNN
+	1    13200 5950
+	1    0    0    -1  
+$EndComp
+$Comp
+L Mechanical:MountingHole H1
+U 1 1 6052FA37
+P 12700 6400
+F 0 "H1" H 12800 6446 50  0000 L CNN
+F 1 "MountingHole" H 12800 6355 50  0000 L CNN
+F 2 "woodpecker:709620400" H 12700 6400 50  0001 C CNN
+F 3 "~" H 12700 6400 50  0001 C CNN
+	1    12700 6400
+	1    0    0    -1  
+$EndComp
+$Comp
+L Mechanical:MountingHole_Pad H4
+U 1 1 6052FA3D
+P 12750 5700
+F 0 "H4" V 12987 5703 50  0000 C CNN
+F 1 "MountingHole_Pad" V 12896 5703 50  0000 C CNN
+F 2 "MountingHole:MountingHole_3.2mm_M3_DIN965_Pad" H 12750 5700 50  0001 C CNN
+F 3 "~" H 12750 5700 50  0001 C CNN
+	1    12750 5700
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Mechanical:MountingHole H2
+U 1 1 6052FA43
+P 12700 6650
+F 0 "H2" H 12800 6696 50  0000 L CNN
+F 1 "MountingHole" H 12800 6605 50  0000 L CNN
+F 2 "woodpecker:709620400" H 12700 6650 50  0001 C CNN
+F 3 "~" H 12700 6650 50  0001 C CNN
+	1    12700 6650
+	1    0    0    -1  
+$EndComp
+Text Label 4550 5900 2    50   ~ 0
+C1
+Text Label 4550 5800 2    50   ~ 0
+C2
+Text Label 4550 5700 2    50   ~ 0
+C3
+Text Label 4550 5600 2    50   ~ 0
+C4
+Text Label 4550 5500 2    50   ~ 0
+C5
+NoConn ~ 4900 6000
+Wire Wire Line
+	13600 3300 13600 2950
+Wire Wire Line
+	13600 2950 13500 2950
+Wire Wire Line
+	13500 2800 13700 2800
+Wire Wire Line
+	13700 2800 13700 2600
+Wire Wire Line
+	13500 3550 13700 3550
+Wire Wire Line
+	13700 3550 13700 2800
+Connection ~ 13700 2800
+$EndSCHEMATC
