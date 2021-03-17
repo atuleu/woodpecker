@@ -24,6 +24,10 @@ K rotary switch encoder switch push button
 F ~
 $ENDCMP
 #
+$CMP RPI_Pico
+D Raspberry Pico Board, from Raspbery.org
+$ENDCMP
+#
 $CMP VLED
 D Power symbol creates a global label with name "Vdrive"
 K power-flag
