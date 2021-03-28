@@ -138,8 +138,6 @@ Wire Wire Line
 	4650 6200 4450 6200
 Wire Wire Line
 	4650 6300 4450 6300
-Wire Wire Line
-	4650 6400 4450 6400
 Text Label 4450 6300 2    50   ~ 0
 PT1
 Text Label 4450 6200 2    50   ~ 0
@@ -148,7 +146,7 @@ Text Label 4450 6100 2    50   ~ 0
 PT3
 Text Label 4450 6000 2    50   ~ 0
 PT4
-Text Label 4450 6400 2    50   ~ 0
+Text Label 4450 6700 2    50   ~ 0
 PT5
 $Comp
 L power:GND1 #PWR0107
@@ -228,19 +226,16 @@ F 3 "" H 4550 6800 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
+	4650 6400 4550 6400
+Wire Wire Line
+	4550 6400 4550 6500
+Wire Wire Line
 	4650 6500 4550 6500
+Connection ~ 4550 6500
 Wire Wire Line
 	4550 6500 4550 6600
 Wire Wire Line
-	4650 6600 4550 6600
-Connection ~ 4550 6600
-Wire Wire Line
-	4550 6600 4550 6700
-Wire Wire Line
-	4550 6700 4650 6700
-Connection ~ 4550 6700
-Wire Wire Line
-	4550 6700 4550 6800
+	4550 6600 4650 6600
 Wire Wire Line
 	4900 7400 4900 7500
 $Comp
@@ -1203,4 +1198,46 @@ Wire Wire Line
 	7550 5050 7900 5050
 Text Label 6150 6500 0    50   ~ 0
 ~CS_ADC
+$Comp
+L Device:C C2
+U 1 1 605C87EF
+P 5950 5400
+F 0 "C2" H 6065 5446 50  0000 L CNN
+F 1 "100nF" H 6065 5355 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric_Pad1.08x0.95mm_HandSolder" H 5988 5250 50  0001 C CNN
+F 3 "~" H 5950 5400 50  0001 C CNN
+	1    5950 5400
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5950 5650 5950 5550
+$Comp
+L power:+3V3 #PWR0134
+U 1 1 605D30BA
+P 5950 5150
+F 0 "#PWR0134" H 5950 5000 50  0001 C CNN
+F 1 "+3V3" H 5965 5323 50  0000 C CNN
+F 2 "" H 5950 5150 50  0001 C CNN
+F 3 "" H 5950 5150 50  0001 C CNN
+	1    5950 5150
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5950 5150 5950 5250
+$Comp
+L power:GND #PWR0133
+U 1 1 605E5182
+P 5950 5650
+F 0 "#PWR0133" H 5950 5400 50  0001 C CNN
+F 1 "GND" H 5955 5477 50  0000 C CNN
+F 2 "" H 5950 5650 50  0001 C CNN
+F 3 "" H 5950 5650 50  0001 C CNN
+	1    5950 5650
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4450 6700 4650 6700
+Wire Wire Line
+	4550 6600 4550 6800
+Connection ~ 4550 6600
 $EndSCHEMATC

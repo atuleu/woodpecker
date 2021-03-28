@@ -1390,67 +1390,47 @@ DI
 Text Label 10050 7300 2    50   ~ 0
 DO
 $Comp
-L Mechanical:MountingHole_Pad H3
-U 1 1 60D74927
-P 13350 6550
-F 0 "H3" V 13587 6553 50  0000 C CNN
-F 1 "MountingHole_Pad" V 13496 6553 50  0000 C CNN
-F 2 "MountingHole:MountingHole_3.2mm_M3_DIN965_Pad" H 13350 6550 50  0001 C CNN
-F 3 "~" H 13350 6550 50  0001 C CNN
-	1    13350 6550
-	0    -1   -1   0   
-$EndComp
-Wire Wire Line
-	13450 6550 13800 6550
-Wire Wire Line
-	13800 6550 13800 6950
-Wire Wire Line
-	13450 6950 13800 6950
-Connection ~ 13800 6950
-Wire Wire Line
-	13800 6950 13800 7200
-$Comp
-L power:GND #PWR0244
-U 1 1 60E82409
-P 13800 7200
-F 0 "#PWR0244" H 13800 6950 50  0001 C CNN
-F 1 "GND" H 13805 7027 50  0000 C CNN
-F 2 "" H 13800 7200 50  0001 C CNN
-F 3 "" H 13800 7200 50  0001 C CNN
-	1    13800 7200
-	1    0    0    -1  
-$EndComp
-$Comp
 L Mechanical:MountingHole H1
 U 1 1 60E82AE2
 P 13300 7650
 F 0 "H1" H 13400 7696 50  0000 L CNN
 F 1 "MountingHole" H 13400 7605 50  0000 L CNN
-F 2 "woodpecker:709620400" H 13300 7650 50  0001 C CNN
+F 2 "woodpecker:MountingHole_3.2mm_M3_DIN965" H 13300 7650 50  0001 C CNN
 F 3 "~" H 13300 7650 50  0001 C CNN
 	1    13300 7650
 	1    0    0    -1  
 $EndComp
 $Comp
-L Mechanical:MountingHole_Pad H4
-U 1 1 60E8377E
-P 13350 6950
-F 0 "H4" V 13587 6953 50  0000 C CNN
-F 1 "MountingHole_Pad" V 13496 6953 50  0000 C CNN
-F 2 "MountingHole:MountingHole_3.2mm_M3_DIN965_Pad" H 13350 6950 50  0001 C CNN
-F 3 "~" H 13350 6950 50  0001 C CNN
-	1    13350 6950
-	0    -1   -1   0   
+L Mechanical:MountingHole H2
+U 1 1 605BA47D
+P 13300 7850
+F 0 "H2" H 13400 7896 50  0000 L CNN
+F 1 "MountingHole" H 13400 7805 50  0000 L CNN
+F 2 "woodpecker:MountingHole_3.2mm_M3_DIN965" H 13300 7850 50  0001 C CNN
+F 3 "~" H 13300 7850 50  0001 C CNN
+	1    13300 7850
+	1    0    0    -1  
 $EndComp
 $Comp
-L Mechanical:MountingHole H2
-U 1 1 60E84383
-P 13300 7900
-F 0 "H2" H 13400 7946 50  0000 L CNN
-F 1 "MountingHole" H 13400 7855 50  0000 L CNN
-F 2 "woodpecker:709620400" H 13300 7900 50  0001 C CNN
-F 3 "~" H 13300 7900 50  0001 C CNN
-	1    13300 7900
+L Mechanical:MountingHole H3
+U 1 1 605BA91F
+P 13300 8050
+F 0 "H3" H 13400 8096 50  0000 L CNN
+F 1 "MountingHole" H 13400 8005 50  0000 L CNN
+F 2 "woodpecker:MountingHole_3.2mm_M3_DIN965" H 13300 8050 50  0001 C CNN
+F 3 "~" H 13300 8050 50  0001 C CNN
+	1    13300 8050
+	1    0    0    -1  
+$EndComp
+$Comp
+L Mechanical:MountingHole H4
+U 1 1 605BABC6
+P 13300 8250
+F 0 "H4" H 13400 8296 50  0000 L CNN
+F 1 "MountingHole" H 13400 8205 50  0000 L CNN
+F 2 "woodpecker:MountingHole_3.2mm_M3_DIN965" H 13300 8250 50  0001 C CNN
+F 3 "~" H 13300 8250 50  0001 C CNN
+	1    13300 8250
 	1    0    0    -1  
 $EndComp
 $EndSCHEMATC

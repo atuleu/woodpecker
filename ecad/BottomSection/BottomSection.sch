@@ -593,67 +593,14 @@ DI
 Text Label 8150 5900 2    50   ~ 0
 DO
 $Comp
-L Mechanical:MountingHole_Pad H3
-U 1 1 6052FA26
-P 12750 5300
-F 0 "H3" V 12987 5303 50  0000 C CNN
-F 1 "MountingHole_Pad" V 12896 5303 50  0000 C CNN
-F 2 "MountingHole:MountingHole_3.2mm_M3_DIN965_Pad" H 12750 5300 50  0001 C CNN
-F 3 "~" H 12750 5300 50  0001 C CNN
-	1    12750 5300
-	0    -1   -1   0   
-$EndComp
-Wire Wire Line
-	12850 5300 13200 5300
-Wire Wire Line
-	13200 5300 13200 5700
-Wire Wire Line
-	12850 5700 13200 5700
-Connection ~ 13200 5700
-Wire Wire Line
-	13200 5700 13200 5950
-$Comp
-L power:GND #PWR0109
-U 1 1 6052FA31
-P 13200 5950
-F 0 "#PWR0109" H 13200 5700 50  0001 C CNN
-F 1 "GND" H 13205 5777 50  0000 C CNN
-F 2 "" H 13200 5950 50  0001 C CNN
-F 3 "" H 13200 5950 50  0001 C CNN
-	1    13200 5950
-	1    0    0    -1  
-$EndComp
-$Comp
 L Mechanical:MountingHole H1
 U 1 1 6052FA37
-P 12700 6400
-F 0 "H1" H 12800 6446 50  0000 L CNN
-F 1 "MountingHole" H 12800 6355 50  0000 L CNN
-F 2 "woodpecker:709620400" H 12700 6400 50  0001 C CNN
-F 3 "~" H 12700 6400 50  0001 C CNN
-	1    12700 6400
-	1    0    0    -1  
-$EndComp
-$Comp
-L Mechanical:MountingHole_Pad H4
-U 1 1 6052FA3D
-P 12750 5700
-F 0 "H4" V 12987 5703 50  0000 C CNN
-F 1 "MountingHole_Pad" V 12896 5703 50  0000 C CNN
-F 2 "MountingHole:MountingHole_3.2mm_M3_DIN965_Pad" H 12750 5700 50  0001 C CNN
-F 3 "~" H 12750 5700 50  0001 C CNN
-	1    12750 5700
-	0    -1   -1   0   
-$EndComp
-$Comp
-L Mechanical:MountingHole H2
-U 1 1 6052FA43
-P 12700 6650
-F 0 "H2" H 12800 6696 50  0000 L CNN
-F 1 "MountingHole" H 12800 6605 50  0000 L CNN
-F 2 "woodpecker:709620400" H 12700 6650 50  0001 C CNN
-F 3 "~" H 12700 6650 50  0001 C CNN
-	1    12700 6650
+P 12700 5200
+F 0 "H1" H 12800 5246 50  0000 L CNN
+F 1 "MountingHole" H 12800 5155 50  0000 L CNN
+F 2 "woodpecker:MountingHole_3.2mm_M3_DIN965" H 12700 5200 50  0001 C CNN
+F 3 "~" H 12700 5200 50  0001 C CNN
+	1    12700 5200
 	1    0    0    -1  
 $EndComp
 Text Label 4550 5900 2    50   ~ 0
@@ -680,4 +627,37 @@ Wire Wire Line
 Wire Wire Line
 	13700 3550 13700 2800
 Connection ~ 13700 2800
+$Comp
+L Mechanical:MountingHole H2
+U 1 1 605C98BC
+P 12700 5450
+F 0 "H2" H 12800 5496 50  0000 L CNN
+F 1 "MountingHole" H 12800 5405 50  0000 L CNN
+F 2 "woodpecker:MountingHole_3.2mm_M3_DIN965" H 12700 5450 50  0001 C CNN
+F 3 "~" H 12700 5450 50  0001 C CNN
+	1    12700 5450
+	1    0    0    -1  
+$EndComp
+$Comp
+L Mechanical:MountingHole H3
+U 1 1 605C9A45
+P 12700 5700
+F 0 "H3" H 12800 5746 50  0000 L CNN
+F 1 "MountingHole" H 12800 5655 50  0000 L CNN
+F 2 "woodpecker:MountingHole_3.2mm_M3_DIN965" H 12700 5700 50  0001 C CNN
+F 3 "~" H 12700 5700 50  0001 C CNN
+	1    12700 5700
+	1    0    0    -1  
+$EndComp
+$Comp
+L Mechanical:MountingHole H4
+U 1 1 605C9CBE
+P 12700 5950
+F 0 "H4" H 12800 5996 50  0000 L CNN
+F 1 "MountingHole" H 12800 5905 50  0000 L CNN
+F 2 "woodpecker:MountingHole_3.2mm_M3_DIN965" H 12700 5950 50  0001 C CNN
+F 3 "~" H 12700 5950 50  0001 C CNN
+	1    12700 5950
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC
