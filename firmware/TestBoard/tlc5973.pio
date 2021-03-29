@@ -1,0 +1,50 @@
+.program tlc5973
+
+.side_set 1
+
+; TLC5973 communication cycle
+; every bit is on a pulse cycle, here lasting 5 ticks
+;
+; a zero has no middle pulse:
+; _-____-_
+;  01234
+; a one is marked with a pulse:
+; _-_-__-_
+;  012345
+;
+; the rising edge has to happen before 50% of the cycle, here it happens at 40% of the cycle
+
+.wrap_target
+bitloop:
+	jmp y-- skip_eoc side 0;
+	out y,16         side 0 [15];
+skip_eoc:
+	out x,1          side 1; start of cycle pulse
+	jmp !x do_zero   side 0; end start of cycle pulse
+do_one:
+	nop              side 1; marks a one
+	jmp bitloop      side 0 ; repeat with a delay to have a 5 tick bitloop
+do_zero:
+	jmp bitloop      side 0 [1]; do not mark one, and ensure a bitloop of 5 ticks
+.wrap
+
+% c-sdk {
+#include "hardware/clocks.h"
+
+static inline void tlc5973_program_init(PIO pio, uint sm, uint offset, uint pin, float freq) {
+	pio_gpio_init(pio, pin);
+	pio_sm_set_consecutive_pindirs(pio, sm, pin, 1, true);
+
+	pio_sm_config c = tlc5973_program_get_default_config(offset);
+	sm_config_set_sideset_pins(&c, pin);
+	sm_config_set_out_shift(&c, false, true, 32);
+	sm_config_set_fifo_join(&c, PIO_FIFO_JOIN_TX);
+
+	int cycles_per_bit = 5;
+	float div = clock_get_hz(clk_sys) / (freq * cycles_per_bit);
+	sm_config_set_clkdiv(&c, div);
+
+	pio_sm_init(pio, sm, offset, &c);
+	pio_sm_set_enabled(pio, sm, true);
+}
+%}
