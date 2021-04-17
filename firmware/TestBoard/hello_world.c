@@ -98,18 +98,31 @@ void animate() {
 
 int main() {
 	clock_init();
-	init_animation();
-	uint64_t period = 25e3;
+	//init_animation();
+	uint64_t period = 1000e3;
 	uint64_t last = time_us_64();
 
 	display_init();
+	int i = 0;
 
+#define is_set(bit) ( ( i & ( 1 << (bit) ) ) != 0 )
 	while(true) {
 		uint64_t now = time_us_64();
 		if ( (now - last) >= period ) {
-			//	clock_out();
 			last += period;
-			animate();
+			++i;
+			display_set_pixel(0,0,
+							  is_set(0) * 255, is_set(0) * 255,is_set(0) * 255);
+			display_set_pixel(0,1,
+							  is_set(1) * 255, is_set(1) * 255,is_set(1) * 255);
+			display_set_pixel(0,2,
+							  is_set(2) * 255, is_set(2) * 255,is_set(2) * 255);
+			display_set_pixel(0,3,
+							  is_set(3) * 255, is_set(3) * 255,is_set(3) * 255);
+			display_set_pixel(0,4,
+							  is_set(4) * 255, is_set(4) * 255,is_set(4) * 255);
+			display_set_pixel(0,5,
+							  is_set(5) * 255, is_set(5) * 255,is_set(5) * 255);
 		}
 		display_process();
 
