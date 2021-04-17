@@ -6,7 +6,7 @@ project(TestBoard C CXX ASM)
 
 pico_sdk_init()
 
-add_executable(hello_world hello_world.c)
+add_executable(hello_world hello_world.c display.cpp)
 
 pico_generate_pio_header(hello_world ${CMAKE_CURRENT_LIST_DIR}/tlc5973.pio)
 

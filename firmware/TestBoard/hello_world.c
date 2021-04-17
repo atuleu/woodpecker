@@ -1,18 +1,9 @@
 #include <stdio.h>
 #include "pico/stdlib.h"
 
-#include "tlc5973.pio.h"
+#include "display.h"
 
 static int i;
-
-static inline void put_pixel(uint8_t r,uint8_t g, uint8_t b) {
-	pio_sm_put_blocking(pio0,
-						0,
-						(47 << 16) | (0x3aa << 4 ) | r >> 4);
-	pio_sm_put_blocking(pio0,
-						0,
-						(r << 28) | (g << 16) |(b << 4));
-}
 
 void clock_init() {
 	gpio_init(PICO_DEFAULT_LED_PIN);
@@ -26,37 +17,102 @@ void clock_out() {
 	gpio_put(PICO_DEFAULT_LED_PIN,i%2);
 	i++;
 	if ( (i % 2) == 0 ) {
-		put_pixel(0xff,0x00,0x00);
-		put_pixel(0x00,0xff,0x00);
-		put_pixel(0x00,0x00,0xff);
-		put_pixel(0xff,0xff,0x00);
-
 		printf("It is %d seconds\n",i/2);
 	} else {
-		put_pixel(0x00,0x00,0x00);
-		put_pixel(0x00,0x00,0x00);
-		put_pixel(0x00,0x00,0x00);
-		put_pixel(0x00,0x00,0x00);
+
 	}
+}
+static uint8_t pixels[5*3*6];
+typedef void(*animatorFunc)();
+static animatorFunc animator;
+void go_red();
+void go_yellow();
+void go_green();
+void go_cyan();
+void go_blue();
+void go_magenta();
+
+void go_yellow() {
+	if ( ++pixels[1] == 255 ) {
+		animator = &go_green;
+	}
+}
+
+void go_green() {
+	if ( --pixels[0] == 0 ) {
+		animator = &go_cyan;
+	}
+}
+
+void go_cyan() {
+	if ( ++pixels[2] == 255 ) {
+		animator = &go_blue;
+	}
+}
+
+void go_blue() {
+	if ( --pixels[1] == 0 ) {
+		animator = &go_magenta;
+	}
+}
+
+void go_magenta() {
+	if ( ++pixels[0] == 255 ) {
+		animator = &go_red;
+	}
+}
+
+void go_red() {
+	if ( --pixels[2] == 0 ) {
+		animator = &go_yellow;
+	}
+
+}
+
+void init_animation() {
+	for ( int i = 0 ; i < 5 * 6 * 3 ; ++i ) {
+		pixels[i] = 0;
+	}
+	pixels[0] = 255;
+	animator = &go_yellow;
+}
+
+void animate() {
+	for ( int i = 1; i < 5 * 6; ++i) {
+		int j = i - 1;
+		pixels[3*i] = pixels[3*j];
+		pixels[3*i+1] = pixels[3*j+1];
+		pixels[3*i+2] = pixels[3*j+2];
+	}
+	(*animator)();
+
+	for ( size_t x = 0; x < 5; ++x ) {
+		for (size_t y = 0; y < 6; ++y) {
+			size_t i = y * 5 + x;
+			display_set_pixel(x,y,
+							  pixels[3*i+0],pixels[3*i+1],pixels[3*i+2]);
+		}
+	}
+
 }
 
 int main() {
 	clock_init();
-	uint64_t period = 500e3;
+	init_animation();
+	uint64_t period = 25e3;
 	uint64_t last = time_us_64();
 
-    PIO pio = pio0;
-    int sm = 0;
-    uint offset = pio_add_program(pio, &tlc5973_program);
-
-    tlc5973_program_init(pio0, 0, offset, 10, 2e6);
+	display_init();
 
 	while(true) {
 		uint64_t now = time_us_64();
 		if ( (now - last) >= period ) {
+			//	clock_out();
 			last += period;
-			clock_out();
+			animate();
 		}
+		display_process();
+
 	}
 	return 0;
 }

@@ -1,3 +1,4 @@
 (sym_lib_table
   (lib (name woodpecker)(type Legacy)(uri ${KIPRJMOD}/../libs/woodpecker.lib)(options "")(descr ""))
+  (lib (name TestBoard-rescue)(type Legacy)(uri ${KIPRJMOD}/TestBoard-rescue.lib)(options "")(descr ""))
 )
