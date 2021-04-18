@@ -33,8 +33,8 @@ public:
 	}
 
 	size_t SendAvailable() {
-		while( d_index < 2*Size  ) {
-			pio_sm_put_blocking(d_pio,d_sm,d_data[d_index]);
+		while( (d_index < 2*Size) && pio_sm_is_tx_fifo_full(d_pio,d_sm) == false ) {
+			pio_sm_put(d_pio,d_sm,d_data[d_index]);
 			++d_index;
 		}
 		return 2*Size - d_index;
