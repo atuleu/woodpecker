@@ -6,12 +6,12 @@ project(TestBoard C CXX ASM)
 
 pico_sdk_init()
 
-add_executable(hello_world hello_world.c display.cpp)
+add_executable(hello_world hello_world.c display.cpp key.cpp)
 
 pico_generate_pio_header(hello_world ${CMAKE_CURRENT_LIST_DIR}/tlc5973.pio)
 
 # Add pico_stdlib library which aggregates commonly used features
-target_link_libraries(hello_world pico_stdlib hardware_pio)
+target_link_libraries(hello_world pico_stdlib hardware_pio hardware_spi)
 
 # enable usb output, disable uart output
 pico_enable_stdio_usb(hello_world 1)

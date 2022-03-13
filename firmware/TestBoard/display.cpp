@@ -139,7 +139,6 @@ public:
 			d_last += PERIOD_US;
 			d_topQueue.ReArm();
 			d_bottomQueue.ReArm();
-			PrintIndex();
 		}
 		d_topQueue.SendAvailable();
 		d_bottomQueue.SendAvailable();

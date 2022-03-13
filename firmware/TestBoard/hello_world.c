@@ -2,6 +2,7 @@
 #include "pico/stdlib.h"
 
 #include "display.h"
+#include "key.h"
 
 static int i;
 
@@ -9,7 +10,7 @@ void clock_init() {
 	gpio_init(PICO_DEFAULT_LED_PIN);
 	gpio_set_dir(PICO_DEFAULT_LED_PIN,GPIO_OUT);
 
-	stdio_init_all();
+
 	i = 0;
 }
 
@@ -97,8 +98,11 @@ void animate() {
 }
 
 int main() {
-	clock_init();
-	//init_animation();
+	stdio_init_all();
+
+	key_init();
+
+
 	uint64_t period = 1000e3;
 	uint64_t last = time_us_64();
 
@@ -124,7 +128,14 @@ int main() {
 			display_set_pixel(0,5,
 							  is_set(5) * 255, is_set(5) * 255,is_set(5) * 255);
 		}
+
+		key_process();
+
 		display_process();
+
+		for ( KeyEvent ke = key_next_event(); ke != ke_noevent; ke = key_next_event() ) {
+			printf("Key %d: %d\n",ke_key_id(ke),ke_key_is_pressed(ke) ? "PRESSED" : "RELEASED");
+		}
 
 	}
 	return 0;
