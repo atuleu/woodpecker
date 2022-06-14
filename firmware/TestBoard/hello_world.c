@@ -127,6 +127,7 @@ int main() {
 							  is_set(4) * 255, is_set(4) * 255,is_set(4) * 255);
 			display_set_pixel(0,5,
 							  is_set(5) * 255, is_set(5) * 255,is_set(5) * 255);
+			printf("Clock: %05d\n",i);
 		}
 
 		key_process();
