@@ -3,3 +3,4 @@
 *.log
 report.txt
 *.pckl
+*.lck
