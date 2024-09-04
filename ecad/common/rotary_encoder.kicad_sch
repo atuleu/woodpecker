@@ -2605,16 +2605,15 @@
 	)
 	(symbol
 		(lib_id "Diode:BAS16TW")
-		(at 101.6 30.48 0)
-		(mirror x)
+		(at 101.6 25.4 0)
 		(unit 3)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(uuid "08651b00-f963-4d10-925b-f470f0337fbb")
-		(property "Reference" "D1"
-			(at 101.5619 36.83 0)
+		(property "Reference" "D16"
+			(at 101.5619 19.05 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2622,7 +2621,7 @@
 			)
 		)
 		(property "Value" "BAS16TW"
-			(at 101.5619 34.29 0)
+			(at 101.5619 21.59 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2630,7 +2629,7 @@
 			)
 		)
 		(property "Footprint" "Package_TO_SOT_SMD:SOT-363_SC-70-6"
-			(at 101.6 26.035 0)
+			(at 101.6 29.845 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2639,7 +2638,7 @@
 			)
 		)
 		(property "Datasheet" "http://www.diodes.com/datasheets/ds30154.pdf"
-			(at 101.6 33.02 0)
+			(at 101.6 22.86 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2648,7 +2647,7 @@
 			)
 		)
 		(property "Description" "Fast switching diode array 3 independent"
-			(at 101.6 30.48 0)
+			(at 101.6 25.4 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2729,7 +2728,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "1ae14b93-19d1-44cb-8f25-7c2f4d2c96d0")
-		(property "Reference" "Q1"
+		(property "Reference" "Q6"
 			(at 148.59 66.04 0)
 			(effects
 				(font
@@ -2856,7 +2855,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "2d2f54c9-de07-4830-83ae-68f2093a6c92")
-		(property "Reference" "#PWR05"
+		(property "Reference" "#PWR050"
 			(at 86.36 68.58 0)
 			(effects
 				(font
@@ -2958,7 +2957,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "6ec95e99-e48a-485d-9048-dd8303928de9")
-		(property "Reference" "#PWR02"
+		(property "Reference" "#PWR047"
 			(at 54.61 76.2 0)
 			(effects
 				(font
@@ -3060,7 +3059,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "7b3535c7-f787-4767-8384-875d93f1d4ed")
-		(property "Reference" "SW1"
+		(property "Reference" "SW11"
 			(at 120.65 52.0699 90)
 			(effects
 				(font
@@ -3184,7 +3183,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "95edcad3-8bda-4892-929e-988690067515")
-		(property "Reference" "U1"
+		(property "Reference" "U6"
 			(at 74.5841 40.64 0)
 			(effects
 				(font
@@ -3309,7 +3308,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "ac414931-a87f-4293-8749-c066ecdbdbde")
-		(property "Reference" "#PWR04"
+		(property "Reference" "#PWR049"
 			(at 72.39 76.2 0)
 			(effects
 				(font
@@ -3411,7 +3410,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "b5877265-2238-41fb-b33a-980b2dfad576")
-		(property "Reference" "R2"
+		(property "Reference" "R12"
 			(at 135.89 73.6599 0)
 			(effects
 				(font
@@ -3517,7 +3516,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "ba2b2afd-e132-4b2a-9eb2-6408d27cca6b")
-		(property "Reference" "#PWR06"
+		(property "Reference" "#PWR051"
 			(at 133.35 88.9 0)
 			(effects
 				(font
@@ -3619,7 +3618,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "bc3319f4-6c10-4219-b4f2-b84ec89403d4")
-		(property "Reference" "C1"
+		(property "Reference" "C11"
 			(at 35.56 41.9099 0)
 			(effects
 				(font
@@ -3725,7 +3724,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "c3eefa2e-51fa-457c-bb8c-5c1d1ac94369")
-		(property "Reference" "R1"
+		(property "Reference" "R11"
 			(at 57.15 60.9599 0)
 			(effects
 				(font
@@ -3823,15 +3822,16 @@
 	)
 	(symbol
 		(lib_id "Diode:BAS16TW")
-		(at 101.6 25.4 0)
+		(at 101.6 30.48 0)
+		(mirror x)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(uuid "cadc543b-e7cb-4b85-97b1-f5d0f51c6a09")
-		(property "Reference" "D1"
-			(at 101.5619 19.05 0)
+		(property "Reference" "D16"
+			(at 101.5619 36.83 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3839,7 +3839,7 @@
 			)
 		)
 		(property "Value" "BAS16TW"
-			(at 101.5619 21.59 0)
+			(at 101.5619 34.29 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3847,7 +3847,7 @@
 			)
 		)
 		(property "Footprint" "Package_TO_SOT_SMD:SOT-363_SC-70-6"
-			(at 101.6 29.845 0)
+			(at 101.6 26.035 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3856,7 +3856,7 @@
 			)
 		)
 		(property "Datasheet" "http://www.diodes.com/datasheets/ds30154.pdf"
-			(at 101.6 22.86 0)
+			(at 101.6 33.02 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3865,7 +3865,7 @@
 			)
 		)
 		(property "Description" "Fast switching diode array 3 independent"
-			(at 101.6 25.4 0)
+			(at 101.6 30.48 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3946,7 +3946,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "d37e8d50-f00d-47c4-be12-63506256de76")
-		(property "Reference" "D1"
+		(property "Reference" "D16"
 			(at 154.9019 52.07 0)
 			(effects
 				(font
@@ -4062,7 +4062,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "e0640f10-1301-435c-ae7a-4cf154331e39")
-		(property "Reference" "#PWR01"
+		(property "Reference" "#PWR046"
 			(at 31.75 55.88 0)
 			(effects
 				(font
@@ -4164,7 +4164,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "f9db6b07-8d6d-4f4f-8349-207499190270")
-		(property "Reference" "#PWR033"
+		(property "Reference" "#PWR048"
 			(at 72.39 39.37 0)
 			(effects
 				(font

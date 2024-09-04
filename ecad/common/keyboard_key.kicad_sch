@@ -1729,7 +1729,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "d9f7ecaa-962e-41c3-a41a-1545c7297988")
-		(property "Reference" "D11"
+		(property "Reference" "D6"
 			(at 110.49 25.4 0)
 			(effects
 				(font
