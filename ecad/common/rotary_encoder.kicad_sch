@@ -2674,7 +2674,7 @@
 			(uuid "4c4126bd-a72f-4868-9b04-a73e918ad56c")
 		)
 		(instances
-			(project "top_board"
+			(project "top_section"
 				(path "/908c4fb0-9cf3-4739-9176-bc5c47ef8a7b/13aacf74-60ae-4d45-9173-ec26a84d6d8a"
 					(reference "D16")
 					(unit 3)
@@ -2801,7 +2801,7 @@
 			(uuid "e2d01295-7b44-4ed0-a5d0-0855fa90d557")
 		)
 		(instances
-			(project "top_board"
+			(project "top_section"
 				(path "/908c4fb0-9cf3-4739-9176-bc5c47ef8a7b/13aacf74-60ae-4d45-9173-ec26a84d6d8a"
 					(reference "Q6")
 					(unit 1)
@@ -2903,7 +2903,7 @@
 			(uuid "d7208e7b-b104-4c37-b4dd-7b8f0ee2f351")
 		)
 		(instances
-			(project "top_board"
+			(project "top_section"
 				(path "/908c4fb0-9cf3-4739-9176-bc5c47ef8a7b/13aacf74-60ae-4d45-9173-ec26a84d6d8a"
 					(reference "#PWR050")
 					(unit 1)
@@ -3005,7 +3005,7 @@
 			(uuid "c4ced536-11b2-4939-a41c-9dd20e28d7d9")
 		)
 		(instances
-			(project "top_board"
+			(project "top_section"
 				(path "/908c4fb0-9cf3-4739-9176-bc5c47ef8a7b/13aacf74-60ae-4d45-9173-ec26a84d6d8a"
 					(reference "#PWR047")
 					(unit 1)
@@ -3129,7 +3129,7 @@
 			(uuid "f8d01d42-a733-4451-ab3b-f8ddf9f0fa7d")
 		)
 		(instances
-			(project "top_board"
+			(project "top_section"
 				(path "/908c4fb0-9cf3-4739-9176-bc5c47ef8a7b/13aacf74-60ae-4d45-9173-ec26a84d6d8a"
 					(reference "SW11")
 					(unit 1)
@@ -3254,7 +3254,7 @@
 			(uuid "24dc817e-56ae-4797-9b16-853673537284")
 		)
 		(instances
-			(project "top_board"
+			(project "top_section"
 				(path "/908c4fb0-9cf3-4739-9176-bc5c47ef8a7b/13aacf74-60ae-4d45-9173-ec26a84d6d8a"
 					(reference "U6")
 					(unit 1)
@@ -3356,7 +3356,7 @@
 			(uuid "1ae29b96-d3cf-475a-b7e9-20605cfbf395")
 		)
 		(instances
-			(project "top_board"
+			(project "top_section"
 				(path "/908c4fb0-9cf3-4739-9176-bc5c47ef8a7b/13aacf74-60ae-4d45-9173-ec26a84d6d8a"
 					(reference "#PWR049")
 					(unit 1)
@@ -3462,7 +3462,7 @@
 			(uuid "1fad92e6-407f-49e6-a868-e9f7f36f9ae1")
 		)
 		(instances
-			(project "top_board"
+			(project "top_section"
 				(path "/908c4fb0-9cf3-4739-9176-bc5c47ef8a7b/13aacf74-60ae-4d45-9173-ec26a84d6d8a"
 					(reference "R12")
 					(unit 1)
@@ -3564,7 +3564,7 @@
 			(uuid "bf8db6c4-064a-41de-9624-e06dcc0cd168")
 		)
 		(instances
-			(project "top_board"
+			(project "top_section"
 				(path "/908c4fb0-9cf3-4739-9176-bc5c47ef8a7b/13aacf74-60ae-4d45-9173-ec26a84d6d8a"
 					(reference "#PWR051")
 					(unit 1)
@@ -3670,7 +3670,7 @@
 			(uuid "388656ee-e6b8-4316-86dd-d2594acf1a57")
 		)
 		(instances
-			(project "top_board"
+			(project "top_section"
 				(path "/908c4fb0-9cf3-4739-9176-bc5c47ef8a7b/13aacf74-60ae-4d45-9173-ec26a84d6d8a"
 					(reference "C11")
 					(unit 1)
@@ -3776,7 +3776,7 @@
 			(uuid "229b199e-5e88-462c-9959-d3dc9021e93b")
 		)
 		(instances
-			(project "top_board"
+			(project "top_section"
 				(path "/908c4fb0-9cf3-4739-9176-bc5c47ef8a7b/13aacf74-60ae-4d45-9173-ec26a84d6d8a"
 					(reference "R11")
 					(unit 1)
@@ -3892,7 +3892,7 @@
 			(uuid "dadf7d9f-d577-4d6d-9d3a-bda8fecd05ee")
 		)
 		(instances
-			(project "top_board"
+			(project "top_section"
 				(path "/908c4fb0-9cf3-4739-9176-bc5c47ef8a7b/13aacf74-60ae-4d45-9173-ec26a84d6d8a"
 					(reference "D16")
 					(unit 1)
@@ -4008,7 +4008,7 @@
 			(uuid "dadf7d9f-d577-4d6d-9d3a-bda8fecd05ef")
 		)
 		(instances
-			(project "top_board"
+			(project "top_section"
 				(path "/908c4fb0-9cf3-4739-9176-bc5c47ef8a7b/13aacf74-60ae-4d45-9173-ec26a84d6d8a"
 					(reference "D16")
 					(unit 2)
@@ -4110,7 +4110,7 @@
 			(uuid "60a68992-fdc5-49c0-ba04-cd22f3daeb7b")
 		)
 		(instances
-			(project "top_board"
+			(project "top_section"
 				(path "/908c4fb0-9cf3-4739-9176-bc5c47ef8a7b/13aacf74-60ae-4d45-9173-ec26a84d6d8a"
 					(reference "#PWR046")
 					(unit 1)
@@ -4212,7 +4212,7 @@
 			(uuid "509af389-85e0-48c1-bec9-1ee89c90a1a2")
 		)
 		(instances
-			(project "top_board"
+			(project "top_section"
 				(path "/908c4fb0-9cf3-4739-9176-bc5c47ef8a7b/13aacf74-60ae-4d45-9173-ec26a84d6d8a"
 					(reference "#PWR048")
 					(unit 1)

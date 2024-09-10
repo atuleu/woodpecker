@@ -74,7 +74,7 @@
     "ssh_key": ""
   },
   "meta": {
-    "filename": "top_board.kicad_prl",
+      "filename": "top_section.kicad_prl",
     "version": 3
   },
   "project": {

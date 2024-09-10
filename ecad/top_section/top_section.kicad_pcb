@@ -11674,7 +11674,7 @@
 		(property ki_fp_filters "R_*")
 		(path "/4078b3b3-4a6b-48ed-b77b-44ad58e9b396")
 		(sheetname "Root")
-		(sheetfile "top_board.kicad_sch")
+		(sheetfile "top_section.kicad_sch")
 		(attr smd)
 		(fp_line
 			(start 0.237258 0.5225)
@@ -12112,7 +12112,7 @@
 		(property ki_fp_filters "R_*")
 		(path "/2b4cd146-42b6-45fd-94f2-a416b3a402d5")
 		(sheetname "Root")
-		(sheetfile "top_board.kicad_sch")
+		(sheetfile "top_section.kicad_sch")
 		(attr smd dnp)
 		(fp_line
 			(start 0.237258 0.5225)
@@ -12549,7 +12549,7 @@
 		(property ki_fp_filters "Connector*:*_1x??_*")
 		(path "/40a4fa97-37ec-4ca6-8fe8-5fa15ccd89dd")
 		(sheetname "Root")
-		(sheetfile "top_board.kicad_sch")
+		(sheetfile "top_section.kicad_sch")
 		(attr through_hole)
 		(fp_line
 			(start -2.06 1.46)
@@ -13314,7 +13314,7 @@
 		(property ki_fp_filters "R_*")
 		(path "/efcd54fc-b687-47db-9b6a-82941c612888")
 		(sheetname "Root")
-		(sheetfile "top_board.kicad_sch")
+		(sheetfile "top_section.kicad_sch")
 		(attr smd)
 		(fp_line
 			(start 0.237258 0.5225)
@@ -14916,7 +14916,7 @@
 		(property ki_fp_filters "R_*")
 		(path "/d25cc127-ba74-4b17-abfd-595ecf10c325")
 		(sheetname "Root")
-		(sheetfile "top_board.kicad_sch")
+		(sheetfile "top_section.kicad_sch")
 		(attr smd)
 		(fp_line
 			(start 0.237258 -0.5225)
@@ -16770,7 +16770,7 @@
 		(property ki_fp_filters "Connector*:*_1x??_*")
 		(path "/503dfc64-52b4-4b66-a1a0-ee8c4638b27c")
 		(sheetname "Root")
-		(sheetfile "top_board.kicad_sch")
+		(sheetfile "top_section.kicad_sch")
 		(attr smd)
 		(fp_line
 			(start -2.06 -2.1)
@@ -18357,7 +18357,7 @@
 		(property ki_fp_filters "R_*")
 		(path "/a7ed2ce3-305a-4cc8-8e75-ecf4cb520275")
 		(sheetname "Root")
-		(sheetfile "top_board.kicad_sch")
+		(sheetfile "top_section.kicad_sch")
 		(attr smd)
 		(fp_line
 			(start 0.237258 0.5225)
@@ -20234,7 +20234,7 @@
 		(property ki_fp_filters "R_*")
 		(path "/32947944-b16b-408a-bb7e-cede1291c761")
 		(sheetname "Root")
-		(sheetfile "top_board.kicad_sch")
+		(sheetfile "top_section.kicad_sch")
 		(attr smd)
 		(fp_line
 			(start 0.237258 0.5225)
@@ -22802,7 +22802,7 @@
 		(property ki_fp_filters "R_*")
 		(path "/6498f5dc-46c0-4f68-a9d9-e926bccf4527")
 		(sheetname "Root")
-		(sheetfile "top_board.kicad_sch")
+		(sheetfile "top_section.kicad_sch")
 		(attr smd)
 		(fp_line
 			(start 0.237258 0.5225)
@@ -23021,7 +23021,7 @@
 		(property ki_fp_filters "Connector*:*_1x??_*")
 		(path "/2de14710-6bf7-4e59-925c-803668fdf751")
 		(sheetname "Root")
-		(sheetfile "top_board.kicad_sch")
+		(sheetfile "top_section.kicad_sch")
 		(attr through_hole)
 		(fp_line
 			(start -2.06 1.46)
@@ -24902,7 +24902,7 @@
 		(property ki_fp_filters "QFN*6x6mm*P0.65mm*")
 		(path "/17d18f74-caac-45f9-b404-c65fab8e5d36")
 		(sheetname "Root")
-		(sheetfile "top_board.kicad_sch")
+		(sheetfile "top_section.kicad_sch")
 		(attr smd)
 		(fp_line
 			(start 3.11 3.11)
@@ -28519,7 +28519,7 @@
 		(property ki_fp_filters "R_*")
 		(path "/18c083fa-6082-40cf-8512-4acd73d5a9d8")
 		(sheetname "Root")
-		(sheetfile "top_board.kicad_sch")
+		(sheetfile "top_section.kicad_sch")
 		(attr smd)
 		(fp_line
 			(start 0.237258 -0.5225)
@@ -29809,7 +29809,7 @@
 		(property ki_fp_filters "C_*")
 		(path "/387e8bff-c40c-4704-873a-701cfdc0af80")
 		(sheetname "Root")
-		(sheetfile "top_board.kicad_sch")
+		(sheetfile "top_section.kicad_sch")
 		(attr smd)
 		(fp_line
 			(start 0.14058 0.51)
@@ -35198,7 +35198,7 @@
 		(property ki_fp_filters "R_*")
 		(path "/36d2d5c0-7510-4371-b444-7f1e7bf1587e")
 		(sheetname "Root")
-		(sheetfile "top_board.kicad_sch")
+		(sheetfile "top_section.kicad_sch")
 		(attr smd dnp)
 		(fp_line
 			(start 0.237258 0.5225)
@@ -37089,7 +37089,7 @@
 		(property ki_fp_filters "R_*")
 		(path "/b24fb665-9c88-4b66-a537-f5ed51aca785")
 		(sheetname "Root")
-		(sheetfile "top_board.kicad_sch")
+		(sheetfile "top_section.kicad_sch")
 		(attr smd dnp)
 		(fp_line
 			(start 0.237258 0.5225)
