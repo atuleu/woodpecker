@@ -179,6 +179,7 @@
       ],
       "track_widths": [
         0.0,
+        0.15,
         0.2,
         0.3,
         0.5
@@ -601,7 +602,7 @@
           "group_by": false,
           "label": "MPN",
           "name": "MPN",
-          "show": false
+          "show": true
         },
         {
           "group_by": false,
