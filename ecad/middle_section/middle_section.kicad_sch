@@ -2474,7 +2474,7 @@
 		(uuid "802a52c0-fca9-463a-9146-924ee2b232d3")
 	)
 	(label "CH3"
-		(at 190.5 58.42 180)
+		(at 190.5 53.34 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -2507,7 +2507,7 @@
 		(uuid "9421b44d-924b-44c5-a7af-fbb191a56530")
 	)
 	(label "CH4"
-		(at 190.5 60.96 180)
+		(at 190.5 50.8 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -2562,7 +2562,7 @@
 		(uuid "b69d9ff7-56f8-4a60-8b1c-54d7ba98c0bc")
 	)
 	(label "CH1"
-		(at 190.5 53.34 180)
+		(at 190.5 58.42 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -2584,7 +2584,7 @@
 		(uuid "d110e7f9-62cd-4b28-a17c-ea147cc14d98")
 	)
 	(label "CH0"
-		(at 190.5 50.8 180)
+		(at 190.5 60.96 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
