@@ -4637,7 +4637,7 @@
 		(uuid "10cf8d2c-de78-46b7-a064-9e221a2b3225")
 	)
 	(label "R3_QA"
-		(at 125.73 224.79 0)
+		(at 125.73 222.25 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4947,7 +4947,7 @@
 		(uuid "f153047e-aee7-49cb-9ba8-ec52cc433afa")
 	)
 	(label "R3_QB"
-		(at 125.73 222.25 0)
+		(at 125.73 224.79 0)
 		(effects
 			(font
 				(size 1.27 1.27)
