@@ -456,7 +456,9 @@
     }
   },
   "libraries": {
-    "pinned_footprint_libs": [],
+    "pinned_footprint_libs": [
+      "woodpecker"
+    ],
     "pinned_symbol_libs": []
   },
   "meta": {

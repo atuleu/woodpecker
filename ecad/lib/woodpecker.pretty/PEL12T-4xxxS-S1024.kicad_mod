@@ -1,7 +1,7 @@
 (footprint "PEL12T-4xxxS-S1024"
-	(version 20240108)
+	(version 20241229)
 	(generator "pcbnew")
-	(generator_version "8.0")
+	(generator_version "9.0")
 	(layer "F.Cu")
 	(property "Reference" "REF**"
 		(at 7.5 -5 90)
@@ -21,18 +21,6 @@
 		(effects
 			(font
 				(size 1 1)
-				(thickness 0.15)
-			)
-		)
-	)
-	(property "Footprint" ""
-		(at 0 0 0)
-		(layer "F.Fab")
-		(hide yes)
-		(uuid "1ad3b3c1-2133-44fd-8c5a-77a86320530b")
-		(effects
-			(font
-				(size 1.27 1.27)
 				(thickness 0.15)
 			)
 		)
@@ -179,7 +167,7 @@
 			(width 0.12)
 			(type solid)
 		)
-		(fill none)
+		(fill no)
 		(layer "F.Fab")
 		(uuid "dc07033a-e700-470c-9378-f9f32c274b09")
 	)
@@ -190,7 +178,7 @@
 			(width 0.12)
 			(type solid)
 		)
-		(fill none)
+		(fill no)
 		(layer "F.Fab")
 		(uuid "3921f58b-5ec4-4a14-b6ec-1753bf3b8e4a")
 	)
@@ -272,7 +260,8 @@
 		(remove_unused_layers no)
 		(uuid "619fc3ed-6b3d-4b51-9e43-1af3ad093be2")
 	)
-	(model "${PROJECT_LIBS}/woodpecker.3dsymbols/PEL12T-4225S.stp"
+	(embedded_fonts no)
+	(model "${KIPRJMOD}/lib/woodpecker.3dsymbols/PEL12T-4225S.stp"
 		(offset
 			(xyz 0 0 0)
 		)

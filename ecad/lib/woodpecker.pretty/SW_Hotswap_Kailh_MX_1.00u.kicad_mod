@@ -1,7 +1,7 @@
 (footprint "SW_Hotswap_Kailh_MX_1.00u"
-	(version 20240108)
+	(version 20241229)
 	(generator "pcbnew")
-	(generator_version "8.0")
+	(generator_version "9.0")
 	(layer "F.Cu")
 	(descr "Kailh keyswitch Hotswap Socket Keycap 1.00u")
 	(tags "Kailh Keyboard Keyswitch Switch Hotswap Socket Relief Cutout Keycap 1.00u")
@@ -23,18 +23,6 @@
 		(effects
 			(font
 				(size 1 1)
-				(thickness 0.15)
-			)
-		)
-	)
-	(property "Footprint" ""
-		(at 0 0 0)
-		(layer "F.Fab")
-		(hide yes)
-		(uuid "8aae9c31-e170-497f-b5b2-67a8651bb932")
-		(effects
-			(font
-				(size 1.27 1.27)
 				(thickness 0.15)
 			)
 		)
@@ -64,6 +52,36 @@
 		)
 	)
 	(attr smd)
+	(fp_line
+		(start -7.1 -7.1)
+		(end -7.1 7.1)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "4d38bc85-8359-4637-bc8d-0433d6e4cc20")
+	)
+	(fp_line
+		(start 7.1 -7.1)
+		(end -7.1 -7.1)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "67c4660d-8c43-4a7e-ab40-18905c02cb76")
+	)
+	(fp_line
+		(start 7.1 7.1)
+		(end 7.1 -7.1)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "58cecfea-dee3-4f15-a7ba-c56dc4a5f9c4")
+	)
 	(fp_line
 		(start -4.1 -6.9)
 		(end 1 -6.9)
@@ -105,36 +123,6 @@
 		)
 		(layer "B.SilkS")
 		(uuid "e19d26e1-c385-42a0-b6c7-61b7c17c0c0c")
-	)
-	(fp_line
-		(start -7.1 -7.1)
-		(end -7.1 7.1)
-		(stroke
-			(width 0.12)
-			(type solid)
-		)
-		(layer "F.SilkS")
-		(uuid "4d38bc85-8359-4637-bc8d-0433d6e4cc20")
-	)
-	(fp_line
-		(start 7.1 -7.1)
-		(end -7.1 -7.1)
-		(stroke
-			(width 0.12)
-			(type solid)
-		)
-		(layer "F.SilkS")
-		(uuid "67c4660d-8c43-4a7e-ab40-18905c02cb76")
-	)
-	(fp_line
-		(start 7.1 7.1)
-		(end 7.1 -7.1)
-		(stroke
-			(width 0.12)
-			(type solid)
-		)
-		(layer "F.SilkS")
-		(uuid "58cecfea-dee3-4f15-a7ba-c56dc4a5f9c4")
 	)
 	(fp_line
 		(start -9.525 -9.525)
@@ -649,18 +637,19 @@
 	(pad "1" smd roundrect
 		(at -7.085 -2.54)
 		(size 2.55 2.5)
-		(layers "B.Cu" "B.Paste" "B.Mask")
+		(layers "B.Cu" "B.Mask" "B.Paste")
 		(roundrect_rratio 0.1)
 		(uuid "5ace75ea-c9d0-4357-8f60-2def681ca607")
 	)
 	(pad "2" smd roundrect
 		(at 5.842 -5.08)
 		(size 2.55 2.5)
-		(layers "B.Cu" "B.Paste" "B.Mask")
+		(layers "B.Cu" "B.Mask" "B.Paste")
 		(roundrect_rratio 0.1)
 		(uuid "69d8a09d-5e11-4f07-9bba-026dd972af07")
 	)
-	(model "/home/atuleu/devel/github.com/atuleu/woodpecker/ecad/libs/woodpecker.3dsymbols/MX_SWITCH_CLEAR.step"
+	(embedded_fonts no)
+	(model "${KIPRJMOD}/lib/woodpecker.3dsymbols/MX_SWITCH_CLEAR.step"
 		(offset
 			(xyz 0 0 0)
 		)

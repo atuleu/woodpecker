@@ -1,7 +1,7 @@
 (footprint "Potentiometer_Bourns_PTA6043_Single_Slide"
-	(version 20240108)
+	(version 20241229)
 	(generator "pcbnew")
-	(generator_version "8.0")
+	(generator_version "9.0")
 	(layer "F.Cu")
 	(descr "Bourns single-gang slide potentiometer, 60.0mm travel, https://www.bourns.com/docs/Product-Datasheets/pta.pdf")
 	(tags "Bourns single-gang slide potentiometer 60.0mm")
@@ -23,18 +23,6 @@
 		(effects
 			(font
 				(size 1 1)
-				(thickness 0.15)
-			)
-		)
-	)
-	(property "Footprint" ""
-		(at 0 0 0)
-		(layer "F.Fab")
-		(hide yes)
-		(uuid "556cc7ee-6c09-460e-85ff-a00fe329a617")
-		(effects
-			(font
-				(size 1.27 1.27)
 				(thickness 0.15)
 			)
 		)
@@ -371,7 +359,7 @@
 			(width 0.1)
 			(type solid)
 		)
-		(fill none)
+		(fill no)
 		(layer "F.Fab")
 		(uuid "a77507c9-90f9-4a9e-aa74-878443923ed0")
 	)
@@ -382,7 +370,7 @@
 			(width 0.1)
 			(type solid)
 		)
-		(fill none)
+		(fill no)
 		(layer "F.Fab")
 		(uuid "09753ef6-e29c-492f-a351-84fc39909fc8")
 	)
@@ -453,7 +441,8 @@
 		(remove_unused_layers no)
 		(uuid "eef11aae-b473-41b8-80d7-a480f21f5b5e")
 	)
-	(model "${PROJECT_LIBS}/woodpecker.3dsymbols/pta6043-2x10cixxxx.stp"
+	(embedded_fonts no)
+	(model "${KIPRJMOD}/lib/woodpecker.3dsymbols/pta6043-2x10cixxxx.stp"
 		(offset
 			(xyz 0 0 0)
 		)
