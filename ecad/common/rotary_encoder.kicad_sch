@@ -1320,6 +1320,24 @@
 				(hide yes)
 			)
 		)
+		(property "MPN" "BAS16TW"
+			(at 100.33 43.18 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" ""
+			(at 100.33 43.18 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "6"
 			(uuid "3c44c16e-53f6-4043-87ea-66cf88f49c10")
 		)
@@ -1448,6 +1466,15 @@
 				(hide yes)
 			)
 		)
+		(property "Manufacturer" ""
+			(at 113.03 71.12 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "5"
 			(uuid "969802ed-8490-4fe8-9b30-6b8c77ef1931")
 		)
@@ -1562,6 +1589,24 @@
 			)
 		)
 		(property "Description" "Fast switching diode array 3 independent"
+			(at 100.33 48.26 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "BAS16TW"
+			(at 100.33 48.26 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" ""
 			(at 100.33 48.26 0)
 			(effects
 				(font

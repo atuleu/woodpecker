@@ -1034,6 +1034,15 @@
 				(hide yes)
 			)
 		)
+		(property "Manufacturer" ""
+			(at 93.98 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "f6e64d81-7582-4fb9-8932-a60fcdf1f9cc")
 		)
@@ -1141,6 +1150,15 @@
 			)
 		)
 		(property "MPN" "IN-P32TRRRGB"
+			(at 100.33 60.96 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" ""
 			(at 100.33 60.96 90)
 			(effects
 				(font
@@ -1269,6 +1287,15 @@
 			)
 		)
 		(property "Sim.Pins" "1=K 2=A"
+			(at 110.49 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" ""
 			(at 110.49 31.75 0)
 			(effects
 				(font
