@@ -2751,6 +2751,12 @@
 		(uuid "ad0dca51-51e5-48e2-b991-ae608d3efd03")
 	)
 	(junction
+		(at 280.67 161.29)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "ae831e1a-afa1-4c11-abe1-e0ef0629386c")
+	)
+	(junction
 		(at 156.21 77.47)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -3446,6 +3452,16 @@
 	)
 	(wire
 		(pts
+			(xy 292.1 161.29) (xy 292.1 162.56)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "21709176-5b1d-4e44-b8ef-0b8da98d91c1")
+	)
+	(wire
+		(pts
 			(xy 217.17 97.79) (xy 227.33 97.79)
 		)
 		(stroke
@@ -3523,6 +3539,16 @@
 			(type default)
 		)
 		(uuid "2521b6d7-468d-4a4a-a50b-5cc584478ff6")
+	)
+	(wire
+		(pts
+			(xy 292.1 170.18) (xy 292.1 171.45)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "25eca1b7-c864-470b-9562-ae6af6f9738f")
 	)
 	(wire
 		(pts
@@ -6366,6 +6392,16 @@
 	)
 	(wire
 		(pts
+			(xy 280.67 161.29) (xy 292.1 161.29)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d823ebf0-658b-4470-a6e0-4969d63e390d")
+	)
+	(wire
+		(pts
 			(xy 175.26 100.33) (xy 170.18 100.33)
 		)
 		(stroke
@@ -8058,6 +8094,85 @@
 	)
 	(symbol
 		(lib_id "Device:C")
+		(at 292.1 166.37 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "34f4c452-fe76-4c5b-9301-5d36cd3f38eb")
+		(property "Reference" "C6"
+			(at 295.91 165.0999 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "22u"
+			(at 295.91 167.6399 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
+			(at 293.0652 170.18 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 292.1 166.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Unpolarized capacitor"
+			(at 292.1 166.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" ""
+			(at 292.1 166.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "aa7a7cb1-2f5a-4f43-9d93-411825eb9c9c")
+		)
+		(pin "1"
+			(uuid "28c1820c-ef86-48b9-971c-bfbd0f9cdefe")
+		)
+		(instances
+			(project "top_section"
+				(path "/908c4fb0-9cf3-4739-9176-bc5c47ef8a7b"
+					(reference "C6")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C")
 		(at 78.74 184.15 0)
 		(unit 1)
 		(exclude_from_sim no)
@@ -9582,6 +9697,72 @@
 			(project "top_section"
 				(path "/908c4fb0-9cf3-4739-9176-bc5c47ef8a7b"
 					(reference "#PWR06")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 292.1 171.45 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "c1102d64-4b48-42a6-b358-4390bfc7642b")
+		(property "Reference" "#PWR022"
+			(at 292.1 177.8 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 292.1 176.53 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 292.1 171.45 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 292.1 171.45 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 292.1 171.45 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "47deabcb-71b4-460b-a2b4-579d60b8c0ff")
+		)
+		(instances
+			(project "top_section"
+				(path "/908c4fb0-9cf3-4739-9176-bc5c47ef8a7b"
+					(reference "#PWR022")
 					(unit 1)
 				)
 			)
