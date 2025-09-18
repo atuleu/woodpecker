@@ -1,0 +1,322 @@
+(footprint "LED_Inolux_IN-PI32TRRRGB_PLCC4_3.2x2.8mm_P1.5mm"
+	(version 20241229)
+	(generator "pcbnew")
+	(generator_version "9.0")
+	(layer "F.Cu")
+	(descr "5.0mm x 5.0mm PLCC4 Addressable RGB LED, http://www.inolux-corp.com/datasheet/SMDLED/Addressable%20LED/IN-PI554FCH.pdf")
+	(tags "LED RGB NeoPixel addressable PLCC-4 5050")
+	(property "Reference" "REF**"
+		(at 0 -2.85 0)
+		(layer "F.SilkS")
+		(uuid "91030031-69c9-40ae-ae11-52bd1e7851fa")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "LED_Inolux_IN-PI32TRRRGB_PLCC4_3.2x2.8mm_P1.5mm"
+		(at 0 -3.8 0)
+		(layer "F.Fab")
+		(uuid "4012ea67-447f-4769-90be-1adc100f005d")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "f360453a-4844-4755-a3f8-82e09efde6f1")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "9eae9825-18ea-4c42-b4ed-7b93ce6fcb6e")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr smd)
+	(fp_line
+		(start -3.35 -2.05)
+		(end 3.35 -2.05)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "e1dccf65-1247-4a8f-a190-975038732411")
+	)
+	(fp_line
+		(start -3.35 2.05)
+		(end 3.35 2.05)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "bf347ee1-30c2-44ea-81b5-09be46ebe3db")
+	)
+	(fp_line
+		(start 3.35 -1.37)
+		(end 3.35 -2.03)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "80c0bc4e-cc13-48cb-803d-f741f3be41f5")
+	)
+	(fp_line
+		(start -1.900001 1.200001)
+		(end -1.900001 -1.2)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(layer "Edge.Cuts")
+		(uuid "13fa7fe9-5511-4441-ba17-adc53ca71620")
+	)
+	(fp_line
+		(start -1.4 -1.7)
+		(end 1.4 -1.7)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(layer "Edge.Cuts")
+		(uuid "cea217c8-09a3-435e-b540-d381ab245bcc")
+	)
+	(fp_line
+		(start 1.4 1.7)
+		(end -1.400001 1.700001)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(layer "Edge.Cuts")
+		(uuid "d004f690-9598-4f40-b258-b99d81ffc38b")
+	)
+	(fp_line
+		(start 1.9 -1.2)
+		(end 1.900001 1.2)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(layer "Edge.Cuts")
+		(uuid "0ffaf2c5-56a5-418b-8c4d-3c68f10021a6")
+	)
+	(fp_arc
+		(start -1.900001 -1.200001)
+		(mid -1.753554 -1.553554)
+		(end -1.400001 -1.700001)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(layer "Edge.Cuts")
+		(uuid "6d530c77-fcc9-4b2d-98be-c919675853e9")
+	)
+	(fp_arc
+		(start -1.400001 1.700001)
+		(mid -1.753554 1.553554)
+		(end -1.900001 1.200001)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(layer "Edge.Cuts")
+		(uuid "0787165a-88bc-4e0c-9241-3457b0e49a26")
+	)
+	(fp_arc
+		(start 1.4 -1.7)
+		(mid 1.753553 -1.553553)
+		(end 1.9 -1.2)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(layer "Edge.Cuts")
+		(uuid "99dd3189-9ea3-4451-8371-d1345b6dbcac")
+	)
+	(fp_arc
+		(start 1.900001 1.200001)
+		(mid 1.753554 1.553554)
+		(end 1.400001 1.700001)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(layer "Edge.Cuts")
+		(uuid "3bbeae9f-f23f-4abb-b7e7-ed816f4c12bd")
+	)
+	(fp_line
+		(start -3.45 -2.15)
+		(end -3.45 2.15)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "83096164-5bd8-4b2b-81e2-0b47c25b01c8")
+	)
+	(fp_line
+		(start -3.45 2.15)
+		(end 3.45 2.15)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "2e8600f6-77b9-44c1-b6b4-a04748cb747b")
+	)
+	(fp_line
+		(start 3.45 -2.15)
+		(end -3.45 -2.15)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "cd76d13f-aa97-438c-9473-cb3a19f0afa3")
+	)
+	(fp_line
+		(start 3.45 2.15)
+		(end 3.45 -2.15)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "5c839b66-2365-4f80-83f1-48938678b6be")
+	)
+	(fp_line
+		(start -1.625 -1.4)
+		(end 1.625 -1.4)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "1aa09dca-7950-485f-a074-79bd5a541961")
+	)
+	(fp_line
+		(start -1.625 1.4)
+		(end -1.625 -1.4)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "659aa3c8-952f-48e0-bb5b-5374d47f9a28")
+	)
+	(fp_line
+		(start 0.6 -1.4)
+		(end 1.625 -0.375)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "5c91c710-b09a-4826-a4ac-6ddd5dd32831")
+	)
+	(fp_line
+		(start 1.625 -1.4)
+		(end 1.625 1.4)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "fd5fbf98-3445-4697-ba11-02c4c2a0066c")
+	)
+	(fp_line
+		(start 1.625 1.4)
+		(end -1.625 1.4)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "fbe66160-df84-4d35-b733-e571fd6b07ba")
+	)
+	(fp_circle
+		(center 0 0)
+		(end 0.4 0)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.Fab")
+		(uuid "6bc763b9-3bb2-42a8-bb0c-986b5067124d")
+	)
+	(fp_text user "${REFERENCE}"
+		(at 0 -2.2 0)
+		(layer "F.Fab")
+		(uuid "bde00d2d-a1db-45a6-a29b-22b84db43208")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.15)
+			)
+		)
+	)
+	(pad "1" smd roundrect
+		(at 2.7 -0.725)
+		(size 1.2 0.8)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(roundrect_rratio 0)
+		(chamfer_ratio 0.3)
+		(chamfer top_right)
+		(uuid "3ab5ed53-4563-4b8d-a247-6c9b75efe4e3")
+	)
+	(pad "2" smd rect
+		(at -2.7 -0.725)
+		(size 1.2 0.8)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(uuid "e8a740cc-704c-4138-8995-97baba664d12")
+	)
+	(pad "3" smd rect
+		(at -2.7 0.725)
+		(size 1.2 0.8)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(uuid "6bd41321-d49e-4b65-ba27-9b1df5d35370")
+	)
+	(pad "4" smd rect
+		(at 2.7 0.725)
+		(size 1.2 0.8)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(uuid "2b7ab591-a740-4c63-8fcb-8b2f09d1dd1f")
+	)
+	(embedded_fonts no)
+	(model "${KIPRJMOD}/lib/woodpecker.3dsymbols/IN-PI32TAR.step"
+		(offset
+			(xyz 0 0 0)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz 180 -0 -180)
+		)
+	)
+)

@@ -1095,7 +1095,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "a6dc74d6-65da-44b4-9718-aa75392da62d")
-		(property "Reference" "D"
+		(property "Reference" "D2"
 			(at 109.22 59.6899 90)
 			(effects
 				(font
@@ -1113,7 +1113,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "woodpecker:LED_Inolux_IN-PI32TRRRGB_PLCC4_3.2x2.8mm_P1.5mm"
 			(at 101.6 60.96 0)
 			(effects
 				(font
@@ -1140,6 +1140,15 @@
 				(hide yes)
 			)
 		)
+		(property "MPN" "IN-P32TRRRGB"
+			(at 100.33 60.96 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "4"
 			(uuid "d345e749-fb56-4b1f-9733-08c1e43a2b3f")
 		)
@@ -1155,39 +1164,43 @@
 		(instances
 			(project "top_section"
 				(path "/908c4fb0-9cf3-4739-9176-bc5c47ef8a7b/3e4c3c5e-0959-4abd-bf8c-f1b783d7e681"
-					(reference "D18")
+					(reference "D19")
 					(unit 1)
 				)
 				(path "/908c4fb0-9cf3-4739-9176-bc5c47ef8a7b/47cfd13d-bf73-4a03-a6ca-7b66fdb5bb7d"
-					(reference "D12")
+					(reference "D13")
+					(unit 1)
+				)
+				(path "/908c4fb0-9cf3-4739-9176-bc5c47ef8a7b/61fbcd7b-b588-48a7-b7d7-7589f646c796"
+					(reference "D2")
 					(unit 1)
 				)
 				(path "/908c4fb0-9cf3-4739-9176-bc5c47ef8a7b/6c386fc9-dbbe-48da-a0ca-97d6098257c4"
-					(reference "D20")
+					(reference "D21")
 					(unit 1)
 				)
 				(path "/908c4fb0-9cf3-4739-9176-bc5c47ef8a7b/6c8e40cf-9126-4984-9b5c-e41719a9c800"
-					(reference "D10")
+					(reference "D11")
 					(unit 1)
 				)
 				(path "/908c4fb0-9cf3-4739-9176-bc5c47ef8a7b/72a62481-ec11-41eb-95a3-ab230221a7af"
-					(reference "D22")
+					(reference "D23")
 					(unit 1)
 				)
 				(path "/908c4fb0-9cf3-4739-9176-bc5c47ef8a7b/7f0d18ff-a6af-4cf0-a91c-779951147286"
-					(reference "D24")
+					(reference "D25")
 					(unit 1)
 				)
 				(path "/908c4fb0-9cf3-4739-9176-bc5c47ef8a7b/935564e7-05e7-459d-8b7a-ca61f7462e6f"
-					(reference "D16")
+					(reference "D17")
 					(unit 1)
 				)
 				(path "/908c4fb0-9cf3-4739-9176-bc5c47ef8a7b/b7e74592-5a83-4609-924c-57c795101512"
-					(reference "D14")
+					(reference "D15")
 					(unit 1)
 				)
 				(path "/908c4fb0-9cf3-4739-9176-bc5c47ef8a7b/d85b7b05-f8ab-4186-bcfd-5df52ba17141"
-					(reference "D8")
+					(reference "D9")
 					(unit 1)
 				)
 			)
@@ -1273,11 +1286,11 @@
 		(instances
 			(project "top_section"
 				(path "/908c4fb0-9cf3-4739-9176-bc5c47ef8a7b/3e4c3c5e-0959-4abd-bf8c-f1b783d7e681"
-					(reference "D19")
+					(reference "D20")
 					(unit 1)
 				)
 				(path "/908c4fb0-9cf3-4739-9176-bc5c47ef8a7b/47cfd13d-bf73-4a03-a6ca-7b66fdb5bb7d"
-					(reference "D13")
+					(reference "D14")
 					(unit 1)
 				)
 				(path "/908c4fb0-9cf3-4739-9176-bc5c47ef8a7b/61fbcd7b-b588-48a7-b7d7-7589f646c796"
@@ -1285,31 +1298,31 @@
 					(unit 1)
 				)
 				(path "/908c4fb0-9cf3-4739-9176-bc5c47ef8a7b/6c386fc9-dbbe-48da-a0ca-97d6098257c4"
-					(reference "D21")
+					(reference "D22")
 					(unit 1)
 				)
 				(path "/908c4fb0-9cf3-4739-9176-bc5c47ef8a7b/6c8e40cf-9126-4984-9b5c-e41719a9c800"
-					(reference "D11")
+					(reference "D12")
 					(unit 1)
 				)
 				(path "/908c4fb0-9cf3-4739-9176-bc5c47ef8a7b/72a62481-ec11-41eb-95a3-ab230221a7af"
-					(reference "D23")
+					(reference "D24")
 					(unit 1)
 				)
 				(path "/908c4fb0-9cf3-4739-9176-bc5c47ef8a7b/7f0d18ff-a6af-4cf0-a91c-779951147286"
-					(reference "D25")
+					(reference "D26")
 					(unit 1)
 				)
 				(path "/908c4fb0-9cf3-4739-9176-bc5c47ef8a7b/935564e7-05e7-459d-8b7a-ca61f7462e6f"
-					(reference "D17")
+					(reference "D18")
 					(unit 1)
 				)
 				(path "/908c4fb0-9cf3-4739-9176-bc5c47ef8a7b/b7e74592-5a83-4609-924c-57c795101512"
-					(reference "D15")
+					(reference "D16")
 					(unit 1)
 				)
 				(path "/908c4fb0-9cf3-4739-9176-bc5c47ef8a7b/d85b7b05-f8ab-4186-bcfd-5df52ba17141"
-					(reference "D9")
+					(reference "D10")
 					(unit 1)
 				)
 			)
