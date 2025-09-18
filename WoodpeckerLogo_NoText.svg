@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="128.95079mm"
+   height="80.000282mm"
+   viewBox="0 0 128.95079 80.00028"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4.2 (ebf0e940d0, 2025-05-08)"
+   sodipodi:docname="WoodpeckerLogo_NoText.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="0.25449098"
+     inkscape:cx="1459.7767"
+     inkscape:cy="911.62367"
+     inkscape:window-width="1920"
+     inkscape:window-height="1011"
+     inkscape:window-x="0"
+     inkscape:window-y="32"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="g3" />
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-25.385004,-54.488147)">
+    <g
+       id="g3">
+      <g
+         id="g4">
+        <path
+           id="path1"
+           style="baseline-shift:baseline;display:inline;overflow:visible;opacity:1;vector-effect:none;enable-background:accumulate;stop-color:#000000;stop-opacity:1"
+           d="m 114.33617,54.488147 c -16.493326,1e-6 -30.746147,10.128656 -36.842192,24.470341 l 7.874971,4.547009 6.816122,3.935161 c 2.95027,-9.425796 11.689809,-16.173173 22.151099,-16.173173 12.92353,-10e-7 23.22029,10.297267 23.22029,23.220804 0,12.923541 -10.29676,23.218741 -23.22029,23.218741 -10.46165,0 -19.20112,-6.74633 -22.151099,-16.17214 l -6.816122,3.93516 -7.875488,4.54701 c 6.095795,14.34224 20.34898,24.47137 36.842709,24.47137 21.99201,0 39.99963,-18.00813 39.99963,-40.000141 0,-21.992014 -18.00762,-40.000143 -39.99963,-40.000142 z" />
+        <path
+           id="path2"
+           style="stroke-width:16"
+           d="m 122.42327,94.487625 a 8.0866337,8.0866337 0 0 1 -8.08664,8.086635 8.0866337,8.0866337 0 0 1 -8.08663,-8.086635 8.0866337,8.0866337 0 0 1 8.08663,-8.086634 8.0866337,8.0866337 0 0 1 8.08664,8.086634 z" />
+        <path
+           id="path3-3"
+           style="stroke-width:16"
+           inkscape:transform-center-x="6.3406552"
+           transform="matrix(-1,0,0,1,72.434507,44.129951)"
+           d="M 47.049503,50.357674 28.027535,61.340012 9.0055685,72.32235 V 50.357673 28.392998 L 28.027536,39.375336 Z" />
+      </g>
+    </g>
+  </g>
+</svg>

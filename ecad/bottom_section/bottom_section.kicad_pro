@@ -48,7 +48,7 @@
         "silk_text_thickness": 0.1,
         "silk_text_upright": false,
         "zones": {
-          "min_clearance": 0.5
+          "min_clearance": 0.2
         }
       },
       "diff_pair_dimensions": [
@@ -190,7 +190,8 @@
       "track_widths": [
         0.0,
         0.2,
-        0.3
+        0.3,
+        0.5
       ],
       "tuning_pattern_settings": {
         "diff_pair_defaults": {
@@ -495,7 +496,6 @@
         "bus_width": 12,
         "clearance": 0.2,
         "diff_pair_gap": 0.25,
-        "diff_pair_via_gap": 0.25,
         "diff_pair_width": 0.2,
         "line_style": 0,
         "microvia_diameter": 0.3,
@@ -504,7 +504,7 @@
         "pcb_color": "rgba(0, 0, 0, 0.000)",
         "priority": 0,
         "schematic_color": "rgba(0, 0, 0, 0.000)",
-        "track_width": 0.5,
+        "track_width": 0.6,
         "via_diameter": 0.8,
         "via_drill": 0.4,
         "wire_width": 6
@@ -526,7 +526,7 @@
       },
       {
         "netclass": "Power",
-        "pattern": ".*/OUT[RGB]"
+        "pattern": "/R*_LED*"
       },
       {
         "netclass": "Power",
@@ -679,43 +679,43 @@
       "Root"
     ],
     [
-      "eecf71da-2e67-4f0b-92c0-d34fe28e40d0",
+      "b05b7d89-e8e3-4430-b508-1898dbbdfc32",
       "KeyboardKey_COL1"
     ],
     [
-      "43c495ec-0348-4e70-bae3-e478a7926858",
+      "e33e4fdc-bd58-4c67-bb99-1ce8e87238a8",
       "KeyboardKey_COL2"
     ],
     [
-      "5d4bd88f-404a-45d9-84b1-f8a2580b6846",
+      "fe8acc3a-547c-469d-9f32-08486ec377e4",
       "KeyboardKey_COL3"
     ],
     [
-      "0437712c-67d3-485b-8737-ec9c33b0b309",
+      "972bcb43-2c03-4a62-ab04-b4b2649c149d",
       "KeyboardKey_COL4"
     ],
     [
-      "9c40564d-0035-4f33-8a3b-5e18288924b0",
+      "1d252128-5a15-4d61-935a-3deb595aa18f",
       "KeyboardKey_COL5"
     ],
     [
-      "3fb6c85a-2d43-4f7b-bd3f-56c65a7697b8",
+      "4e0f2a1f-84c1-4159-b51f-b8ab8493fd2c",
       "KeyboardKey_COL6"
     ],
     [
-      "d5da806f-a5b3-4f44-90fd-17aa4b8c7863",
+      "61a04379-d684-4de2-8564-18b65f6be942",
       "KeyboardKey_COL7"
     ],
     [
-      "4604d7b2-5cd0-4ad9-95ed-8443762ace55",
+      "e46df20f-6acd-4ec4-b154-0a8435b82625",
       "KeyboardKey_COL8"
     ],
     [
-      "02c6ff89-1fc8-4678-bf1d-1043beb45171",
+      "a60112cb-2a25-4cee-b7dc-a72ac75dbb95",
       "KeyboardKey_COL9"
     ],
     [
-      "1fc92505-145a-40e2-8919-68b36da6f43d",
+      "5978120e-7110-4ebf-b594-4881798784db",
       "KeyboardKey_COL10"
     ]
   ],
