@@ -4964,6 +4964,15 @@
 				(hide yes)
 			)
 		)
+		(property "MPN" "GRM21BZ71A226ME15L"
+			(at 334.01 118.11 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "aa7a7cb1-2f5a-4f43-9d93-411825eb9c9c")
 		)
@@ -5232,7 +5241,7 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "1-188275-2"
+		(property "MPN" "1-215079-2"
 			(at 134.62 116.84 0)
 			(effects
 				(font
@@ -5350,6 +5359,15 @@
 				(hide yes)
 			)
 		)
+		(property "MPN" "GCM155C71A105KE38D"
+			(at 322.58 118.11 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "1833d6f0-3285-41de-92a0-b5665e4adafb")
 		)
@@ -5421,6 +5439,15 @@
 			)
 		)
 		(property "Manufacturer" ""
+			(at 284.48 198.12 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "GCM155C71A105KE38D"
 			(at 284.48 198.12 0)
 			(effects
 				(font
@@ -5982,6 +6009,15 @@
 				(hide yes)
 			)
 		)
+		(property "MPN" "KGM05AR71A102KH"
+			(at 264.16 143.51 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "d45669d0-9135-487f-a6a2-ba4a41e3960f")
 		)
@@ -6016,7 +6052,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "10k"
+		(property "Value" "33k"
 			(at 143.51 187.9599 0)
 			(effects
 				(font
@@ -6053,6 +6089,15 @@
 			)
 		)
 		(property "Manufacturer" ""
+			(at 140.97 186.69 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "RC0603FR-0733KL"
 			(at 140.97 186.69 0)
 			(effects
 				(font
@@ -6161,7 +6206,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "10k"
+		(property "Value" "33k"
 			(at 143.51 210.8199 0)
 			(effects
 				(font
@@ -6198,6 +6243,15 @@
 			)
 		)
 		(property "Manufacturer" ""
+			(at 140.97 209.55 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "RC0603FR-0733KL"
 			(at 140.97 209.55 0)
 			(effects
 				(font
@@ -6276,7 +6330,7 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "LP5864"
+		(property "MPN" "LP5864RSMR"
 			(at 309.88 165.1 0)
 			(effects
 				(font
@@ -6524,6 +6578,15 @@
 			)
 		)
 		(property "Manufacturer" ""
+			(at 297.18 118.11 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "GCM155C71A105KE38D"
 			(at 297.18 118.11 0)
 			(effects
 				(font

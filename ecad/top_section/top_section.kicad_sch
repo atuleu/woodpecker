@@ -8156,6 +8156,15 @@
 				(hide yes)
 			)
 		)
+		(property "MPN" "GRM21BZ71A226ME15L"
+			(at 292.1 166.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "aa7a7cb1-2f5a-4f43-9d93-411825eb9c9c")
 		)
@@ -8227,6 +8236,15 @@
 			)
 		)
 		(property "Manufacturer" ""
+			(at 78.74 184.15 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "CL10B104KB8NNWC"
 			(at 78.74 184.15 0)
 			(effects
 				(font
@@ -8446,6 +8464,15 @@
 				(hide yes)
 			)
 		)
+		(property "MPN" "GCM155C71A105KE38D"
+			(at 280.67 166.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "1833d6f0-3285-41de-92a0-b5665e4adafb")
 		)
@@ -8517,6 +8544,15 @@
 			)
 		)
 		(property "Manufacturer" ""
+			(at 242.57 246.38 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "GCM155C71A105KE38D"
 			(at 242.57 246.38 0)
 			(effects
 				(font
@@ -8625,7 +8661,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "JST SH 6P"
+		(property "Value" "JST SH 3P"
 			(at 176.53 209.5499 0)
 			(effects
 				(font
@@ -8662,6 +8698,15 @@
 			)
 		)
 		(property "Manufacturer" ""
+			(at 173.99 208.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "SM03B-SRSS-TB"
 			(at 173.99 208.28 0)
 			(effects
 				(font
@@ -9451,6 +9496,15 @@
 				(hide yes)
 			)
 		)
+		(property "MPN" "KGM05AR71A102KH"
+			(at 222.25 191.77 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "d45669d0-9135-487f-a6a2-ba4a41e3960f")
 		)
@@ -9494,7 +9548,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Connector_JST:JST_SH_SM06B-SRSS-TB_1x06-1MP_P1.00mm_Horizontal"
+		(property "Footprint" "woodpecker:JST_SH_SM06B-SRSS-TB_1x06-1MP_P1.00mm_Horizontal"
 			(at 172.72 171.45 0)
 			(effects
 				(font
@@ -9522,6 +9576,15 @@
 			)
 		)
 		(property "Manufacturer" ""
+			(at 172.72 171.45 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "SM06B-SRSS-TB"
 			(at 172.72 171.45 0)
 			(effects
 				(font
@@ -9576,7 +9639,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "10k"
+		(property "Value" "33k"
 			(at 33.02 207.0099 0)
 			(effects
 				(font
@@ -9613,6 +9676,15 @@
 			)
 		)
 		(property "Manufacturer" ""
+			(at 30.48 205.74 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "RC0603FR-0733KL"
 			(at 30.48 205.74 0)
 			(effects
 				(font
@@ -9787,7 +9859,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "10k"
+		(property "Value" "33k"
 			(at 33.02 229.8699 0)
 			(effects
 				(font
@@ -9832,6 +9904,15 @@
 				(hide yes)
 			)
 		)
+		(property "MPN" "RC0603FR-0733KL"
+			(at 30.48 228.6 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "d6a47fdf-3224-48c6-a737-71880e61fa53")
 		)
@@ -9866,7 +9947,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "LP5864"
+		(property "Value" "LP5864RSMR"
 			(at 270.1133 254 0)
 			(effects
 				(font
@@ -9902,7 +9983,7 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "LP5864"
+		(property "MPN" "LP5864RSMR"
 			(at 267.97 213.36 0)
 			(effects
 				(font
@@ -10150,6 +10231,15 @@
 			)
 		)
 		(property "Manufacturer" ""
+			(at 255.27 166.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "GCM155C71A105KE38D"
 			(at 255.27 166.37 0)
 			(effects
 				(font
