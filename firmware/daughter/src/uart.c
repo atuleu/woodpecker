@@ -114,3 +114,9 @@ void UART_push_frame(const struct Frame *f) {
 	}
 	UART_putc(crc);
 }
+
+void UART_wait_free() {
+	while (uart_full()) {
+		UART_work();
+	}
+}
