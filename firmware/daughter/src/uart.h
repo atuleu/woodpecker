@@ -7,8 +7,6 @@ void init_UART(bool alternate);
 
 void UART_putc(char c);
 
-void UART_work();
-
 void UART_wait_free();
 
 uint8_t UART_available();

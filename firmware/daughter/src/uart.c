@@ -1,34 +1,44 @@
 #include "uart.h"
+#include <avr/interrupt.h>
 #include <stdbool.h>
 #include <stdint.h>
 
 #include <avr/io.h>
+#include <util/atomic.h>
 
 #include "frame.h"
 
-#define SIZE 16
-#define MASK 0x7f
+#define SIZE 32
+#define MASK 0x1f
 
 static char    buffer[SIZE];
 static uint8_t head = 0, tail = 0;
 
 static inline bool uart_full() {
-	if (head == 0) {
-		return tail == MASK;
-	}
-	return tail + 1 == head;
+	return ((tail + 1) & MASK) == head;
 }
 
 static inline bool uart_empty() {
 	return head == tail;
 }
 
-uint8_t UART_available() {
-	if (head <= tail) {
-		return tail - head;
-	}
+#define uart_enable_dreif()                                                    \
+	do {                                                                       \
+		USART0.CTRLA |= USART_DREIE_bm;                                        \
+	} while (0)
 
-	return tail + SIZE - head;
+#define uart_disable_dreif()                                                   \
+	do {                                                                       \
+		USART0.CTRLA &= ~USART_DREIE_bm;                                       \
+	} while (0)
+
+uint8_t UART_available() {
+	ATOMIC_BLOCK(ATOMIC_FORCEON) {
+		if (head <= tail) {
+			return tail - head;
+		}
+		return tail + SIZE - head;
+	}
 }
 
 void init_UART(bool alternate) {
@@ -37,12 +47,12 @@ void init_UART(bool alternate) {
 
 		PORTMUX.CTRLB = PORTMUX_USART0_bm;
 		// set alternate pin position, PA1 as output
-		PORTA.OUTSET  = _BV(1);
-		PORTA.DIRSET  = _BV(1);
+		PORTA.OUTSET  = PIN1_bm;
+		PORTA.DIRSET  = PIN1_bm;
 	} else {
 		// set PB2, the normal pin output as an output
-		PORTB.OUTSET = _BV(2);
-		PORTB.DIRSET = _BV(2);
+		PORTB.OUTSET = PIN2_bm;
+		PORTB.DIRSET = PIN2_bm;
 	}
 
 	// sets the UART to 115200 baud from a 10MHz clock.
@@ -56,20 +66,24 @@ void init_UART(bool alternate) {
 }
 
 void UART_putc(char c) {
-	// read from ring buffer, and process.
-	if (uart_full()) {
-		return;
+	ATOMIC_BLOCK(ATOMIC_FORCEON) {
+		// read from ring buffer, and process.
+		if (uart_full()) {
+			return;
+		}
+		buffer[tail] = c;
+		tail         = (tail + 1) & MASK;
+		uart_enable_dreif(); // will trigger interrupt and therefore TX
 	}
-	buffer[tail] = c;
-	tail         = (tail + 1) & MASK;
 }
 
-void UART_work() {
-	if (uart_empty() || (USART0.STATUS & USART_DREIF_bm) == 0x00) {
-		return;
-	}
+ISR(USART0_DRE_vect) {
 	USART0.TXDATAL = buffer[head];
 	head           = (head + 1) & MASK;
+
+	if (uart_empty()) {
+		uart_disable_dreif();
+	}
 }
 
 uint8_t crc8_update(uint8_t crc, uint8_t data) {
@@ -101,7 +115,7 @@ uint8_t crc8_update(uint8_t crc, uint8_t data) {
 }
 
 void UART_push_frame(const struct Frame *f) {
-	if (UART_available() < 9) {
+	if (UART_available() < (sizeof(struct Frame) + 2)) {
 		return;
 	}
 
@@ -116,7 +130,6 @@ void UART_push_frame(const struct Frame *f) {
 }
 
 void UART_wait_free() {
-	while (uart_full()) {
-		UART_work();
-	}
+	do {
+	} while (uart_full());
 }

@@ -30,7 +30,7 @@ enum FrameType {
 	FADER   = 1,
 };
 
-inline void Frame_set_button(struct Frame *f, uint8_t idx, bool value) {
+inline static void Frame_set_button(struct Frame *f, uint8_t idx, bool value) {
 	if (value == true) {
 		f->Buttons |= ((uint16_t)1 << idx);
 	} else {
@@ -38,7 +38,8 @@ inline void Frame_set_button(struct Frame *f, uint8_t idx, bool value) {
 	}
 }
 
-inline void Frame_set_encoder(struct Frame *f, uint8_t idx, uint8_t value) {
+inline static void
+Frame_set_encoder(struct Frame *f, uint8_t idx, uint8_t value) {
 	// get the right index.
 	if ((idx & 0x01) == 0x00) {
 		f->Encoder[idx >> 1].A = value & 0x0f;
@@ -47,7 +48,7 @@ inline void Frame_set_encoder(struct Frame *f, uint8_t idx, uint8_t value) {
 	}
 }
 
-int8_t Frame_get_encoder(const struct Frame *f, uint8_t idx) {
+inline static int8_t Frame_get_encoder(const struct Frame *f, uint8_t idx) {
 	// get value from the right index.
 	if ((idx & 0x01) == 0x00) {
 		return f->Encoder[idx >> 1].A;
