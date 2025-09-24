@@ -11,8 +11,8 @@
 #define SIZE 32
 #define MASK 0x1f
 
-static char    buffer[SIZE];
-static uint8_t head = 0, tail = 0;
+static char             buffer[SIZE];
+static volatile uint8_t head = 0, tail = 0;
 
 static inline bool uart_full() {
 	return ((tail + 1) & MASK) == head;

@@ -8,7 +8,7 @@
 #include "uart.h"
 
 #define ADDR0_bm _BV(5)
-#define ADDR1_bm _BV(4)
+#define ADDR1_bm _BV(6)
 
 #define COL1_bm _BV(0)
 #define COL2_bm _BV(1)
@@ -77,21 +77,26 @@ uint8_t read_row(uint8_t row_mask) {
 	return res;
 }
 
-void update_group(uint8_t offset, uint8_t qA_bm, uint8_t qB_bm, uint8_t sw_bm) {
+static inline void
+update_group(uint8_t offset, uint8_t qA_bm, uint8_t qB_bm, uint8_t sw_bm) {
 	uint8_t qA = read_row(qA_bm);
 	uint8_t qB = read_row(qB_bm);
 	uint8_t sw = read_row(sw_bm);
 
-	uint16_t buttonUpdate = 0;
 	for (uint8_t i = offset; i < offset + 5; ++i) {
 		uint8_t col_bm = _BV(i - offset);
 		Encoder_update(&encoders[i], (qA & col_bm) != 0, (qB & col_bm) != 0);
 		Frame_set_encoder(&frame, i, encoders[i].value);
 		Debouncer_push(&buttons[i], (sw & col_bm) != 0);
-		buttonUpdate |= ((uint16_t)buttons[i].state << i);
 	}
-	uint16_t button_bm = ~((uint16_t)0x1F << offset);
-	frame.Buttons      = ((frame.Buttons & button_bm) | buttonUpdate);
+}
+
+static inline void write_buttons_to_frame() {
+	uint16_t buttonValues = 0;
+	for (uint8_t i = 0; i < 10; ++i) {
+		buttonValues |= (uint16_t)buttons[i].state << i;
+	}
+	frame.Buttons = buttonValues;
 }
 
 int main() {
