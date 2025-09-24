@@ -1,5 +1,3 @@
-#include <stdio.h>
-
 #include <avr/io.h>
 #include <util/delay.h>
 
@@ -34,6 +32,8 @@
 #define ALL_ROW_bm                                                             \
 	(R4_SW_bm | R3_QA_bm | R3_QB_bm | R2_SW_bm | R1_QA_bm | R1_QB_bm)
 
+#define ALL_COL_bm (COL1_bm | COL2_bm | COL3_bm | COL4_bm | COL5_bm)
+
 void initPins() {
 	PORTA.DIRCLR = ADDR0_bm | ADDR1_bm;
 
@@ -54,8 +54,6 @@ struct Debouncer buttons[10];
 
 struct Frame frame;
 
-uint8_t address;
-
 void init() {
 	init_10MHz_clock();
 	init_RTC_1kHz();
@@ -65,22 +63,35 @@ void init() {
 		Debouncer_init(&buttons[i]);
 	}
 	_delay_us(20);
-	address = ((uint8_t)((PORTA.IN & ADDR1_bm) != 0) << 1) |
-	          ((PORTA.IN & ADDR0_bm) != 0);
+	frame.ID = ((uint8_t)((PORTA.IN & ADDR1_bm) != 0) << 1) |
+	           ((PORTA.IN & ADDR0_bm) != 0);
 	frame.Type       = ENCODER;
-	frame.ID         = address;
 	frame.SequenceID = 0x07;
 }
-
-#define PERIOD_ms 250U
-#define SCAN_DELAY_LOOP 18
 
 uint8_t read_row(uint8_t row_mask) {
 	PORTB.OUTCLR = row_mask;
 	_delay_us(20);
-	uint8_t res  = PORTC.IN & (COL1_bm | COL2_bm | COL3_bm | COL4_bm | COL5_bm);
+	uint8_t res  = PORTC.IN & ALL_COL_bm;
 	PORTB.OUTSET = row_mask;
 	return res;
+}
+
+void update_group(uint8_t offset, uint8_t qA_bm, uint8_t qB_bm, uint8_t sw_bm) {
+	uint8_t qA = read_row(qA_bm);
+	uint8_t qB = read_row(qB_bm);
+	uint8_t sw = read_row(sw_bm);
+
+	uint16_t buttonUpdate = 0;
+	for (uint8_t i = offset; i < offset + 5; ++i) {
+		uint8_t col_bm = _BV(i - offset);
+		Encoder_update(&encoders[i], (qA & col_bm) != 0, (qB & col_bm) != 0);
+		Frame_set_encoder(&frame, i, encoders[i].value);
+		Debouncer_push(&buttons[i], (sw & col_bm) != 0);
+		buttonUpdate |= ((uint16_t)buttons[i].state << i);
+	}
+	uint16_t button_bm = ~((uint16_t)0x1F << offset);
+	frame.Buttons      = ((frame.Buttons & button_bm) | buttonUpdate);
 }
 
 int main() {
@@ -95,31 +106,9 @@ int main() {
 		}
 		last = now;
 
-		uint8_t qa = read_row(R1_QA_bm);
-		uint8_t qb = read_row(R1_QB_bm);
-		uint8_t r  = read_row(R2_SW_bm);
-		for (uint8_t i = 0; i < 5; ++i) {
-			uint8_t mask = 1 << i;
-			Encoder_update(&encoders[i], (qa & mask) != 0, (qb & mask) != 0);
-			Frame_set_encoder(&frame, i, encoders[i].value);
-			Debouncer_push(&buttons[i], (r & mask) != 0);
-			Frame_set_button(&frame, i, buttons[i].state);
-		}
+		update_group(0, R1_QA_bm, R1_QB_bm, R2_SW_bm);
+		update_group(5, R3_QA_bm, R3_QB_bm, R4_SW_bm);
 
-		qa = read_row(R3_QA_bm);
-		qb = read_row(R3_QB_bm);
-		r  = read_row(R4_SW_bm);
-		for (uint8_t i = 0; i < 5; ++i) {
-			uint8_t mask = 1 << i;
-			Encoder_update(
-			    &encoders[i + 5],
-			    (qa & mask) != 0,
-			    (qb & mask) != 0
-			);
-			Frame_set_encoder(&frame, i + 5, encoders[i + 5].value);
-			Debouncer_push(&buttons[i + 5], (r & mask) != 0);
-			Frame_set_button(&frame, i + 5, buttons[i + 5].state);
-		}
 		frame.SequenceID += 1;
 		UART_push_frame(&frame);
 	}
