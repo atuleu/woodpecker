@@ -24,16 +24,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED 1)
 include(FetchContent)
 set(PICO_UTILS_DIR ${PROJECT_SOURCE_DIR}/deps/rpi-pico-utils)
 
-if(EXISTS ${PICO_UTILS_DIR})
-	FetchContent_Declare(rpi-pico-utils SOURCE_DIR ${PICO_UTILS_DIR})
-else()
-	FetchContent_Declare(
-		rpi-pico-utils
-		GIT_REPOSITORY https://github.com/atuleu/rpi-pico-utils
-		GIT_TAG main
-	)
-endif()
+# if(EXISTS ${PICO_UTILS_DIR}) FetchContent_Declare(rpi-pico-utils SOURCE_DIR
+# ${PICO_UTILS_DIR}) else() FetchContent_Declare( rpi-pico-utils GIT_REPOSITORY
+# https://github.com/atuleu/rpi-pico-utils GIT_TAG main ) endif()
 
-FetchContent_MakeAvailable(rpi-pico-utils)
+# FetchContent_MakeAvailable(rpi-pico-utils)
 
 add_subdirectory(src)
