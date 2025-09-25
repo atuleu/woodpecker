@@ -1,12 +1,14 @@
 set(SRC_FILES
 	main.c #
 	tusb_config.h #
-	usb_descriptor.c #
+	usb_descriptors.c #
+	netusb.c #
+	netusb.h #
 	lwipopts.h
-	${PICO_TINYUSB_PATH}/lib/networking/rndis_report.c
+	${PICO_TINYUSB_PATH}/lib/networking/rndis_reports.c
 )
 
-add_executable(woodpecker-controller main.c)
+add_executable(woodpecker-controller ${SRC_FILES})
 
 target_link_libraries(
 	woodpecker-controller
