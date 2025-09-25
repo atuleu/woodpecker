@@ -6,27 +6,38 @@ set(SRC_FILES
 	netusb.h #
 	lwipopts.h
 	${PICO_TINYUSB_PATH}/lib/networking/rndis_reports.c
+	${PICO_TINYUSB_PATH}/lib/networking/dhserver.c
 )
 
 add_executable(woodpecker-controller ${SRC_FILES})
 
 target_link_libraries(
 	woodpecker-controller
-	pico_stdlib
-	tinyusb_device
-	pico_lwip
-	pico_lwip_nosys
-	pico_lwip_mdns
-	pico_unique_id
+	PRIVATE pico_stdlib
+			tinyusb_device
+			pico_lwip
+			pico_lwip_nosys
+			pico_lwip_mdns
+			pico_lwip_http
+			pico_unique_id
+			pico_httpd_content
 )
 
 target_compile_definitions(woodpecker-controller PUBLIC -DUSE_ECM=1)
+
 target_include_directories(
-	woodpecker-controller PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
-								  ${PICO_TINYUSB_PATH}/lib/networking
+	woodpecker-controller
+	PRIVATE ${CMAKE_CURRENT_SOURCE_DIR} #
+			${PICO_TINYUSB_PATH}/lib/networking
+			${PICO_LWIP_CONTRIB_PATH}/apps/httpd
 )
+
 pico_add_extra_outputs(woodpecker-controller)
 
+pico_add_library(pico_httpd_content NOFLAG)
+pico_set_lwip_httpd_content(
+	pico_httpd_content INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/content/index.html
+)
 pico_enable_stdio_uart(woodpecker-controller ENABLED)
 pico_enable_stdio_usb(woodpecker-controller 0)
 add_openocd_upload_target(TARGET woodpecker-controller)

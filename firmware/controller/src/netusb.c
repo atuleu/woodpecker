@@ -29,7 +29,7 @@ static const ip4_addr_t netusb_ipaddr  = INIT_MYSUBNET_IP(2);
 static const ip4_addr_t netusb_netmask = INIT_IP4(255, 255, 255, 0);
 static const ip4_addr_t netusb_gateway = INIT_IP4(0, 0, 0, 0);
 
-static dhcp_entry_t netusb_entries[] = {
+static dhcp_entry_t netusb_dhcp_entries[] = {
     {{0}, INIT_MYSUBNET_IP(11), 24 * 60 * 60},
     {{0}, INIT_MYSUBNET_IP(12), 24 * 60 * 60},
     {{0}, INIT_MYSUBNET_IP(13), 24 * 60 * 60},
@@ -40,8 +40,8 @@ static const dhcp_config_t netusb_dhcp_config = {
     .port   = 67,
     .dns    = INIT_IP4(0, 0, 0, 0),
     "usb",
-    TU_ARRAY_SIZE(entries),
-    entries
+    TU_ARRAY_SIZE(netusb_dhcp_entries),
+    netusb_dhcp_entries
 };
 
 // this function glues liwp -> tud for xmit

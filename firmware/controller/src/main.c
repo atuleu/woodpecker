@@ -1,20 +1,21 @@
-#include <lwip/pbuf.h>
-#include <stdint.h>
 
-#include "class/net/net_device.h"
-#include "tusb_config.h"
-#include <string.h>
-#include <tusb.h>
+#include <pico/stdlib.h>
 
-#include <lwip/err.h>
-#include <lwip/ip4_addr.h>
-#include <lwip/netif.h>
+#include <stdio.h>
 
-#include <lwip/etharp.h>
-#include <lwip/init.h>
-#include <lwip/timeouts.h>
-#include <netif/ethernet.h>
+#include "netusb.h"
 
-#include <pico/unique_id.h>
+int main() {
+	stdio_init_all();
 
-int main() {}
+	printf("Woodpecker hello-world\n");
+
+	if (netusb_init() == false) {
+		printf("could not initialize netusb. Bye!\n");
+	}
+
+	while (true) {
+		netusb_task();
+	}
+	netusb_deinit();
+}
