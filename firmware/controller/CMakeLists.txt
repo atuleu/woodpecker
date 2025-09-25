@@ -7,6 +7,7 @@ set(PICO_SDK_FETCH_FROM_GIT 1)
 set(PICO_SDK_FETCH_FROM_GIT_TAG 2.2.0)
 
 include(cmake/pico_sdk_import.cmake)
+include(cmake/OpenOCD.cmake)
 
 project(
 	woodpecker_controller

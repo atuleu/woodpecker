@@ -27,3 +27,4 @@ pico_add_extra_outputs(woodpecker-controller)
 
 pico_enable_stdio_uart(woodpecker-controller ENABLED)
 pico_enable_stdio_usb(woodpecker-controller 0)
+add_openocd_upload_target(TARGET woodpecker-controller)
