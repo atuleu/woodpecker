@@ -7,6 +7,8 @@ set(SRC_FILES
 	lwipopts.h
 	${PICO_TINYUSB_PATH}/lib/networking/rndis_reports.c
 	${PICO_TINYUSB_PATH}/lib/networking/dhserver.c
+	osc.h
+	osc.c
 )
 
 add_executable(woodpecker-controller ${SRC_FILES})
