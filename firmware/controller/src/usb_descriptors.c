@@ -357,7 +357,8 @@ static uint16_t _desc_str[32 + 1];
 // enough for transfer to complete
 uint16_t const *tud_descriptor_string_cb(uint8_t index, uint16_t langid) {
 	(void)langid;
-	unsigned int chr_count = 0;
+	unsigned int           chr_count = 0;
+	pico_unique_board_id_t id;
 
 	switch (index) {
 	case STRID_LANGID:
@@ -366,7 +367,6 @@ uint16_t const *tud_descriptor_string_cb(uint8_t index, uint16_t langid) {
 		break;
 
 	case STRID_SERIAL:
-		pico_unique_board_id_t id;
 		pico_get_unique_board_id(&id);
 		for (unsigned i = 0; i < sizeof(id.id); i++) {
 			_desc_str[1 + chr_count++] =

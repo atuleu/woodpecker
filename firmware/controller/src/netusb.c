@@ -198,3 +198,12 @@ void netusb_deinit() {
 	netusb_netif.flags = 0;
 	tud_deinit(BOARD_TUD_RHPORT);
 }
+
+const ip4_addr_t *netusb_own_ip() {
+	return &netusb_ipaddr;
+}
+
+const ip4_addr_t *netusb_broadcast_ip() {
+	static const ip4_addr_t broadcast = INIT_MYSUBNET_IP(255);
+	return &broadcast;
+}
