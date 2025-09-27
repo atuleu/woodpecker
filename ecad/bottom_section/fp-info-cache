@@ -1,4 +1,4 @@
-920352355025159
+923871854268473
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
@@ -107758,6 +107758,13 @@ connector JST SH horizontal
 5
 4
 woodpecker
+JST_SH_SM06B-SRSS-TB_1x06-1MP_P1.00mm_Horizontal
+JST SH series connector, SM06B-SRSS-TB (http://www.jst-mfg.com/product/pdf/eng/eSH.pdf), generated with kicad-footprint-generator
+connector JST SH horizontal
+0
+8
+7
+woodpecker
 LED_Inolux_IN-PI32TAR_PLCC4_3.2x2.8mm_P1.5mm
 5.0mm x 5.0mm PLCC4 Addressable RGB LED, http://www.inolux-corp.com/datasheet/SMDLED/Addressable%20LED/IN-PI554FCH.pdf
 LED RGB NeoPixel addressable PLCC-4 5050
@@ -107803,6 +107810,13 @@ woodpecker
 TE_Micro-MaTch_1-188275-2_2x06_P1.27mm_Vertical
 
 
+0
+12
+12
+woodpecker
+TE_Micro-MaTch_1-215079-2_2x06_P1.27mm_Vertical
+TE-Connectivity Micro-MaTch female-on-board top-entry thru-hole 12 pin connector, https://www.te.com/commerce/DocumentDelivery/DDEController?Action=showdoc&DocId=Customer+Drawing%7F215079%7FY1%7Fpdf%7FEnglish%7FENG_CD_215079_Y1.pdf%7F215079-4
+connector TE-Connectivity Micro-MaTch Vertical 1-215079-2 8-215079-12
 0
 12
 12

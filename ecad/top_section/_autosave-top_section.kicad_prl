@@ -20,7 +20,7 @@
       "footprints": true,
       "graphics": true,
       "keepouts": true,
-      "lockedItems": true,
+      "lockedItems": false,
       "otherItems": true,
       "pads": true,
       "text": true,
@@ -49,7 +49,7 @@
       "conflict_shadows",
       "shapes"
     ],
-    "visible_layers": "00000000_00000000_0ffcfff5_ffffffff",
+    "visible_layers": "00000000_00000000_0ffcfff5_fffdffff",
     "zone_display_mode": 0
   },
   "git": {
@@ -59,11 +59,13 @@
     "ssh_key": ""
   },
   "meta": {
-    "filename": "middle_section.kicad_prl",
+    "filename": "top_section.kicad_prl",
     "version": 5
   },
   "net_inspector_panel": {
     "col_hidden": [
+      false,
+      false,
       false,
       false,
       false,
@@ -85,7 +87,9 @@
       6,
       7,
       8,
-      9
+      9,
+      10,
+      11
     ],
     "col_widths": [
       0,

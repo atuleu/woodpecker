@@ -991,7 +991,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "59dc1e47-0d7e-4946-abce-599a549c128c")
-		(property "Reference" "SW2"
+		(property "Reference" "SW1"
 			(at 93.98 24.13 0)
 			(effects
 				(font
@@ -1155,7 +1155,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "a6dc74d6-65da-44b4-9718-aa75392da62d")
-		(property "Reference" "D2"
+		(property "Reference" "D1"
 			(at 109.22 59.6899 90)
 			(effects
 				(font
@@ -1327,7 +1327,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "d9f7ecaa-962e-41c3-a41a-1545c7297988")
-		(property "Reference" "D3"
+		(property "Reference" "D2"
 			(at 110.49 25.4 0)
 			(effects
 				(font

@@ -631,6 +631,19 @@
 				)
 			)
 		)
+		(property "MPN" "1528-5118-ND"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "e86a7e52-dbc8-4fc2-a0b8-3d9d7681dd21")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
 		(path "/b7e74592-5a83-4609-924c-57c795101512/59dc1e47-0d7e-4946-abce-599a549c128c")
 		(sheetname "/KeyboardKey_COL5/")
 		(sheetfile "../common/keyboard_key.kicad_sch")
@@ -2069,6 +2082,19 @@
 				)
 			)
 		)
+		(property "MPN" "1528-5118-ND"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "5fe09363-10cb-4455-a988-4801dcd47c49")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
 		(path "/6c8e40cf-9126-4984-9b5c-e41719a9c800/59dc1e47-0d7e-4946-abce-599a549c128c")
 		(sheetname "/KeyboardKey_COL3/")
 		(sheetfile "../common/keyboard_key.kicad_sch")
@@ -3040,6 +3066,19 @@
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "d1c94e0f-ef8c-439a-a2fa-932933c20931")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "MPN" "1528-5118-ND"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "d9f75ee0-a79e-4571-969e-329a32b1687d")
 			(effects
 				(font
 					(size 1 1)
@@ -4715,6 +4754,19 @@
 				)
 			)
 		)
+		(property "MPN" "1528-5118-ND"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "e5fbc74a-a581-4640-a836-6b71e5c84b24")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
 		(path "/3e4c3c5e-0959-4abd-bf8c-f1b783d7e681/59dc1e47-0d7e-4946-abce-599a549c128c")
 		(sheetname "/KeyboardKey_COL7/")
 		(sheetfile "../common/keyboard_key.kicad_sch")
@@ -5825,6 +5877,19 @@
 				)
 			)
 		)
+		(property "MPN" "1528-5118-ND"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "8131bc8a-7ac9-4ff5-9f8a-431dee1fe5d9")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
 		(path "/935564e7-05e7-459d-8b7a-ca61f7462e6f/59dc1e47-0d7e-4946-abce-599a549c128c")
 		(sheetname "/KeyboardKey_COL6/")
 		(sheetfile "../common/keyboard_key.kicad_sch")
@@ -6830,6 +6895,19 @@
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "eab0ca0d-a90b-4ad5-8f14-b88dafc96c19")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "MPN" "1528-5118-ND"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "777043dd-a9d4-45b2-a15f-8d023f5db233")
 			(effects
 				(font
 					(size 1 1)
@@ -7849,6 +7927,19 @@
 				)
 			)
 		)
+		(property "MPN" "1528-5118-ND"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "5c4cda75-9b99-4107-9551-0def0a4aae0b")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
 		(path "/47cfd13d-bf73-4a03-a6ca-7b66fdb5bb7d/59dc1e47-0d7e-4946-abce-599a549c128c")
 		(sheetname "/KeyboardKey_COL4/")
 		(sheetfile "../common/keyboard_key.kicad_sch")
@@ -8861,6 +8952,19 @@
 				)
 			)
 		)
+		(property "MPN" "1528-5118-ND"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "2322e174-0bb1-46e3-8513-eb4c2bcf821d")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
 		(path "/6c386fc9-dbbe-48da-a0ca-97d6098257c4/59dc1e47-0d7e-4946-abce-599a549c128c")
 		(sheetname "/KeyboardKey_COL8/")
 		(sheetfile "../common/keyboard_key.kicad_sch")
@@ -9545,6 +9649,19 @@
 				)
 			)
 		)
+		(property "MPN" "1528-5118-ND"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "bcb32316-93db-4c1b-ba43-cbf6912e80ab")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
 		(path "/72a62481-ec11-41eb-95a3-ab230221a7af/59dc1e47-0d7e-4946-abce-599a549c128c")
 		(sheetname "/KeyboardKey_COL9/")
 		(sheetfile "../common/keyboard_key.kicad_sch")
@@ -10222,6 +10339,19 @@
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "6b946b3e-aa87-494a-9682-a086751946d5")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "MPN" "1528-5118-ND"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "b15ba0e6-f1b2-4197-b1e3-fc3c68d7e9b9")
 			(effects
 				(font
 					(size 1 1)
@@ -11213,14 +11343,14 @@
 		)
 		(embedded_fonts no)
 	)
-	(footprint "Connector_JST:JST_SH_SM06B-SRSS-TB_1x06-1MP_P1.00mm_Horizontal"
+	(footprint "woodpecker:JST_SH_SM06B-SRSS-TB_1x06-1MP_P1.00mm_Horizontal"
 		(layer "B.Cu")
 		(uuid "11cef873-6ff6-4a35-a26d-64d725cef0e2")
 		(at 82.1 135.725 180)
 		(descr "JST SH series connector, SM06B-SRSS-TB (http://www.jst-mfg.com/product/pdf/eng/eSH.pdf), generated with kicad-footprint-generator")
 		(tags "connector JST SH horizontal")
 		(property "Reference" "J1"
-			(at -4 2.5 0)
+			(at 0 3.98 0)
 			(layer "B.SilkS")
 			(uuid "8a8ae7ea-0812-4bef-a408-2d6a5b8734bb")
 			(effects
@@ -11274,7 +11404,21 @@
 			(unlocked yes)
 			(layer "B.Fab")
 			(hide yes)
-			(uuid "f6498a55-c533-4270-b089-2d3df04d8568")
+			(uuid "a9eee9b7-e77f-4204-b4e8-05c03c4e9880")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
+		(property "MPN" "SM06B-SRSS-TB"
+			(at 0 0 180)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "1a7f0a71-74ea-44bc-85a0-1ee5e810b5f7")
 			(effects
 				(font
 					(size 1 1)
@@ -11296,7 +11440,7 @@
 				(type solid)
 			)
 			(layer "B.SilkS")
-			(uuid "6576eb4c-0675-4fb8-85c6-308a6ba7f458")
+			(uuid "dff0ca41-c3cc-4ed2-ab6e-54e5343c0a70")
 		)
 		(fp_line
 			(start 4.11 -0.715)
@@ -11306,7 +11450,7 @@
 				(type solid)
 			)
 			(layer "B.SilkS")
-			(uuid "ed878c48-2773-4a1f-bdad-2e8c4102735d")
+			(uuid "8095284c-86a6-4009-9efa-ed62aec59619")
 		)
 		(fp_line
 			(start -2.94 -2.685)
@@ -11316,7 +11460,7 @@
 				(type solid)
 			)
 			(layer "B.SilkS")
-			(uuid "d98a5291-9c85-4d3c-8656-f136f69a159f")
+			(uuid "592c4e3f-93f1-41db-ae0a-793cfb46769d")
 		)
 		(fp_line
 			(start -3.06 1.785)
@@ -11326,7 +11470,7 @@
 				(type solid)
 			)
 			(layer "B.SilkS")
-			(uuid "623e0b3e-57c8-4190-aae6-d70117a8ec25")
+			(uuid "36ea8a14-269f-4576-ac7c-c0c1812e9907")
 		)
 		(fp_line
 			(start -4.11 1.785)
@@ -11336,7 +11480,7 @@
 				(type solid)
 			)
 			(layer "B.SilkS")
-			(uuid "125d3e49-8613-4358-b298-3971262c656d")
+			(uuid "455df374-2f24-4e1a-9910-1b576b41d967")
 		)
 		(fp_line
 			(start -4.11 -0.715)
@@ -11346,7 +11490,7 @@
 				(type solid)
 			)
 			(layer "B.SilkS")
-			(uuid "8c6da6b4-8ab9-4c7f-a1c4-e5117d84bd21")
+			(uuid "4b9ee35f-e4cf-4ef6-9ea8-571893f82b4c")
 		)
 		(fp_line
 			(start 4.9 -0.47)
@@ -11356,7 +11500,7 @@
 				(type solid)
 			)
 			(layer "B.CrtYd")
-			(uuid "b487e9d3-5958-4d3d-9fe8-d83be2fb4d5a")
+			(uuid "22bd40b8-ce27-4912-a2ba-e21ac8c739fb")
 		)
 		(fp_line
 			(start 4.9 -3.28)
@@ -11366,7 +11510,7 @@
 				(type solid)
 			)
 			(layer "B.CrtYd")
-			(uuid "184e1c91-b67f-46dd-bd84-ae4908b6b9d4")
+			(uuid "480ec71e-7348-4dfe-bc21-029d05a63d04")
 		)
 		(fp_line
 			(start 4.5 2.18)
@@ -11376,7 +11520,7 @@
 				(type solid)
 			)
 			(layer "B.CrtYd")
-			(uuid "eaf48322-d6fa-49b2-a6f9-8887856b72dc")
+			(uuid "ebae7f7a-0f2b-4a43-ab9c-ad218f2ec18a")
 		)
 		(fp_line
 			(start 4.5 -0.47)
@@ -11386,7 +11530,7 @@
 				(type solid)
 			)
 			(layer "B.CrtYd")
-			(uuid "d834e8d7-b63b-47b5-966a-5c69d8d03cd5")
+			(uuid "b24fb3a6-5f26-4c86-8030-e6e336893b8b")
 		)
 		(fp_line
 			(start 3.3 3.28)
@@ -11396,7 +11540,7 @@
 				(type solid)
 			)
 			(layer "B.CrtYd")
-			(uuid "908bdeb0-549f-40b0-842c-163de167ffa3")
+			(uuid "575e64f0-4c57-4429-bf04-cfce96590b81")
 		)
 		(fp_line
 			(start 3.3 2.18)
@@ -11406,7 +11550,7 @@
 				(type solid)
 			)
 			(layer "B.CrtYd")
-			(uuid "00a04f8c-f2e8-497d-b2b3-b15f9eb06fde")
+			(uuid "e7a04532-b9fd-4365-8ec5-8d86f8bd7be7")
 		)
 		(fp_line
 			(start 2.69 -3.08)
@@ -11416,7 +11560,7 @@
 				(type solid)
 			)
 			(layer "B.CrtYd")
-			(uuid "cd7e633a-fc12-4e7a-81f9-d8e6f1a9ef1a")
+			(uuid "f101580f-eaac-4fea-8bcd-ba963bd681be")
 		)
 		(fp_line
 			(start 2.69 -3.28)
@@ -11426,7 +11570,7 @@
 				(type solid)
 			)
 			(layer "B.CrtYd")
-			(uuid "90ce69a4-a574-46ce-a43d-69b1d570547d")
+			(uuid "b0c0c4c9-0b87-4461-9e3e-ade71b1b6e4e")
 		)
 		(fp_line
 			(start -2.69 -3.08)
@@ -11436,7 +11580,7 @@
 				(type solid)
 			)
 			(layer "B.CrtYd")
-			(uuid "6ce57566-6ca8-480f-ae55-dfe9a7459b93")
+			(uuid "234af630-b02d-44d6-9c31-46b7a66197d7")
 		)
 		(fp_line
 			(start -2.69 -3.28)
@@ -11446,7 +11590,7 @@
 				(type solid)
 			)
 			(layer "B.CrtYd")
-			(uuid "828d65d2-a027-4290-89f5-04165d8dc50f")
+			(uuid "0b2194f5-d356-417b-b4f9-508044a74ecf")
 		)
 		(fp_line
 			(start -3.3 3.28)
@@ -11456,7 +11600,7 @@
 				(type solid)
 			)
 			(layer "B.CrtYd")
-			(uuid "7c58db4b-1e54-45e4-8f11-cdb2fcec6d72")
+			(uuid "03a07905-c9b0-4e33-9e25-6b194408ca48")
 		)
 		(fp_line
 			(start -3.3 2.18)
@@ -11466,7 +11610,7 @@
 				(type solid)
 			)
 			(layer "B.CrtYd")
-			(uuid "0dd4826d-3e52-4fea-b464-dd76edf2d65d")
+			(uuid "690addba-4043-422c-8fd8-63e73f6688ef")
 		)
 		(fp_line
 			(start -4.5 2.18)
@@ -11476,7 +11620,7 @@
 				(type solid)
 			)
 			(layer "B.CrtYd")
-			(uuid "713fb169-058f-42fc-83c9-d3c870d1d119")
+			(uuid "2692ef0e-df9b-4821-8b22-98048833e5b7")
 		)
 		(fp_line
 			(start -4.5 -0.47)
@@ -11486,7 +11630,7 @@
 				(type solid)
 			)
 			(layer "B.CrtYd")
-			(uuid "4ba6c9f2-a9cd-4e31-aa46-3726210f8a86")
+			(uuid "a1e48dd3-a3fe-4658-a2d1-10b6d28574f0")
 		)
 		(fp_line
 			(start -4.9 -0.47)
@@ -11496,7 +11640,7 @@
 				(type solid)
 			)
 			(layer "B.CrtYd")
-			(uuid "b9b83abf-013c-429d-81cb-f2e1c6e75ac9")
+			(uuid "bf8e7c40-7773-456b-98f2-d36e97b15724")
 		)
 		(fp_line
 			(start -4.9 -3.28)
@@ -11506,7 +11650,7 @@
 				(type solid)
 			)
 			(layer "B.CrtYd")
-			(uuid "a8896b28-8adf-41b2-94de-bf3e398b48dd")
+			(uuid "cfb62897-3767-4030-a91b-9c6c6203596f")
 		)
 		(fp_line
 			(start 4 1.675)
@@ -11516,7 +11660,7 @@
 				(type solid)
 			)
 			(layer "B.Fab")
-			(uuid "d0cc02cb-fcdf-4e7f-98d2-1623cd813bff")
+			(uuid "ba9345f7-3568-475b-b32f-b7600f1b4c5e")
 		)
 		(fp_line
 			(start -2.5 0.967893)
@@ -11526,7 +11670,7 @@
 				(type solid)
 			)
 			(layer "B.Fab")
-			(uuid "e6d2fe32-1f9b-443e-92d3-f4e65cc1fcab")
+			(uuid "7ed5f084-91b0-4941-abf8-1899af9dce06")
 		)
 		(fp_line
 			(start -3 1.675)
@@ -11536,7 +11680,7 @@
 				(type solid)
 			)
 			(layer "B.Fab")
-			(uuid "339a1fe0-b3f5-4230-a216-5ee1e11a4b71")
+			(uuid "c5cf674c-fdee-4037-b03a-1d28df72cdd7")
 		)
 		(fp_line
 			(start -4 1.675)
@@ -11546,7 +11690,7 @@
 				(type solid)
 			)
 			(layer "B.Fab")
-			(uuid "4b3a3462-3892-425e-8286-331f84ec1448")
+			(uuid "ba3a71e4-5627-4a7a-8438-46c0c27fb725")
 		)
 		(fp_line
 			(start -4 1.675)
@@ -11556,7 +11700,7 @@
 				(type solid)
 			)
 			(layer "B.Fab")
-			(uuid "4c42966e-76b1-4abe-bbac-ae5a3677a701")
+			(uuid "23a1c53d-1356-4ec4-95e1-98c010c075b9")
 		)
 		(fp_line
 			(start -4 -2.575)
@@ -11566,7 +11710,7 @@
 				(type solid)
 			)
 			(layer "B.Fab")
-			(uuid "116fd1af-5663-4295-8056-907b1cf6936d")
+			(uuid "5c60e09b-ec35-4986-b02e-f8ae8493cfa5")
 		)
 		(fp_text user "${REFERENCE}"
 			(at 0 0 0)
@@ -11652,10 +11796,10 @@
 			(size 1.2 1.8)
 			(layers "B.Cu" "B.Mask" "B.Paste")
 			(roundrect_rratio 0.208333)
-			(uuid "a3fb247f-86fe-4996-9bc1-94b1864b15a8")
+			(uuid "f5fc74a2-dbc5-4a7e-989f-345d8735af4b")
 		)
 		(embedded_fonts no)
-		(model "${KICAD9_3DMODEL_DIR}/Connector_JST.3dshapes/JST_SH_SM06B-SRSS-TB_1x06-1MP_P1.00mm_Horizontal.step"
+		(model "${KIPRJMOD}/lib/woodpecker.3dsymbols/SM06B-SRSS-TB.STEP"
 			(offset
 				(xyz 0 0 0)
 			)
@@ -11663,7 +11807,7 @@
 				(xyz 1 1 1)
 			)
 			(rotate
-				(xyz 0 0 0)
+				(xyz -90 -0 -0)
 			)
 		)
 	)
@@ -12503,6 +12647,20 @@
 				(justify mirror)
 			)
 		)
+		(property "MPN" "GRM21BZ71A226ME15L"
+			(at 0 0 90)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "3e55855c-30f2-4121-a519-225bafdaad57")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
 		(property ki_fp_filters "C_*")
 		(path "/34f4c452-fe76-4c5b-9301-5d36cd3f38eb")
 		(sheetname "/")
@@ -12762,7 +12920,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Value" "LP5864"
+		(property "Value" "LP5864RSMR"
 			(at 0 -3.33 0)
 			(layer "B.Fab")
 			(uuid "c3dd6119-560f-46b5-a9ef-abb018b59b84")
@@ -12800,7 +12958,7 @@
 				(justify mirror)
 			)
 		)
-		(property "MPN" "LP5864"
+		(property "MPN" "LP5864RSMR"
 			(at 0 0 0)
 			(unlocked yes)
 			(layer "B.Fab")
@@ -14343,6 +14501,20 @@
 				(justify mirror)
 			)
 		)
+		(property "MPN" "1N4148W"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "b0e5df12-4bdb-45d0-a407-232c3c8918f2")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
 		(property ki_fp_filters "D*SOD?123*")
 		(path "/3e4c3c5e-0959-4abd-bf8c-f1b783d7e681/d9f7ecaa-962e-41c3-a41a-1545c7297988")
 		(sheetname "/KeyboardKey_COL7/")
@@ -14792,6 +14964,20 @@
 				(justify mirror)
 			)
 		)
+		(property "MPN" "GCM155C71A105KE38D"
+			(at 0 0 270)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "9185cf0f-767d-405f-a97f-65e11a89a5da")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
 		(property ki_fp_filters "C_*")
 		(path "/d98ab30d-2d35-4d12-a588-9e15cf50b3b0")
 		(sheetname "/")
@@ -14958,7 +15144,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Value" "10k"
+		(property "Value" "33k"
 			(at 0 -1.43 0)
 			(layer "B.Fab")
 			(uuid "f09e9177-457b-409f-9140-9af5dc3a610e")
@@ -15002,6 +15188,20 @@
 			(layer "B.Fab")
 			(hide yes)
 			(uuid "613a1a86-f973-49f4-8195-5d2101771333")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
+		(property "MPN" "RC0603FR-0733KL"
+			(at 0 0 180)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "73aeeda1-b43f-4e2c-b06d-d7ebc8d598f1")
 			(effects
 				(font
 					(size 1 1)
@@ -15250,6 +15450,20 @@
 			(layer "B.Fab")
 			(hide yes)
 			(uuid "7de3e40d-080f-4f02-a61e-c093bce9e8f7")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
+		(property "MPN" "1N4148W"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "d07573da-d214-4647-b720-dbdce3ee7134")
 			(effects
 				(font
 					(size 1 1)
@@ -15588,6 +15802,20 @@
 				(justify mirror)
 			)
 		)
+		(property "MPN" "1N4148W"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "f0b671fe-d76b-44f1-881e-a3d635e5454d")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
 		(property ki_fp_filters "D*SOD?123*")
 		(path "/47cfd13d-bf73-4a03-a6ca-7b66fdb5bb7d/d9f7ecaa-962e-41c3-a41a-1545c7297988")
 		(sheetname "/KeyboardKey_COL4/")
@@ -15918,6 +16146,20 @@
 				(justify mirror)
 			)
 		)
+		(property "MPN" "1N4148W"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "208f930c-09ec-4f7e-8536-b26c98fe3abd")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
 		(property ki_fp_filters "D*SOD?123*")
 		(path "/d85b7b05-f8ab-4186-bcfd-5df52ba17141/d9f7ecaa-962e-41c3-a41a-1545c7297988")
 		(sheetname "/KeyboardKey_COL2/")
@@ -16218,6 +16460,20 @@
 				(justify mirror)
 			)
 		)
+		(property "MPN" "GCM155C71A105KE38D"
+			(at 0 0 180)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "aca3fb51-d302-4202-b66b-c2453a3e71f6")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
 		(property ki_fp_filters "C_*")
 		(path "/47ebb12e-1177-4e9d-a942-3d3db0fad936")
 		(sheetname "/")
@@ -16458,6 +16714,20 @@
 			(layer "B.Fab")
 			(hide yes)
 			(uuid "c15e6f39-c5d0-4432-b334-a90ee914f8cb")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
+		(property "MPN" "1N4148W"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "9359cb03-7b20-4c2b-b7e2-26abe94f2837")
 			(effects
 				(font
 					(size 1 1)
@@ -18447,6 +18717,20 @@
 				(justify mirror)
 			)
 		)
+		(property "MPN" "1N4148W"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "e1ed2df7-5f87-4fcf-ac51-f37f701156e2")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
 		(property ki_fp_filters "D*SOD?123*")
 		(path "/61fbcd7b-b588-48a7-b7d7-7589f646c796/d9f7ecaa-962e-41c3-a41a-1545c7297988")
 		(sheetname "/KeyboardKey_COL1/")
@@ -19435,7 +19719,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Value" "10k"
+		(property "Value" "33k"
 			(at 0 -1.43 0)
 			(layer "B.Fab")
 			(uuid "7c17da1b-ad99-46d3-a0f5-d1285ba26f2d")
@@ -19479,6 +19763,20 @@
 			(layer "B.Fab")
 			(hide yes)
 			(uuid "842500b3-7cd9-49b0-ad37-4e24f11ef761")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
+		(property "MPN" "RC0603FR-0733KL"
+			(at 0 0 180)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "5cb02b21-37ab-4fcc-b00b-17c5161c2f54")
 			(effects
 				(font
 					(size 1 1)
@@ -20325,6 +20623,20 @@
 				(justify mirror)
 			)
 		)
+		(property "MPN" "1N4148W"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "3be4818d-6e21-4159-b2d2-056b683cd78a")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
 		(property ki_fp_filters "D*SOD?123*")
 		(path "/6c8e40cf-9126-4984-9b5c-e41719a9c800/d9f7ecaa-962e-41c3-a41a-1545c7297988")
 		(sheetname "/KeyboardKey_COL3/")
@@ -20627,6 +20939,20 @@
 				(justify mirror)
 			)
 		)
+		(property "MPN" "CL10B104KB8NNWC"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "a06d527c-d757-432b-bb18-e6dd56183b91")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
 		(property ki_fp_filters "C_*")
 		(path "/387e8bff-c40c-4704-873a-701cfdc0af80")
 		(sheetname "/")
@@ -20867,6 +21193,20 @@
 			(layer "B.Fab")
 			(hide yes)
 			(uuid "34655df8-cbb9-4bab-a0c3-1fc4f80c41b5")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
+		(property "MPN" "1N4148W"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "23a090fa-aa92-401c-8762-f0f736c4c687")
 			(effects
 				(font
 					(size 1 1)
@@ -22129,6 +22469,20 @@
 				(justify mirror)
 			)
 		)
+		(property "MPN" "KGM05AR71A102KH"
+			(at 0 0 180)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "43466231-7719-40bf-823d-eed47819f9d0")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
 		(property ki_fp_filters "C_*")
 		(path "/a49b570c-3553-4d5e-8264-b2413ed17d9e")
 		(sheetname "/")
@@ -22295,7 +22649,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Value" "JST SH 6P"
+		(property "Value" "JST SH 3P"
 			(at 0 -3.98 0)
 			(layer "B.Fab")
 			(uuid "2495926f-08a5-4c7d-9758-0d5eb0693799")
@@ -22339,6 +22693,20 @@
 			(layer "B.Fab")
 			(hide yes)
 			(uuid "4fe7261b-bd85-4c12-bf59-bfccf5a58437")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
+		(property "MPN" "SM03B-SRSS-TB"
+			(at 0 0 180)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "66bb1969-20aa-46f9-b440-7308aa4cc3c8")
 			(effects
 				(font
 					(size 1 1)
@@ -22793,6 +23161,20 @@
 			(layer "B.Fab")
 			(hide yes)
 			(uuid "344555e3-d546-4983-9675-72b89bee3fd9")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
+		(property "MPN" "1N4148W"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "242c1643-f735-4e4f-81fb-7071eddbc0e4")
 			(effects
 				(font
 					(size 1 1)
@@ -24077,6 +24459,20 @@
 			(layer "B.Fab")
 			(hide yes)
 			(uuid "0a9c2c84-bbd1-4ef5-ba6a-1d60bc2102ab")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
+		(property "MPN" "1N4148W"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "ca398a02-5dea-4bf6-8a70-c28302bed710")
 			(effects
 				(font
 					(size 1 1)
@@ -25779,6 +26175,20 @@
 			(layer "B.Fab")
 			(hide yes)
 			(uuid "9e36f58f-dd34-4d15-a0e7-f1e07172b6c3")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+				(justify mirror)
+			)
+		)
+		(property "MPN" "GCM155C71A105KE38D"
+			(at 0 0 90)
+			(unlocked yes)
+			(layer "B.Fab")
+			(hide yes)
+			(uuid "325330bd-3a55-49a8-9a55-0f38a0f9bfa8")
 			(effects
 				(font
 					(size 1 1)

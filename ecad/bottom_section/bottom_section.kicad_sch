@@ -5214,7 +5214,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Connector_TE-Connectivity:TE_Micro-MaTch_1-215079-2_2x06_P1.27mm_Vertical"
+		(property "Footprint" "woodpecker:TE_Micro-MaTch_1-215079-2_2x06_P1.27mm_Vertical"
 			(at 134.62 116.84 0)
 			(effects
 				(font
