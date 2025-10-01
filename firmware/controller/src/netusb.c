@@ -182,7 +182,7 @@ bool netusb_init(void) {
 	mdns_resp_init();
 	mdns_resp_add_netif(intf, "woodpecker");
 
-	printf("[netusb]: setup complete");
+	printf("[netusb]: setup complete\n");
 
 	return true;
 }
