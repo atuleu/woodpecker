@@ -9,7 +9,6 @@
 #include <stdint.h>
 #include <stdio.h>
 
-#include <lwip/memp.h>
 #include <string.h>
 
 static struct udp_pcb *pcb      = NULL;
@@ -133,7 +132,8 @@ inline static uint16_t osc_argument_parse(OSC_argument_t *a, const char *src) {
 	case OSC_FALSE:
 		return 0;
 	case OSC_STRING: {
-		return 0;
+		a->data.string = (char *)src;
+		return osc_strlen(src);
 	}
 	}
 	return 0;
@@ -147,7 +147,7 @@ err_t osc_send(const OSC_message_t *m) {
 	                osc_argument_size(&m->argument
 	                ); // we need 4 char to encode a single argument type.
 
-	struct pbuf *packet = pbuf_alloc(PBUF_TRANSPORT, size, PBUF_RAM);
+	struct pbuf *packet = pbuf_alloc(PBUF_TRANSPORT, size, PBUF_POOL);
 	uint16_t     cur    = 0;
 	cur += osc_encode_string(packet->payload, m->address);
 	cur += osc_encode_string(
@@ -168,8 +168,6 @@ static void osc_recv_proc(
     u16_t            port
 ) {
 	static OSC_message_t res;
-	static char         *data_buff         = NULL;
-	static size_t        address_buff_size = 0, data_buff_size = 0;
 
 	size_t address_len = osc_strlen(p->payload);
 	if (address_len >= (p->len - 4)) {
@@ -180,16 +178,9 @@ static void osc_recv_proc(
 		return;
 	}
 
-	if (address_buff_size < address_len) {
-		if (address_buff_size != 0) {
-			free(res.address);
-		}
-		res.address       = malloc(address_len);
-		address_buff_size = address_len;
-	}
+	res.address = p->payload;
 
-	memcpy(res.address, p->payload, address_len);
-	const char *type_tag        = &((const char *)p->payload)[address_len];
+	const char *type_tag        = p->payload + address_len;
 	size_t      type_tag_length = strlen(type_tag);
 	if (type_tag_length < 2 || type_tag[0] != ',') {
 		printf(
@@ -208,27 +199,16 @@ static void osc_recv_proc(
 		    res.address,
 		    type_tag
 		);
+		return;
 	}
 	size_t offset = address_len + osc_strlen(type_tag);
-	if (res.argument.type == OSC_STRING) {
-		size_t data_size = osc_strlen(&((const char *)p->payload)[offset]);
-		if (data_buff_size < data_size) {
-			if (data_buff_size != 0) {
-				free(data_buff);
-			}
-			data_buff      = malloc(data_size);
-			data_buff_size = data_size;
-		}
-		memcpy(data_buff, &((const char *)p->payload)[offset], data_size);
-		offset += data_size;
-	} else {
-		offset += osc_argument_parse(
-		    &res.argument,
-		    &((const char *)p->payload)[offset]
-		);
-	}
+	offset += osc_argument_parse(&res.argument, p->payload + offset);
 
 	if (recv_fn != NULL) {
 		recv_fn(recv_arg, &res);
+	} else {
+		printf("[osc]: received Message .address=%s\n", res.address);
 	}
+
+	pbuf_free(p);
 }

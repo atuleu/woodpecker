@@ -23,6 +23,7 @@ target_link_libraries(
 			pico_lwip_http
 			pico_unique_id
 			pico_httpd_content
+			hardware_i2c
 )
 
 target_compile_definitions(woodpecker-controller PUBLIC -DUSE_ECM=1)

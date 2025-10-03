@@ -26,10 +26,10 @@ function(add_pymcuprog_upload_target)
 		${PYMCUPROG_OPTIONS}
 		write
 		-f
-		${TARGET}-${AVR_MCU}.hex
+		${arg_TARGET}-${AVR_MCU}.hex
 		--erase
 		--verify
-		DEPENDS ${TARGET}-${AVR_MCU}}.hex
+		DEPENDS ${arg_TARGET}-${AVR_MCU}.hex
 	)
 
 endfunction(add_pymcuprog_upload_target)
