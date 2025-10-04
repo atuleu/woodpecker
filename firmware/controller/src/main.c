@@ -9,6 +9,7 @@
 #include <stdint.h>
 #include <stdio.h>
 
+#include "lp5864.h"
 #include "netusb.h"
 
 int main() {
@@ -33,19 +34,73 @@ int main() {
 
 	uint8_t buffer[3];
 	buffer[0] = 1;
-#define ADDRESS 0b01000000
-	int res = i2c_write_blocking(i2c0, ADDRESS, buffer, 1, true);
-	if (res == PICO_ERROR_GENERIC || res != 1) {
-		printf("Got an error on write\n");
-		return 1;
-	}
-	res = i2c_read_blocking(i2c0, ADDRESS, buffer, 3, false);
-	if (res == PICO_ERROR_GENERIC) {
-		printf("Got an error on write\n");
-		return 1;
-	}
-	if (res < 3) {
-		printf("Could only read %d bytes.\n", res);
-	}
-	printf("Result: 0x%03X 0x%03X 0x%03X\n", buffer[0], buffer[1], buffer[2]);
+	int res   = lp5864_read_blocking(i2c0, 0, 0, buffer, 3);
+	printf(
+	    "Result: %d 0x%03X 0x%03X 0x%03X\n",
+	    res,
+	    buffer[0],
+	    buffer[1],
+	    buffer[2]
+	);
+	buffer[0] = 0x01;
+	buffer[1] = (4 << 3);
+	printf("Writing Config: ");
+	res = lp5864_write_blocking(i2c0, 0, 0, buffer, 2);
+	printf("%s\n", res == 2 ? " OK" : "ERR");
+
+	printf("Writing CC: ");
+	res = lp5864_write_blocking(
+	    i2c0,
+	    0,
+	    LP5864_CC_ADDRESS,
+	    &(struct LP5864_Current_Compensation){
+	        .Group1 = 90,
+	        .Group2 = 48,
+	        .Group3 = 127,
+	    },
+	    3
+	);
+	printf("%s\n", res == 3 ? " OK" : "ERR");
+
+	// clang-format off
+	uint8_t dots[] = {
+		0xff, 0x00, 0x00, // L0 - C1
+		0x00, 0xff, 0x00, // L0 - C2
+		0x00, 0x00, 0xff, // L0 - C3
+		0xff, 0xff, 0xff, // L0 - C4
+		0xff, 0xff, 0xff, // L0 - C5
+		0x00, 0x00, 0x00, // unused
+		0xff, 0x00, 0x00, // L1 - C1
+		0x00, 0xff, 0x00, // L1 - C2
+		0x00, 0x00, 0xff, // L1 - C3
+		0xff, 0xff, 0xff, // L1 - C4
+		0xff, 0xff, 0xff, // L1 - C5
+		0x00, 0x00, 0x00, // unused
+		0xff, 0xff, 0x00, // L2 - C1
+		0xff, 0x00, 0xff, // L2 - C2
+		0x00, 0xff, 0xff, // L2 - C3
+		0xff, 0xff, 0xff, // L2 - C4
+		0xff, 0xff, 0xff, // L2 - C5
+		0x00, 0x00, 0x00, // unused
+		0xff, 0xff, 0x00, // L3 - C1
+		0xff, 0x00, 0xff, // L3 - C2
+		0x00, 0xff, 0xff, // L3 - C3
+		0xff, 0xff, 0xff, // L3 - C4
+		0xff, 0xff, 0xff, // L3 - C5
+	    0x00, 0x00, 0x00, // unused
+	};
+	// clang-format on
+	printf("Printing dots: ");
+	res = lp5864_write_blocking(
+	    i2c0,
+	    0,
+	    0x200,
+	    dots,
+	    sizeof(dots) / sizeof(uint8_t)
+	);
+	printf(
+	    "%s %d\n",
+	    res == sizeof(dots) / sizeof(uint8_t) ? " OK" : "ERR",
+	    sizeof(dots) / sizeof(uint8_t)
+	);
 }

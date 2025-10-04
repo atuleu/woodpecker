@@ -1,5 +1,6 @@
 #pragma once
 
+#include <hardware/i2c.h>
 #include <pico/types.h>
 #include <stdint.h>
 
@@ -60,7 +61,7 @@ struct __attribute__((packed)) LP5864_Current_Compensation {
 	uint8_t _reserved3 : 1;
 };
 
-#define LP5864_CC_Address 0x009
+#define LP5864_CC_ADDRESS 0x009
 
 struct __attribute__((packed)) LP5864_Group_Selection {
 	uint8_t CS00 : 2;
@@ -112,3 +113,11 @@ struct __attribute__((packed)) LP5864_Dot_onoff {
 
 #define LP5864_DOT_CS(line, cs)  (0x100 + 18 * (line) + (cs))
 #define LP5864_DOT_PWM(line, cs) (0x200 + 18 * (line) + (cs))
+
+int lp5864_read_blocking(
+    i2c_inst_t *i2c, uint8_t addr, uint reg_addr, uint8_t *dst, size_t len
+);
+
+int lp5864_write_blocking(
+    i2c_inst_t *i2c, uint8_t addr, uint reg_addr, const uint8_t *src, size_t len
+);

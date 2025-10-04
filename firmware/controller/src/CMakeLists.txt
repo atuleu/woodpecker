@@ -9,6 +9,8 @@ set(SRC_FILES
 	${PICO_TINYUSB_PATH}/lib/networking/dhserver.c
 	osc.h
 	osc.c
+	lp5864.h
+	lp5864.c
 )
 
 add_executable(woodpecker-controller ${SRC_FILES})
