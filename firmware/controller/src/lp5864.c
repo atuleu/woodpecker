@@ -1,4 +1,5 @@
 #include "lp5864.h"
+#include "i2c_dma.h"
 #include <hardware/i2c.h>
 #include <pico/error.h>
 #include <stdint.h>
@@ -33,4 +34,46 @@ int lp5864_write_blocking(
 		return res;
 	}
 	return i2c_write_blocking(i2c, addr, src, len, false);
+}
+
+int lp5864_schedule_read(
+    i2c_dma_inst_t  *i2c_dma,
+    uint8_t          addr,
+    uint             reg_addr,
+    uint8_t         *dst,
+    size_t           len,
+    i2c_dma_xmit_id *xmit
+) {
+	addr             = build_lp5864_addr(addr, reg_addr);
+	uint8_t reg_mask = reg_addr & 0xff;
+
+	int res = i2c_dma_reserve_xmit(i2c_dma, addr, len + 1, xmit);
+	if (res != PICO_OK) {
+		return res;
+	}
+
+	i2c_dma_xmit_write(i2c_dma, *xmit, 0, &reg_mask, 1, true, false);
+	i2c_dma_xmit_read(i2c_dma, *xmit, 1, dst, len, false, false);
+	return i2c_dma_commit_xmit(i2c_dma, *xmit);
+}
+
+int lp5864_schedule_write(
+    i2c_dma_inst_t  *i2c_dma,
+    uint8_t          addr,
+    uint             reg_addr,
+    const uint8_t   *src,
+    size_t           len,
+    i2c_dma_xmit_id *xmit
+) {
+	addr             = build_lp5864_addr(addr, reg_addr);
+	uint8_t reg_mask = reg_addr & 0xff;
+
+	int res = i2c_dma_reserve_xmit(i2c_dma, addr, len + 1, xmit);
+	if (res != PICO_OK) {
+		return res;
+	}
+
+	i2c_dma_xmit_write(i2c_dma, *xmit, 0, &reg_mask, 1, true, false);
+	i2c_dma_xmit_write(i2c_dma, *xmit, 1, src, len, false, true);
+	return i2c_dma_commit_xmit(i2c_dma, *xmit);
 }

@@ -3,92 +3,120 @@
 #include <hardware/dma.h>
 #include <hardware/i2c.h>
 #include <hardware/irq.h>
-#include <hardware/platform_defs.h>
-#include <hardware/regs/i2c.h>
-#include <hardware/regs/intctrl.h>
-#include <hardware/structs/dma.h>
 #include <hardware/sync.h>
+
+#include <pico/error.h>
 #include <stdint.h>
 #include <stdlib.h>
 
-#define RING_BUFFER_DECLARE(name, type, size)                                  \
-	struct name##_rb {                                                         \
-		type              data[size];                                          \
-		volatile uint16_t head, tail;                                          \
-		_Static_assert(                                                        \
-		    size > 0 && (size & (size - 1)) == 0,                              \
-		    "Size must be a power of two"                                      \
-		);                                                                     \
-	};                                                                         \
-	typedef struct name##_rb name##_rb_t;                                      \
-	void                     name##_rb_init(name##_rb_t *rb) {                 \
-		                    rb->head = 0;                                      \
-		                    rb->tail = 0;                                      \
-	}                                                                          \
-	static inline bool name##_rb_full(const name##_rb_t *rb) {                 \
-		return ((rb->tail + 1) & (size - 1)) == rb->head;                      \
-	}                                                                          \
-	static inline bool name##_rb_empty(const name##_rb_t *rb) {                \
-		return rb->head == rb->tail;                                           \
-	}                                                                          \
-	static inline uint16_t name##_rb_used(const name##_rb_t *rb) {             \
-		if (rb->tail >= rb->head) {                                            \
-			return rb->tail - rb->head;                                        \
-		}                                                                      \
-		return size + rb->tail - rb->head;                                     \
-	}                                                                          \
-	static inline uint16_t name##_rb_available(const name##_rb_t *rb) {        \
-		return size - name##_rb_used(rb);                                      \
-	}                                                                          \
-	type *name##_rb_head(name##_rb_t *rb) {                                    \
-		return &rb->data[rb->head];                                            \
-	}                                                                          \
-	type *name##_rb_tail(name##_rb_t *rb) {                                    \
-		return &rb->data[rb->tail];                                            \
-	}                                                                          \
-	void name##_rb_push(name##_rb_t *rb, uint16_t n) {                         \
-		uint32_t saved = save_and_disable_interrupts();                        \
-		if (name##_rb_available(rb) >= n) {                                    \
-			rb->tail = (rb->tail + n) & (size - 1);                            \
-		}                                                                      \
-		restore_interrupts(saved);                                             \
-	}                                                                          \
-	void name##_rb_pop(name##_rb_t *rb, uint16_t n) {                          \
-		uint32_t saved = save_and_disable_interrupts();                        \
-		if (name##_rb_used(rb) >= n) {                                         \
-			rb->head = (rb->head + n) & (size - 1);                            \
-		}                                                                      \
-		restore_interrupts(saved);                                             \
-	}
+#define COMMAND_SIZE 512
+#define COMMAND_MASK (COMMAND_SIZE - 1)
+#define XMIT_SIZE    16
+#define XMIT_MASK    (XMIT_SIZE - 1)
 
-#define COMMAND_SIZE     512
-#define TRANSACTION_SIZE 16
-
-struct i2c_dma_buffer {
+struct i2c_dma_xmit {
 	volatile uint8_t done;
-	uint8_t          length_transactions;
+	uint8_t          addr;
 	uint16_t        *command_buffer;
 	uint16_t         offset;
 	uint16_t         length;
-	uint16_t         length_read;
 	uint8_t         *dst;
+	size_t           read_length;
 };
 
-RING_BUFFER_DECLARE(i2c_command, uint16_t, COMMAND_SIZE)
-RING_BUFFER_DECLARE(i2c_xmit, i2c_dma_buffer_t, TRANSACTION_SIZE)
+typedef struct i2c_dma_xmit i2c_dma_xmit_t;
 
-void i2c_dma_irq_handler() {}
+#define i2c_xmit_size(xmit)                                                    \
+	((((xmit)->offset + xmit->length) > COMMAND_SIZE) ? 2 : 1)
 
 struct i2c_dma_inst {
-	i2c_command_rb_t   commands;
-	i2c_xmit_rb_t      transactions;
-	i2c_inst_t        *i2c;
-	uint               command_channel, read_channel;
-	dma_channel_config command_config, read_config;
+	uint16_t            commands[COMMAND_SIZE];
+	struct i2c_dma_xmit xmit[XMIT_SIZE];
+
+	uint16_t        command_head, command_tail;
+	i2c_dma_xmit_id xmit_head, xmit_tail, xmit_head_done;
+
+	i2c_inst_t *i2c;
+	uint        command_channel, read_channel;
 };
+
+void i2c_dma_start_next_xmit(i2c_dma_inst_t *i2c_dma);
+
+inline static uint16_t i2c_dma_used_commands(i2c_dma_inst_t *i2c_dma) {
+	return i2c_dma->command_tail - i2c_dma->command_head;
+}
+
+inline static uint16_t i2c_dma_available_commands(i2c_dma_inst_t *i2c_dma) {
+	return COMMAND_SIZE - i2c_dma_used_commands(i2c_dma);
+}
+
+inline static bool i2c_dma_xmit_empty(i2c_dma_inst_t *i2c_dma) {
+	return i2c_dma->xmit_head_done == i2c_dma->xmit_tail;
+}
+
+inline static bool i2c_dma_xmit_full(i2c_dma_inst_t *i2c_dma) {
+	return (i2c_dma->xmit_tail - i2c_dma->xmit_head_done) >= XMIT_MASK;
+}
+
+inline static void i2c_dma_xmit_command_done(i2c_dma_inst_t *i2c_dma) {
+	if (i2c_dma->xmit_head < i2c_dma->xmit_tail) {
+		i2c_dma->xmit_head += 1;
+	}
+}
+
+inline static void i2c_dma_xmit_read_done(i2c_dma_inst_t *i2c_dma) {
+	if (i2c_dma->xmit_head_done < i2c_dma->xmit_tail) {
+		i2c_dma_xmit_t *xmit =
+		    &i2c_dma->xmit[i2c_dma->xmit_head_done & XMIT_MASK];
+		i2c_dma->command_head += xmit->length;
+		i2c_dma->xmit_head_done += 1;
+	}
+}
 
 static i2c_dma_inst_t *context[NUM_DMA_CHANNELS] = {
     NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+
+static inline void i2c_dma_command_channel_irq_handler(i2c_dma_inst_t *i2c_dma
+) {
+	i2c_dma_xmit_t *xmit = &i2c_dma->xmit[i2c_dma->xmit_head & XMIT_MASK];
+	xmit->done += 1;
+	if (xmit->done == i2c_xmit_size(xmit)) {
+		i2c_dma_xmit_command_done(i2c_dma);
+		if (xmit->dst == NULL) {
+			i2c_dma_xmit_read_done(i2c_dma);
+		}
+	}
+
+	if (i2c_dma->xmit_head < i2c_dma->xmit_tail) {
+		i2c_dma_start_next_xmit(i2c_dma);
+	}
+}
+
+static inline void i2c_dma_read_channel_irq_handler(i2c_dma_inst_t *i2c_dma) {
+	i2c_dma_xmit_read_done(i2c_dma);
+}
+
+static inline void
+i2c_dma_channel_irq_handler(i2c_dma_inst_t *i2c_dma, uint channel) {
+	if (channel == i2c_dma->command_channel) {
+		i2c_dma_command_channel_irq_handler(i2c_dma);
+	} else {
+		i2c_dma_read_channel_irq_handler(i2c_dma);
+	}
+}
+
+static void i2c_dma_irq_handler() {
+	uint ints = dma_hw->ints0;
+	for (uint8_t i = 0; i < 12; ++i) {
+		uint mask = (1u << i);
+		if (ints & mask) {
+			if (context[i] != NULL) {
+				i2c_dma_channel_irq_handler(context[i], i);
+			}
+		}
+	}
+	dma_hw->ints0 = ints;
+}
 
 i2c_dma_inst_t *i2c_dma_init(i2c_inst_t *i2c) {
 	i2c_dma_inst_t *res = malloc(sizeof(i2c_dma_inst_t));
@@ -107,28 +135,44 @@ i2c_dma_inst_t *i2c_dma_init(i2c_inst_t *i2c) {
 		dma_channel_unclaim(res->command_channel);
 		free(res);
 	}
-
-	i2c_command_rb_init(&res->commands);
-	i2c_xmit_rb_init(&res->transactions);
+	res->command_head   = 0;
+	res->command_tail   = 0;
+	res->xmit_head      = 0;
+	res->xmit_tail      = 0;
+	res->xmit_head_done = 0;
 
 	irq_set_exclusive_handler(DMA_IRQ_0, i2c_dma_irq_handler);
 	dma_channel_set_irq0_enabled(res->command_channel, true);
 	dma_channel_set_irq0_enabled(res->read_channel, true);
+	irq_set_enabled(DMA_IRQ_0, true);
 	context[res->command_channel] = res;
 	context[res->read_channel]    = res;
-	// TODO: setup handler;
 
-	res->command_config = dma_channel_get_default_config(res->command_channel);
-	channel_config_set_read_increment(&res->command_config, true);
-	channel_config_set_write_increment(&res->command_config, false);
-	channel_config_set_transfer_data_size(&res->command_config, DMA_SIZE_16);
-	channel_config_set_dreq(&res->command_config, i2c_get_dreq(res->i2c, true));
+	dma_channel_config command_config =
+	    dma_channel_get_default_config(res->command_channel);
+	channel_config_set_read_increment(&command_config, true);
+	channel_config_set_write_increment(&command_config, false);
+	channel_config_set_transfer_data_size(&command_config, DMA_SIZE_16);
+	channel_config_set_dreq(&command_config, i2c_get_dreq(res->i2c, true));
+	dma_channel_set_write_addr(
+	    res->command_channel,
+	    &res->i2c->hw->data_cmd,
+	    false
+	);
+	dma_channel_set_config(res->command_channel, &command_config, false);
 
-	res->read_config = dma_channel_get_default_config(res->read_channel);
-	channel_config_set_read_increment(&res->read_config, false);
-	channel_config_set_write_increment(&res->read_config, true);
-	channel_config_set_transfer_data_size(&res->read_config, DMA_SIZE_8);
-	channel_config_set_dreq(&res->read_config, i2c_get_dreq(res->i2c, false));
+	dma_channel_config read_config =
+	    dma_channel_get_default_config(res->read_channel);
+	channel_config_set_read_increment(&read_config, false);
+	channel_config_set_write_increment(&read_config, true);
+	channel_config_set_transfer_data_size(&read_config, DMA_SIZE_8);
+	channel_config_set_dreq(&read_config, i2c_get_dreq(res->i2c, false));
+	dma_channel_set_config(res->read_channel, &read_config, false);
+	dma_channel_set_read_addr(
+	    res->read_channel,
+	    &res->i2c->hw->data_cmd,
+	    false
+	);
 
 	return res;
 }
@@ -136,154 +180,183 @@ i2c_dma_inst_t *i2c_dma_init(i2c_inst_t *i2c) {
 void i2c_dma_deinit(i2c_dma_inst_t *i2c_dma) {
 	if (i2c_dma->command_channel >= 0) {
 		dma_channel_unclaim(i2c_dma->command_channel);
+		context[i2c_dma->command_channel] = NULL;
 	}
 	if (i2c_dma->read_channel >= 0) {
 		dma_channel_unclaim(i2c_dma->read_channel);
+		context[i2c_dma->read_channel] = NULL;
 	}
+
 	free(i2c_dma);
 }
 
-i2c_dma_buffer_t *i2c_dma_reserve(i2c_dma_inst_t *i2c_dma, size_t len) {
-	uint32_t saved = save_and_disable_interrupts();
-	if (i2c_command_rb_available(&i2c_dma->commands) < len ||
-	    i2c_xmit_rb_full(&i2c_dma->transactions)) {
-		restore_interrupts(saved);
-		return NULL;
-	}
-	i2c_dma_buffer_t *next = i2c_xmit_rb_tail(&i2c_dma->transactions);
-	next->command_buffer   = i2c_dma->commands.data;
-	next->offset           = i2c_dma->commands.tail;
-	next->done             = 0;
-	next->length_read      = 0;
-	if (next->offset + len >= COMMAND_SIZE) {
-		next->length_transactions = 2;
-	} else {
-		next->length_transactions = 1;
-	}
-	i2c_command_rb_push(&i2c_dma->commands, len);
-	restore_interrupts(saved);
-	return next;
-}
-
-void i2c_dma_start_transactions(
-    i2c_dma_inst_t *i2c_dma, const i2c_dma_buffer_t *buffer
+int i2c_dma_reserve_xmit(
+    i2c_dma_inst_t *i2c_dma, uint8_t addr, size_t len, i2c_dma_xmit_id *xmit
 ) {
+	uint32_t saved = save_and_disable_interrupts();
+	if (i2c_dma_available_commands(i2c_dma) < len ||
+	    i2c_dma_xmit_full(i2c_dma)) {
+		restore_interrupts(saved);
+		return PICO_ERROR_INSUFFICIENT_RESOURCES;
+	}
 
-	if (buffer->length_read > 0 && buffer->done == 0) {
-		dma_channel_configure(
+	*xmit                = i2c_dma->xmit_tail;
+	i2c_dma_xmit_t *next = &i2c_dma->xmit[i2c_dma->xmit_tail & XMIT_MASK];
+	next->addr           = 0x7f & addr;
+	next->offset         = i2c_dma->command_tail & COMMAND_MASK;
+	next->done           = 0;
+	next->dst            = NULL;
+	next->length         = len;
+	next->read_length    = 0;
+	i2c_dma->command_tail += len;
+
+	restore_interrupts(saved);
+	return PICO_OK;
+}
+
+void i2c_dma_start_next_xmit(i2c_dma_inst_t *i2c_dma) {
+	if (i2c_dma->xmit_head >= i2c_dma->xmit_tail) {
+		return;
+	}
+
+	i2c_dma_xmit_t *next     = &i2c_dma->xmit[i2c_dma->xmit_head & XMIT_MASK];
+	i2c_dma->i2c->hw->enable = 0;
+	i2c_dma->i2c->hw->tar    = next->addr;
+	i2c_dma->i2c->hw->enable = 1;
+	if (next->dst > 0 && next->done == 0) {
+		dma_channel_set_write_addr(i2c_dma->read_channel, next->dst, false);
+		dma_channel_set_trans_count(
 		    i2c_dma->read_channel,
-		    &i2c_dma->read_config,
-		    buffer->dst,
-		    &i2c_dma->i2c->hw->data_cmd,
-		    buffer->length_read,
+		    next->read_length,
 		    true
 		);
 	}
 
-	if (buffer->offset + buffer->length < COMMAND_SIZE) {
-		dma_channel_configure(
+	if (next->offset + next->length < COMMAND_SIZE) {
+		dma_channel_set_read_addr(
 		    i2c_dma->command_channel,
-		    &i2c_dma->command_config,
-		    &i2c_dma->i2c->hw->data_cmd,
-		    buffer->command_buffer + buffer->offset,
-		    buffer->length,
+		    i2c_dma->commands + next->offset,
+		    false
+		);
+		dma_channel_set_trans_count(
+		    i2c_dma->command_channel,
+		    next->length,
 		    true
 		);
-	} else if (buffer->done == 0) {
-		dma_channel_configure(
+	} else if (next->done == 0) {
+		dma_channel_set_read_addr(
 		    i2c_dma->command_channel,
-		    &i2c_dma->command_config,
-		    &i2c_dma->i2c->hw->data_cmd,
-		    buffer->command_buffer + buffer->offset,
-		    COMMAND_SIZE - buffer->offset,
+		    i2c_dma->commands + next->offset,
+		    false
+		);
+		dma_channel_set_trans_count(
+		    i2c_dma->command_channel,
+		    COMMAND_SIZE - next->offset,
 		    true
 		);
 	} else {
-		dma_channel_configure(
+		dma_channel_set_read_addr(
 		    i2c_dma->command_channel,
-		    &i2c_dma->command_config,
-		    &i2c_dma->i2c->hw->data_cmd,
-		    buffer->command_buffer,
-		    buffer->length - COMMAND_SIZE + buffer->offset,
+		    i2c_dma->commands,
+		    false
+		);
+		dma_channel_set_trans_count(
+		    i2c_dma->command_channel,
+		    next->length - COMMAND_SIZE + next->offset,
 		    true
 		);
 	}
 }
 
-void i2c_dma_commit(i2c_dma_inst_t *i2c_dma, const i2c_dma_buffer_t *buffer) {
+int i2c_dma_commit_xmit(i2c_dma_inst_t *i2c_dma, i2c_dma_xmit_id id) {
 	uint32_t saved = save_and_disable_interrupts();
-	bool     start = i2c_xmit_rb_empty(&i2c_dma->transactions);
-	if (buffer == i2c_xmit_rb_tail(&i2c_dma->transactions)) {
-		i2c_xmit_rb_push(&i2c_dma->transactions, 1);
+	bool     start = i2c_dma->xmit_tail == i2c_dma->xmit_head;
+	if (id != i2c_dma->xmit_tail) {
+		restore_interrupts(saved);
+		return PICO_ERROR_INVALID_ARG;
 	}
-	if (start) {
-		i2c_dma_start_transactions(i2c_dma, buffer);
+
+	if (id == i2c_dma->xmit_tail) {
+		i2c_dma->xmit_tail += 1;
+		if (start) {
+			i2c_dma_start_next_xmit(i2c_dma);
+		}
 	}
 	restore_interrupts(saved);
+	return PICO_OK;
 }
 
-bool i2c_dma_buffer_done(const i2c_dma_buffer_t *buffer) {
+bool i2c_dma_xmit_done(const i2c_dma_inst_t *i2c_dma, i2c_dma_xmit_id xmit) {
 	uint32_t saved = save_and_disable_interrupts();
-	bool     res   = buffer->done >= buffer->length_transactions;
+	bool     res   = i2c_dma->xmit_head_done > xmit;
 	restore_interrupts(saved);
 	return res;
 }
 
-void i2c_dma_buffer_write(
-    i2c_dma_buffer_t *buffer,
-    size_t            offset,
-    const uint8_t    *src,
-    size_t            len,
-    bool              nostop,
-    bool              norestart
+int i2c_dma_xmit_write(
+    i2c_dma_inst_t *i2c_dma,
+    i2c_dma_xmit_id xmit_id,
+    size_t          offset,
+    const uint8_t  *src,
+    size_t          len,
+    bool            nostop,
+    bool            norestart
 ) {
-	size_t j = buffer->offset + offset - 1;
+	i2c_dma_xmit_t *xmit = &i2c_dma->xmit[xmit_id & XMIT_MASK];
+
+	size_t j = xmit->offset + offset - 1;
 	for (size_t i = 0; i < len; ++i) {
-		if (i + offset >= buffer->length) {
-			break;
+		if (i + offset >= xmit->length) {
+			return PICO_ERROR_INSUFFICIENT_RESOURCES;
 		}
 		++j;
 		if (j >= COMMAND_SIZE) {
 			j -= COMMAND_SIZE;
 		}
 
-		buffer->command_buffer[j] = src[i];
+		uint16_t value = src[i];
 		if (i == 0 && norestart == false) {
-			buffer->command_buffer[j] |= I2C_IC_DATA_CMD_RESTART_BITS;
+			value |= I2C_IC_DATA_CMD_RESTART_BITS;
 		}
 		if (i == (len - 1) && nostop == false) {
-			buffer->command_buffer[j] |= I2C_IC_DATA_CMD_STOP_BITS;
+			value |= I2C_IC_DATA_CMD_STOP_BITS;
 		}
+		i2c_dma->commands[j] = value;
 	}
 }
 
-void i2c_dma_buffer_read(
-    i2c_dma_buffer_t *buffer,
-    size_t            offset,
-    uint8_t          *dst,
-    size_t            len,
-    bool              nostop,
-    bool              norestart
+int i2c_dma_xmit_read(
+    i2c_dma_inst_t *i2c_dma,
+    i2c_dma_xmit_id xmit_id,
+    size_t          offset,
+    uint8_t        *dst,
+    size_t          len,
+    bool            nostop,
+    bool            norestart
 
 ) {
-	buffer->dst = dst;
-	size_t j    = buffer->offset + offset - 1;
+	i2c_dma_xmit_t *xmit = &i2c_dma->xmit[xmit_id & XMIT_MASK];
+
+	xmit->dst         = dst;
+	xmit->read_length = len;
+	size_t j          = xmit->offset + offset - 1;
 	for (size_t i = 0; i < len; ++i) {
-		if (i + offset >= buffer->length) {
-			break;
+		if (i + offset >= xmit->length) {
+			return PICO_ERROR_INSUFFICIENT_RESOURCES;
 		}
 		++j;
 		if (j >= COMMAND_SIZE) {
 			j -= COMMAND_SIZE;
 		}
 
-		buffer->command_buffer[j] = I2C_IC_DATA_CMD_CMD_BITS;
+		uint16_t cmd = I2C_IC_DATA_CMD_CMD_BITS;
 		if (i == 0 && norestart == false) {
-			buffer->command_buffer[j] |= I2C_IC_DATA_CMD_RESTART_BITS;
+			cmd |= I2C_IC_DATA_CMD_RESTART_BITS;
 		}
 		if (i == (len - 1) && nostop == false) {
-			buffer->command_buffer[j] |= I2C_IC_DATA_CMD_STOP_BITS;
+			cmd |= I2C_IC_DATA_CMD_STOP_BITS;
 		}
-		++buffer->length_read;
+		i2c_dma->commands[j] = cmd;
 	}
+	return PICO_OK;
 }

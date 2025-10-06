@@ -3,12 +3,14 @@
 #include <hardware/i2c.h>
 
 #include <pico/error.h>
+#include <pico/platform/common.h>
 #include <pico/stdlib.h>
 
 #include <pico/types.h>
 #include <stdint.h>
 #include <stdio.h>
 
+#include "i2c_dma.h"
 #include "lp5864.h"
 #include "netusb.h"
 
@@ -31,10 +33,26 @@ int main() {
 	gpio_set_function(12, GPIO_FUNC_I2C);
 
 	i2c_init(i2c0, 400 * 1000);
+	i2c_dma_inst_t *bus = i2c_dma_init(i2c0);
+	if (bus == NULL) {
+		printf("Unable to initialize DMA\n");
+		return 1;
+	}
 
 	uint8_t buffer[3];
 	buffer[0] = 1;
-	int res   = lp5864_read_blocking(i2c0, 0, 0, buffer, 3);
+	i2c_dma_xmit_id xmit;
+
+	printf("Reading chip base address: ");
+	int res = lp5864_schedule_read(bus, 0, 0, buffer, 3, &xmit);
+	if (res != PICO_OK) {
+		printf("ERR\nCould not schedule read\n");
+		return 1;
+	}
+	while (i2c_dma_xmit_done(bus, xmit) == false) {
+		tight_loop_contents();
+	}
+	printf("OK\n");
 	printf(
 	    "Result: %d 0x%03X 0x%03X 0x%03X\n",
 	    res,
@@ -91,16 +109,27 @@ int main() {
 	};
 	// clang-format on
 	printf("Printing dots: ");
-	res = lp5864_write_blocking(
-	    i2c0,
-	    0,
-	    0x200,
-	    dots,
-	    sizeof(dots) / sizeof(uint8_t)
-	);
-	printf(
-	    "%s %d\n",
-	    res == sizeof(dots) / sizeof(uint8_t) ? " OK" : "ERR",
-	    sizeof(dots) / sizeof(uint8_t)
-	);
+	res = lp5864_schedule_write(bus, 0, 0x200, dots, sizeof(dots), &xmit);
+	if (res != PICO_OK) {
+		printf("ERR\nCould not schedule write.\n");
+		return 1;
+	}
+	while (i2c_dma_xmit_done(bus, xmit) == false) {
+		tight_loop_contents();
+	}
+	printf("OK\n");
+
+	/* res = lp5864_write_blocking( */
+	/*     i2c0, */
+	/*     0, */
+	/*     0x200, */
+	/*     dots, */
+	/*     sizeof(dots) / sizeof(uint8_t) */
+	/* ); */
+	/* printf( */
+	/*     "%s %d\n", */
+	/*     res == sizeof(dots) / sizeof(uint8_t) ? " OK" : "ERR", */
+	/*     sizeof(dots) / sizeof(uint8_t) */
+	/* ); */
+	return 0;
 }

@@ -5,32 +5,36 @@
 
 #include <stdint.h>
 
-typedef struct i2c_dma_buffer i2c_dma_buffer_t;
+typedef uint32_t i2c_dma_xmit_id;
 
 typedef struct i2c_dma_inst i2c_dma_inst_t;
 
 i2c_dma_inst_t *i2c_dma_init(i2c_inst_t *i2c);
 void            i2c_dma_deinit(i2c_dma_inst_t *i2c_dma);
 
-i2c_dma_buffer_t *i2c_dma_reserve(i2c_dma_inst_t *i2c_dma, size_t len);
-void i2c_dma_commit(i2c_dma_inst_t *i2c_dma, const i2c_dma_buffer_t *buffer);
+int i2c_dma_reserve_xmit(
+    i2c_dma_inst_t *i2c_dma, uint8_t addr, size_t len, i2c_dma_xmit_id *xmit
+);
+int i2c_dma_commit_xmit(i2c_dma_inst_t *i2c_dma, i2c_dma_xmit_id xmit);
 
-bool i2c_dma_buffer_done(const i2c_dma_buffer_t *buffer);
+bool i2c_dma_xmit_done(const i2c_dma_inst_t *i2c_dma, i2c_dma_xmit_id xmit);
 
-void i2c_dma_buffer_write(
-    i2c_dma_buffer_t *buffer,
-    size_t            offset,
-    const uint8_t    *src,
-    size_t            len,
-    bool              nostop,
-    bool              norestart
+int i2c_dma_xmit_write(
+    i2c_dma_inst_t *i2c_dma,
+    i2c_dma_xmit_id xmit,
+    size_t          offset,
+    const uint8_t  *src,
+    size_t          len,
+    bool            nostop,
+    bool            norestart
 );
 
-void i2c_dma_buffer_read(
-    i2c_dma_buffer_t *buffer,
-    size_t            offset,
-    uint8_t          *dst,
-    size_t            len,
-    bool              nostop,
-    bool              norestart
+int i2c_dma_xmit_read(
+    i2c_dma_inst_t *i2c_dma,
+    i2c_dma_xmit_id xmit,
+    size_t          offset,
+    uint8_t        *dst,
+    size_t          len,
+    bool            nostop,
+    bool            norestart
 );

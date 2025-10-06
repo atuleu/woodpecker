@@ -1,8 +1,9 @@
 #pragma once
 
-#include <hardware/i2c.h>
 #include <pico/types.h>
 #include <stdint.h>
+
+#include "i2c_dma.h"
 
 struct __attribute__((packed)) Chip_en {
 	uint8_t EN : 1;
@@ -120,4 +121,22 @@ int lp5864_read_blocking(
 
 int lp5864_write_blocking(
     i2c_inst_t *i2c, uint8_t addr, uint reg_addr, const uint8_t *src, size_t len
+);
+
+int lp5864_schedule_read(
+    i2c_dma_inst_t  *i2c_dma,
+    uint8_t          addr,
+    uint             reg_addr,
+    uint8_t         *dst,
+    size_t           len,
+    i2c_dma_xmit_id *xmit
+);
+
+int lp5864_schedule_write(
+    i2c_dma_inst_t  *i2c_dma,
+    uint8_t          addr,
+    uint             reg_addr,
+    const uint8_t   *src,
+    size_t           len,
+    i2c_dma_xmit_id *xmit
 );
