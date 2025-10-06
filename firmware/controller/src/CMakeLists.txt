@@ -11,6 +11,8 @@ set(SRC_FILES
 	osc.c
 	lp5864.h
 	lp5864.c
+	i2c_dma.h
+	i2c_dma.c
 )
 
 add_executable(woodpecker-controller ${SRC_FILES})
@@ -26,6 +28,7 @@ target_link_libraries(
 			pico_unique_id
 			pico_httpd_content
 			hardware_i2c
+			hardware_dma
 )
 
 target_compile_definitions(woodpecker-controller PUBLIC -DUSE_ECM=1)
