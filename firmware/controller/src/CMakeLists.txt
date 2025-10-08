@@ -11,8 +11,12 @@ set(SRC_FILES
 	osc.c
 	lp5864.h
 	lp5864.c
+	dma_shared_irq.h
+	dma_shared_irq.c
 	i2c_dma.h
 	i2c_dma.c
+	uart_rx_pio.h
+	uart_rx_pio.c
 )
 
 add_executable(woodpecker-controller ${SRC_FILES})
@@ -29,8 +33,11 @@ target_link_libraries(
 			pico_httpd_content
 			hardware_i2c
 			hardware_dma
+			hardware_pio
 )
-
+pico_generate_pio_header(
+	woodpecker-controller ${CMAKE_CURRENT_SOURCE_DIR}/uart_rx.pio
+)
 target_compile_definitions(woodpecker-controller PUBLIC -DUSE_ECM=1)
 
 target_include_directories(

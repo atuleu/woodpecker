@@ -29,11 +29,8 @@ int main() {
 	/* netusb_deinit(); */
 
 	printf("Attempt to read the I2C chip\n");
-	gpio_set_function(9, GPIO_FUNC_I2C);
-	gpio_set_function(12, GPIO_FUNC_I2C);
 
-	i2c_init(i2c0, 400 * 1000);
-	i2c_dma_inst_t *bus = i2c_dma_init(i2c0);
+	i2c_dma_inst_t *bus = i2c_dma_init(i2c0, 400 * 1000, 12, 9);
 	if (bus == NULL) {
 		printf("Unable to initialize DMA\n");
 		return 1;
