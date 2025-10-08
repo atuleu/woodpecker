@@ -25,17 +25,14 @@
 struct i2c_dma_xmit {
 	volatile uint8_t done;
 	uint8_t          addr;
-	uint16_t        *command_buffer;
+	uint8_t         *dst;
 	uint16_t         offset;
 	uint16_t         length;
-	uint8_t         *dst;
-	size_t           read_length;
+	uint16_t         buffer_length;
+	uint16_t         read_length;
 };
 
 typedef struct i2c_dma_xmit i2c_dma_xmit_t;
-
-#define i2c_dma_xmit_chunks(xmit)                                              \
-	((((xmit)->offset + xmit->length) > COMMAND_SIZE) ? 2 : 1)
 
 static uint64_t i2c_dma_xmit_duration_us(i2c_dma_xmit_t *xmit, uint baudrate) {
 	return (uint64_t)xmit->length * 9000000 / (uint64_t)baudrate;
@@ -79,11 +76,7 @@ inline static void i2c_dma_xmit_command_done(i2c_dma_inst_t *i2c_dma) {
 	if (i2c_dma->xmit_head < i2c_dma->xmit_tail) {
 		i2c_dma_xmit_t *xmit = &i2c_dma->xmit[i2c_dma->xmit_head & XMIT_MASK];
 		i2c_dma->xmit_head += 1;
-		i2c_dma->command_head += xmit->length;
-		if (i2c_dma->command_head == i2c_dma->command_tail) {
-			i2c_dma->command_tail = 0;
-			i2c_dma->command_head = 0;
-		}
+		i2c_dma->command_head += xmit->buffer_length;
 	}
 }
 
@@ -101,7 +94,7 @@ i2c_dma_command_channel_irq_handler(i2c_dma_inst_t *i2c_dma, int channel) {
 	(void)(channel);
 	i2c_dma_xmit_t *xmit = &i2c_dma->xmit[i2c_dma->xmit_head & XMIT_MASK];
 	xmit->done += 1;
-	if (xmit->done >= i2c_dma_xmit_chunks(xmit)) {
+	if (xmit->done >= 1) {
 		i2c_dma_xmit_command_done(i2c_dma);
 		if (xmit->dst == NULL) {
 			i2c_dma_xmit_read_done(i2c_dma);
@@ -222,10 +215,23 @@ int i2c_dma_reserve_xmit(
 	}
 
 	uint32_t saved = save_and_disable_interrupts();
-	if (i2c_dma_available_commands(i2c_dma) < len) {
+	size_t   available =
+	    MAX(COMMAND_SIZE - (i2c_dma->command_tail & COMMAND_MASK),
+	        (i2c_dma->command_head & COMMAND_MASK));
+
+	if (available < len) {
 		restore_interrupts(saved);
+		printf(
+		    "Cannot encode: %d, %d %d, high:%d low: %d.\n",
+		    len,
+		    i2c_dma->command_tail & COMMAND_MASK,
+		    i2c_dma->command_head & COMMAND_MASK,
+		    COMMAND_SIZE - (i2c_dma->command_tail & COMMAND_MASK),
+		    (i2c_dma->command_head & COMMAND_MASK)
+		);
 		return PICO_ERROR_INSUFFICIENT_RESOURCES;
 	}
+
 	if (i2c_dma_xmit_full(i2c_dma)) {
 		restore_interrupts(saved);
 		return PICO_ERROR_RESOURCE_IN_USE;
@@ -234,25 +240,20 @@ int i2c_dma_reserve_xmit(
 	*xmit                = i2c_dma->xmit_tail;
 	i2c_dma_xmit_t *next = &i2c_dma->xmit[i2c_dma->xmit_tail & XMIT_MASK];
 	next->addr           = 0x7f & addr;
-	next->offset         = i2c_dma->command_tail & COMMAND_MASK;
+	next->length         = len;
 	next->done           = 0;
 	next->dst            = NULL;
-	next->length         = len;
 	next->read_length    = 0;
-	i2c_dma->command_tail += len;
+	next->offset         = i2c_dma->command_tail & COMMAND_MASK;
+	next->buffer_length  = len;
+	if (next->offset + len > COMMAND_SIZE) {
+		next->buffer_length += COMMAND_SIZE - next->offset;
+		next->offset = 0;
+	}
+
+	i2c_dma->command_tail += next->buffer_length;
 
 	restore_interrupts(saved);
-	int chunks[2] = {len, 0};
-	if (i2c_dma_xmit_chunks(next) == 2) {
-		chunks[0] = COMMAND_SIZE - next->offset;
-		chunks[1] = len - chunks[0];
-	}
-	printf(
-	    "XMIT: %d, chunks[0]:%d chunks[1]:%d\n",
-	    *xmit,
-	    chunks[0],
-	    chunks[1]
-	);
 	return PICO_OK;
 }
 
@@ -274,42 +275,16 @@ void i2c_dma_start_next_xmit(i2c_dma_inst_t *i2c_dma) {
 		);
 	}
 
-	if (i2c_dma_xmit_chunks(next) == 1) {
-		dma_channel_set_read_addr(
-		    i2c_dma->command_channel,
-		    i2c_dma->commands + next->offset,
-		    false
-		);
-		dma_channel_set_trans_count(
-		    i2c_dma->command_channel,
-		    dma_encode_transfer_count(next->length),
-		    true
-		);
-	} else if (next->done == 0) {
-		dma_channel_set_read_addr(
-		    i2c_dma->command_channel,
-		    i2c_dma->commands + next->offset,
-		    false
-		);
-		dma_channel_set_trans_count(
-		    i2c_dma->command_channel,
-		    dma_encode_transfer_count(COMMAND_SIZE - next->offset),
-		    true
-		);
-	} else {
-		dma_channel_set_read_addr(
-		    i2c_dma->command_channel,
-		    i2c_dma->commands,
-		    false
-		);
-		dma_channel_set_trans_count(
-		    i2c_dma->command_channel,
-		    dma_encode_transfer_count(
-		        next->length - COMMAND_SIZE + next->offset
-		    ),
-		    true
-		);
-	}
+	dma_channel_set_read_addr(
+	    i2c_dma->command_channel,
+	    i2c_dma->commands + next->offset,
+	    false
+	);
+	dma_channel_set_trans_count(
+	    i2c_dma->command_channel,
+	    dma_encode_transfer_count(next->length),
+	    true
+	);
 	i2c_dma->deadline = make_timeout_time_us(
 	    i2c_dma_xmit_duration_us(next, i2c_dma->baudrate) + 1000
 	);
