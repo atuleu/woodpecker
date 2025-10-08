@@ -52,8 +52,15 @@ int lp5864_schedule_read(
 		return res;
 	}
 
-	i2c_dma_xmit_write(i2c_dma, *xmit, 0, &reg_mask, 1, true, false);
-	i2c_dma_xmit_read(i2c_dma, *xmit, 1, dst, len, false, false);
+	res = i2c_dma_xmit_write(i2c_dma, *xmit, 0, &reg_mask, 1, true, false);
+	if (res != PICO_OK) {
+		return res;
+	}
+
+	res = i2c_dma_xmit_read(i2c_dma, *xmit, 1, dst, len, false, false);
+	if (res != PICO_OK) {
+		return res;
+	}
 	return i2c_dma_commit_xmit(i2c_dma, *xmit);
 }
 
@@ -73,7 +80,13 @@ int lp5864_schedule_write(
 		return res;
 	}
 
-	i2c_dma_xmit_write(i2c_dma, *xmit, 0, &reg_mask, 1, true, false);
-	i2c_dma_xmit_write(i2c_dma, *xmit, 1, src, len, false, true);
+	res = i2c_dma_xmit_write(i2c_dma, *xmit, 0, &reg_mask, 1, true, false);
+	if (res != PICO_OK) {
+		return res;
+	}
+	res = i2c_dma_xmit_write(i2c_dma, *xmit, 1, src, len, false, true);
+	if (res != PICO_OK) {
+		return res;
+	}
 	return i2c_dma_commit_xmit(i2c_dma, *xmit);
 }

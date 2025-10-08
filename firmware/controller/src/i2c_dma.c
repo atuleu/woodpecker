@@ -45,13 +45,14 @@ struct i2c_dma_inst {
 	uint16_t            commands[COMMAND_SIZE];
 	struct i2c_dma_xmit xmit[XMIT_SIZE];
 
-	uint16_t        command_head, command_tail;
-	i2c_dma_xmit_id xmit_head, xmit_tail, xmit_head_done;
+	volatile uint16_t        command_head, command_tail;
+	volatile i2c_dma_xmit_id xmit_head, xmit_tail, xmit_head_done;
+	volatile absolute_time_t deadline;
 
-	i2c_inst_t     *i2c;
-	int             baudrate, scl, sda;
-	absolute_time_t deadline;
-	uint            command_channel, read_channel;
+	i2c_inst_t *i2c;
+	int         baudrate, scl, sda;
+
+	uint command_channel, read_channel;
 };
 
 void i2c_dma_start_next_xmit(i2c_dma_inst_t *i2c_dma);
@@ -61,7 +62,7 @@ inline static uint16_t i2c_dma_used_commands(i2c_dma_inst_t *i2c_dma) {
 }
 
 inline static uint16_t i2c_dma_available_commands(i2c_dma_inst_t *i2c_dma) {
-	return COMMAND_SIZE - i2c_dma_used_commands(i2c_dma);
+	return COMMAND_MASK - i2c_dma_used_commands(i2c_dma);
 }
 
 inline static bool i2c_dma_xmit_empty(i2c_dma_inst_t *i2c_dma) {
@@ -76,15 +77,18 @@ inline static bool i2c_dma_xmit_full(i2c_dma_inst_t *i2c_dma) {
 
 inline static void i2c_dma_xmit_command_done(i2c_dma_inst_t *i2c_dma) {
 	if (i2c_dma->xmit_head < i2c_dma->xmit_tail) {
+		i2c_dma_xmit_t *xmit = &i2c_dma->xmit[i2c_dma->xmit_head & XMIT_MASK];
 		i2c_dma->xmit_head += 1;
+		i2c_dma->command_head += xmit->length;
+		if (i2c_dma->command_head == i2c_dma->command_tail) {
+			i2c_dma->command_tail = 0;
+			i2c_dma->command_head = 0;
+		}
 	}
 }
 
 inline static void i2c_dma_xmit_read_done(i2c_dma_inst_t *i2c_dma) {
 	if (i2c_dma->xmit_head_done < i2c_dma->xmit_tail) {
-		i2c_dma_xmit_t *xmit =
-		    &i2c_dma->xmit[i2c_dma->xmit_head_done & XMIT_MASK];
-		i2c_dma->command_head += xmit->length;
 		i2c_dma->xmit_head_done += 1;
 	}
 }
@@ -97,7 +101,7 @@ i2c_dma_command_channel_irq_handler(i2c_dma_inst_t *i2c_dma, int channel) {
 	(void)(channel);
 	i2c_dma_xmit_t *xmit = &i2c_dma->xmit[i2c_dma->xmit_head & XMIT_MASK];
 	xmit->done += 1;
-	if (xmit->done == i2c_dma_xmit_chunks(xmit)) {
+	if (xmit->done >= i2c_dma_xmit_chunks(xmit)) {
 		i2c_dma_xmit_command_done(i2c_dma);
 		if (xmit->dst == NULL) {
 			i2c_dma_xmit_read_done(i2c_dma);
@@ -184,12 +188,12 @@ i2c_dma_inst_t *i2c_dma_init(i2c_inst_t *i2c, int baudrate, int sda, int scl) {
 	channel_config_set_write_increment(&read_config, true);
 	channel_config_set_transfer_data_size(&read_config, DMA_SIZE_8);
 	channel_config_set_dreq(&read_config, i2c_get_dreq(res->i2c, false));
-	dma_channel_set_config(res->read_channel, &read_config, false);
 	dma_channel_set_read_addr(
 	    res->read_channel,
 	    &res->i2c->hw->data_cmd,
 	    false
 	);
+	dma_channel_set_config(res->read_channel, &read_config, false);
 
 	res->deadline = from_us_since_boot(-1);
 
@@ -218,10 +222,13 @@ int i2c_dma_reserve_xmit(
 	}
 
 	uint32_t saved = save_and_disable_interrupts();
-	if (i2c_dma_available_commands(i2c_dma) < len ||
-	    i2c_dma_xmit_full(i2c_dma)) {
+	if (i2c_dma_available_commands(i2c_dma) < len) {
 		restore_interrupts(saved);
 		return PICO_ERROR_INSUFFICIENT_RESOURCES;
+	}
+	if (i2c_dma_xmit_full(i2c_dma)) {
+		restore_interrupts(saved);
+		return PICO_ERROR_RESOURCE_IN_USE;
 	}
 
 	*xmit                = i2c_dma->xmit_tail;
@@ -235,6 +242,17 @@ int i2c_dma_reserve_xmit(
 	i2c_dma->command_tail += len;
 
 	restore_interrupts(saved);
+	int chunks[2] = {len, 0};
+	if (i2c_dma_xmit_chunks(next) == 2) {
+		chunks[0] = COMMAND_SIZE - next->offset;
+		chunks[1] = len - chunks[0];
+	}
+	printf(
+	    "XMIT: %d, chunks[0]:%d chunks[1]:%d\n",
+	    *xmit,
+	    chunks[0],
+	    chunks[1]
+	);
 	return PICO_OK;
 }
 
@@ -247,11 +265,11 @@ void i2c_dma_start_next_xmit(i2c_dma_inst_t *i2c_dma) {
 	i2c_dma->i2c->hw->enable = 0;
 	i2c_dma->i2c->hw->tar    = next->addr;
 	i2c_dma->i2c->hw->enable = 1;
-	if (next->dst > 0 && next->done == 0) {
+	if (next->dst != NULL && next->done == 0) {
 		dma_channel_set_write_addr(i2c_dma->read_channel, next->dst, false);
 		dma_channel_set_trans_count(
 		    i2c_dma->read_channel,
-		    next->read_length,
+		    dma_encode_transfer_count(next->read_length),
 		    true
 		);
 	}
@@ -264,7 +282,7 @@ void i2c_dma_start_next_xmit(i2c_dma_inst_t *i2c_dma) {
 		);
 		dma_channel_set_trans_count(
 		    i2c_dma->command_channel,
-		    next->length,
+		    dma_encode_transfer_count(next->length),
 		    true
 		);
 	} else if (next->done == 0) {
@@ -275,7 +293,7 @@ void i2c_dma_start_next_xmit(i2c_dma_inst_t *i2c_dma) {
 		);
 		dma_channel_set_trans_count(
 		    i2c_dma->command_channel,
-		    COMMAND_SIZE - next->offset,
+		    dma_encode_transfer_count(COMMAND_SIZE - next->offset),
 		    true
 		);
 	} else {
@@ -286,7 +304,9 @@ void i2c_dma_start_next_xmit(i2c_dma_inst_t *i2c_dma) {
 		);
 		dma_channel_set_trans_count(
 		    i2c_dma->command_channel,
-		    next->length - COMMAND_SIZE + next->offset,
+		    dma_encode_transfer_count(
+		        next->length - COMMAND_SIZE + next->offset
+		    ),
 		    true
 		);
 	}
@@ -303,12 +323,11 @@ int i2c_dma_commit_xmit(i2c_dma_inst_t *i2c_dma, i2c_dma_xmit_id id) {
 		return PICO_ERROR_INVALID_ARG;
 	}
 
-	if (id == i2c_dma->xmit_tail) {
-		i2c_dma->xmit_tail += 1;
-		if (start) {
-			i2c_dma_start_next_xmit(i2c_dma);
-		}
+	i2c_dma->xmit_tail += 1;
+	if (start == true) {
+		i2c_dma_start_next_xmit(i2c_dma);
 	}
+
 	restore_interrupts(saved);
 	return PICO_OK;
 }
@@ -335,13 +354,9 @@ int i2c_dma_xmit_write(
 		return PICO_ERROR_INSUFFICIENT_RESOURCES;
 	}
 
-	size_t j = xmit->offset + offset - 1;
 	for (size_t i = 0; i < len; ++i) {
-		if (++j >= COMMAND_SIZE) {
-			j -= COMMAND_SIZE;
-		}
-
-		uint16_t value = src[i];
+		size_t   j     = (offset + xmit->offset + i) & COMMAND_MASK;
+		uint16_t value = src[i] & 0x00ff;
 		if (i == 0 && norestart == false) {
 			value |= I2C_IC_DATA_CMD_RESTART_BITS;
 		}
@@ -350,6 +365,7 @@ int i2c_dma_xmit_write(
 		}
 		i2c_dma->commands[j] = value;
 	}
+	return PICO_OK;
 }
 
 int i2c_dma_xmit_read(
@@ -364,17 +380,15 @@ int i2c_dma_xmit_read(
 ) {
 	i2c_dma_xmit_t *xmit = &i2c_dma->xmit[xmit_id & XMIT_MASK];
 
-	if (offset + len >= xmit->length) {
+	if (offset + len > xmit->length) {
 		return PICO_ERROR_INSUFFICIENT_RESOURCES;
 	}
 
 	xmit->dst         = dst;
 	xmit->read_length = len;
-	size_t j          = xmit->offset + offset - 1;
+
 	for (size_t i = 0; i < len; ++i) {
-		if (++j >= COMMAND_SIZE) {
-			j -= COMMAND_SIZE;
-		}
+		size_t j = (offset + xmit->offset + i) & COMMAND_MASK;
 
 		uint16_t cmd = I2C_IC_DATA_CMD_CMD_BITS;
 		if (i == 0 && norestart == false) {
@@ -417,6 +431,7 @@ i2c_dma_xmit_id i2c_dma_check_and_failed_stalled(i2c_dma_inst_t *i2c_dma) {
 		i2c_dma_i2c_unblock(i2c_dma);
 	}
 
+	restore_interrupts(saved);
 	// report an xmit has failed.
 	return xmit_id;
 }

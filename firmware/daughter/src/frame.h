@@ -23,7 +23,7 @@ struct __attribute__((packed)) Frame {
 	};
 };
 
-_Static_assert(sizeof(struct Frame) == 7, "Frame should be 8 bytes long");
+_Static_assert(sizeof(struct Frame) == 7, "Frame should be 7 bytes long");
 
 enum FrameType {
 	ENCODER = 0,
