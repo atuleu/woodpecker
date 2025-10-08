@@ -17,6 +17,8 @@
 
 #define PERIOD_ticks (6 * 256)
 #define PERIOD_us    (50 * 1000)
+#define BAUDRATE     400 * 1000
+
 static bool schedule_render = true;
 
 void render(
@@ -25,7 +27,8 @@ void render(
 	uint8_t dots[144 * 3];
 	// makes a rainbow effect
 	for (uint i = 0; i < 144 * 3; ++i) {
-		uint32_t phase = ((i / 3) * 50 + now_ms / 2) % PERIOD_ticks;
+		uint32_t phase =
+		    ((i / 3) * 50 + i * 2 * 256 + now_ms / 2) % PERIOD_ticks;
 		if (phase < 256) {
 			dots[i] = phase;
 		} else if (phase < 3 * 256) {
@@ -105,12 +108,12 @@ int main() {
 
 	printf("Attempt to read the I2C chip\n");
 
-	i2c_dma_inst_t *top_bus = i2c_dma_init(i2c0, 400 * 1000, 12, 9);
+	i2c_dma_inst_t *top_bus = i2c_dma_init(i2c0, BAUDRATE, 12, 9);
 	if (top_bus == NULL) {
 		printf("Unable to initialize top I2C\n");
 		return 1;
 	}
-	i2c_dma_inst_t *bot_bus = i2c_dma_init(i2c1, 400 * 1000, 22, 19);
+	i2c_dma_inst_t *bot_bus = i2c_dma_init(i2c1, BAUDRATE, 22, 19);
 	if (bot_bus == NULL) {
 		printf("Unable to initialize bot I2C\n");
 		return 1;
