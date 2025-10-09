@@ -13,12 +13,11 @@
 
 #include "i2c_dma.h"
 #include "lp5864.h"
-#include "netusb.h"
 
-#define PERIOD_ticks (6 * 256)
-#define PERIOD_us    (50 * 1000)
-#define BAUDRATE     400 * 1000
-
+#define PERIOD_ticks    (6 * 256)
+#define PERIOD_us       (50 * 1000)
+#define BAUDRATE        400 * 1000
+#define CHANNEL_DEPHASE 512
 static bool schedule_render = true;
 
 void render(uint32_t now_ms, i2c_dma_t *top, i2c_dma_t *bot, bool schedule) {
@@ -26,7 +25,7 @@ void render(uint32_t now_ms, i2c_dma_t *top, i2c_dma_t *bot, bool schedule) {
 	// makes a rainbow effect
 	for (uint i = 0; i < 144 * 3; ++i) {
 		uint32_t phase =
-		    ((i / 3) * 50 + i * 2 * 256 + now_ms / 2) % PERIOD_ticks;
+		    ((i / 3) * 50 + i * CHANNEL_DEPHASE + now_ms / 2) % PERIOD_ticks;
 		if (phase < 256) {
 			dots[i] = phase;
 		} else if (phase < 3 * 256) {
@@ -37,7 +36,7 @@ void render(uint32_t now_ms, i2c_dma_t *top, i2c_dma_t *bot, bool schedule) {
 			dots[i] = 0;
 		}
 	}
-	static i2c_dma_xmit_id top_xmit, bot_xmit;
+	static i2c_dma_xmit_id top_xmit[3], bot_xmit[3];
 	for (uint8_t addr = 0; addr < 3; ++addr) {
 		if (schedule) {
 			int err = lp5864_schedule_write(
@@ -46,7 +45,7 @@ void render(uint32_t now_ms, i2c_dma_t *top, i2c_dma_t *bot, bool schedule) {
 			    0x200,
 			    dots + 0 + 144 * addr,
 			    72,
-			    &top_xmit
+			    &top_xmit[addr]
 			);
 			if (err != PICO_OK) {
 				printf(
@@ -62,7 +61,7 @@ void render(uint32_t now_ms, i2c_dma_t *top, i2c_dma_t *bot, bool schedule) {
 			    0x200,
 			    dots + 72 + 144 * addr,
 			    72,
-			    &bot_xmit
+			    &bot_xmit[addr]
 			);
 			if (err != PICO_OK) {
 				printf(
@@ -82,6 +81,20 @@ void render(uint32_t now_ms, i2c_dma_t *top, i2c_dma_t *bot, bool schedule) {
 			    72
 			);
 		}
+	}
+	for (uint addr = 0; addr < 3; ++addr) {
+		i2c_dma_xmit_status status = i2c_dma_xmit_wait(top, top_xmit[addr]);
+		printf(
+		    "Top[%d] status: %s\n",
+		    addr,
+		    status & I2C_DMA_XMIT_ABORTED ? "ERR" : "OK"
+		);
+		status = i2c_dma_xmit_wait(bot, bot_xmit[addr]);
+		printf(
+		    "Bot[%d] status: %s\n",
+		    addr,
+		    status & I2C_DMA_XMIT_ABORTED ? "ERR" : "OK"
+		);
 	}
 	/* while (i2c_dma_xmit_done(top, top_xmit) && i2c_dma_xmit_done(bot,
 	 * bot_xmit) */
@@ -121,12 +134,21 @@ int main() {
 	buffer[0] = 0x01;
 	buffer[1] = (4 << 3);
 	printf("Writing Top Config: ");
-	int res = lp5864_write_blocking(i2c0, 0, 0, buffer, 2);
-	printf("%s\n", res == 2 ? " OK" : "ERR");
+	i2c_dma_xmit_id top_xmit, bot_xmit;
+	int res = lp5864_schedule_write(top_bus, 0, 0, buffer, 2, &top_xmit);
+	if (res != PICO_OK) {
+		return 1;
+	}
+	i2c_dma_xmit_status status = i2c_dma_xmit_wait(top_bus, top_xmit);
+	printf("%s\n", status == I2C_DMA_XMIT_DONE ? " OK" : "ERR");
 
 	printf("Writing Bot Config: ");
-	res = lp5864_write_blocking(i2c1, 0, 0, buffer, 2);
-	printf("%s\n", res == 2 ? " OK" : "ERR");
+	res = lp5864_schedule_write(bot_bus, 0, 0, buffer, 2, &bot_xmit);
+	if (res != PICO_OK) {
+		return 1;
+	}
+	status = i2c_dma_xmit_wait(bot_bus, bot_xmit);
+	printf("%s\n", status == I2C_DMA_XMIT_DONE ? " OK" : "ERR");
 
 	struct LP5864_Current_Compensation config = {
 	    .Group1 = 90,
@@ -135,12 +157,34 @@ int main() {
 	};
 
 	printf("Writing Top CC: ");
-	res = lp5864_write_blocking(i2c0, 0, LP5864_CC_ADDRESS, &config, 3);
-	printf("%s\n", res == 3 ? " OK" : "ERR");
+	res = lp5864_schedule_write(
+	    top_bus,
+	    0,
+	    LP5864_CC_ADDRESS,
+	    &config,
+	    3,
+	    &top_xmit
+	);
+	if (res != PICO_OK) {
+		return 1;
+	}
+	status = i2c_dma_xmit_wait(top_bus, top_xmit);
+	printf("%s\n", status == I2C_DMA_XMIT_DONE ? " OK" : "ERR");
 
 	printf("Writing Bot CC: ");
-	res = lp5864_write_blocking(i2c1, 0, LP5864_CC_ADDRESS, &config, 3);
-	printf("%s\n", res == 3 ? " OK" : "ERR");
+	res = lp5864_schedule_write(
+	    bot_bus,
+	    0,
+	    LP5864_CC_ADDRESS,
+	    &config,
+	    3,
+	    &bot_xmit
+	);
+	if (res != PICO_OK) {
+		return 1;
+	}
+	status = i2c_dma_xmit_wait(bot_bus, bot_xmit);
+	printf("%s\n", status == I2C_DMA_XMIT_DONE ? " OK" : "ERR");
 
 	absolute_time_t last_update = -PERIOD_us;
 	while (true) {
@@ -161,17 +205,5 @@ int main() {
 		last_update += PERIOD_us;
 	}
 
-	/* res = lp5864_write_blocking( */
-	/*     i2c0, */
-	/*     0, */
-	/*     0x200, */
-	/*     dots, */
-	/*     sizeof(dots) / sizeof(uint8_t) */
-	/* ); */
-	/* printf( */
-	/*     "%s %d\n", */
-	/*     res == sizeof(dots) / sizeof(uint8_t) ? " OK" : "ERR", */
-	/*     sizeof(dots) / sizeof(uint8_t) */
-	/* ); */
 	return 0;
 }

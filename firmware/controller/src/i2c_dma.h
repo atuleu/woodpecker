@@ -33,6 +33,8 @@ enum i2c_dma_xmit_status_e {
 i2c_dma_xmit_status
 i2c_dma_xmit_get_status(const i2c_dma_t *i2c_dma, i2c_dma_xmit_id xmit);
 
+i2c_dma_xmit_status i2c_dma_xmit_wait(i2c_dma_t *i2c_dma, i2c_dma_xmit_id xmit);
+
 i2c_dma_xmit_id i2c_dma_check_and_failed_stalled(i2c_dma_t *i2c_dma);
 
 int i2c_dma_xmit_write(

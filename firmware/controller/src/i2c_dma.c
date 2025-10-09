@@ -97,26 +97,9 @@ inline static void i2c_dma_xmit_mark_done(i2c_dma_t *i2c_dma) {
 i2c_dma_t *contexts[NUM_I2CS] = {NULL, NULL};
 
 static void i2c_dma_i2c_irq_handler(i2c_dma_t *i2c_dma) {
-	printf(
-	    "coucou inside %d\n",
-	    i2c_dma == contexts[0]   ? 0
-	    : i2c_dma == contexts[1] ? 1
-	                             : -1
-	);
 
-	if (i2c_dma->xmit_head == i2c_dma->xmit_tail) {
-		printf("none scheduled\n");
-	}
-
-	i2c_hw_t	           *hw     = i2c_dma->i2c->hw;
+	i2c_hw_t               *hw     = i2c_dma->i2c->hw;
 	const volatile uint32_t status = hw->intr_stat;
-
-	/* printf( */
-	/*     "Status %x TX:%x STOP:%x\n", */
-	/*     status, */
-	/*     I2C_IC_INTR_STAT_R_TX_ABRT_BITS, */
-	/*     I2C_IC_INTR_STAT_R_STOP_DET_BITS */
-	/* ); */
 
 	if (status & I2C_IC_INTR_STAT_R_TX_ABRT_BITS) {
 
@@ -254,14 +237,6 @@ int i2c_dma_reserve_xmit(
 
 	if (available < len) {
 		restore_interrupts(saved);
-		printf(
-		    "Cannot encode: %d, %d %d, high:%d low: %d.\n",
-		    len,
-		    i2c_dma->command_tail & COMMAND_MASK,
-		    i2c_dma->command_head & COMMAND_MASK,
-		    COMMAND_SIZE - (i2c_dma->command_tail & COMMAND_MASK),
-		    (i2c_dma->command_head & COMMAND_MASK)
-		);
 		return PICO_ERROR_INSUFFICIENT_RESOURCES;
 	}
 
@@ -323,7 +298,6 @@ void i2c_dma_start_next_xmit(i2c_dma_t *i2c_dma) {
 }
 
 int i2c_dma_commit_xmit(i2c_dma_t *i2c_dma, i2c_dma_xmit_id id) {
-	printf("Committing\n");
 	uint32_t saved = save_and_disable_interrupts();
 	bool     start = i2c_dma->xmit_tail == i2c_dma->xmit_head;
 	if (id != i2c_dma->xmit_tail) {
@@ -334,7 +308,6 @@ int i2c_dma_commit_xmit(i2c_dma_t *i2c_dma, i2c_dma_xmit_id id) {
 	i2c_dma->status[i2c_dma->xmit_tail & STATUS_MASK] = I2C_DMA_XMIT_SCHEDULED;
 	i2c_dma->xmit_tail += 1;
 	if (start == true) {
-		printf("scheduling\n");
 		i2c_dma_start_next_xmit(i2c_dma);
 	}
 
@@ -387,6 +360,16 @@ int i2c_dma_xmit_write(
 		i2c_dma->commands[j] = value;
 	}
 	return PICO_OK;
+}
+
+i2c_dma_xmit_status
+i2c_dma_xmit_wait(i2c_dma_t *i2c_dma, i2c_dma_xmit_id xmit) {
+	i2c_dma_xmit_status res;
+	do {
+		res = i2c_dma_xmit_get_status(i2c_dma, xmit);
+		i2c_dma_check_and_failed_stalled(i2c_dma);
+	} while (res == I2C_DMA_XMIT_SCHEDULED);
+	return res;
 }
 
 int i2c_dma_xmit_read(
