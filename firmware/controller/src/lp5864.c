@@ -37,7 +37,7 @@ int lp5864_write_blocking(
 }
 
 int lp5864_schedule_read(
-    i2c_dma_inst_t  *i2c_dma,
+    i2c_dma_t       *i2c_dma,
     uint8_t          addr,
     uint             reg_addr,
     uint8_t         *dst,
@@ -65,7 +65,7 @@ int lp5864_schedule_read(
 }
 
 int lp5864_schedule_write(
-    i2c_dma_inst_t  *i2c_dma,
+    i2c_dma_t       *i2c_dma,
     uint8_t          addr,
     uint             reg_addr,
     const uint8_t   *src,

@@ -21,9 +21,7 @@
 
 static bool schedule_render = true;
 
-void render(
-    uint32_t now_ms, i2c_dma_inst_t *top, i2c_dma_inst_t *bot, bool schedule
-) {
+void render(uint32_t now_ms, i2c_dma_t *top, i2c_dma_t *bot, bool schedule) {
 	uint8_t dots[144 * 3];
 	// makes a rainbow effect
 	for (uint i = 0; i < 144 * 3; ++i) {
@@ -40,7 +38,7 @@ void render(
 		}
 	}
 	static i2c_dma_xmit_id top_xmit, bot_xmit;
-	for (uint8_t addr = 0; addr < 1; ++addr) {
+	for (uint8_t addr = 0; addr < 3; ++addr) {
 		if (schedule) {
 			int err = lp5864_schedule_write(
 			    top,
@@ -108,12 +106,12 @@ int main() {
 
 	printf("Attempt to read the I2C chip\n");
 
-	i2c_dma_inst_t *top_bus = i2c_dma_init(i2c0, BAUDRATE, 12, 9);
+	i2c_dma_t *top_bus = i2c_dma_init(i2c0, BAUDRATE, 12, 9);
 	if (top_bus == NULL) {
 		printf("Unable to initialize top I2C\n");
 		return 1;
 	}
-	i2c_dma_inst_t *bot_bus = i2c_dma_init(i2c1, BAUDRATE, 22, 19);
+	i2c_dma_t *bot_bus = i2c_dma_init(i2c1, BAUDRATE, 22, 19);
 	if (bot_bus == NULL) {
 		printf("Unable to initialize bot I2C\n");
 		return 1;

@@ -5,7 +5,10 @@
 #include <hardware/gpio.h>
 #include <hardware/i2c.h>
 #include <hardware/irq.h>
+#include <hardware/platform_defs.h>
+#include <hardware/regs/i2c.h>
 #include <hardware/regs/intctrl.h>
+#include <hardware/structs/i2c.h>
 #include <hardware/structs/io_bank0.h>
 #include <hardware/sync.h>
 
@@ -21,15 +24,25 @@
 #define COMMAND_MASK (COMMAND_SIZE - 1)
 #define XMIT_SIZE    16
 #define XMIT_MASK    (XMIT_SIZE - 1)
+#define STATUS_SIZE  64
+#define STATUS_MASK  (STATUS_SIZE - 1)
+
+#define static_assert_power_of_2(val)                                          \
+	_Static_assert(                                                            \
+	    val > 0 && (val & (val - 1)) == 0,                                     \
+	    #val " must be a power of two"                                         \
+	)
+static_assert_power_of_2(COMMAND_SIZE);
+static_assert_power_of_2(XMIT_SIZE);
+static_assert_power_of_2(STATUS_SIZE);
 
 struct i2c_dma_xmit {
-	volatile uint8_t done;
-	uint8_t          addr;
-	uint8_t         *dst;
-	uint16_t         offset;
-	uint16_t         length;
-	uint16_t         buffer_length;
-	uint16_t         read_length;
+	uint8_t  addr;
+	uint8_t *dst;
+	uint16_t offset;
+	uint16_t length;
+	uint16_t buffer_length;
+	uint16_t read_length;
 };
 
 typedef struct i2c_dma_xmit i2c_dma_xmit_t;
@@ -38,12 +51,13 @@ static uint64_t i2c_dma_xmit_duration_us(i2c_dma_xmit_t *xmit, uint baudrate) {
 	return (uint64_t)xmit->length * 9000000 / (uint64_t)baudrate;
 }
 
-struct i2c_dma_inst {
+struct i2c_dma {
 	uint16_t            commands[COMMAND_SIZE];
 	struct i2c_dma_xmit xmit[XMIT_SIZE];
+	i2c_dma_xmit_status status[STATUS_SIZE];
 
 	volatile uint16_t        command_head, command_tail;
-	volatile i2c_dma_xmit_id xmit_head, xmit_tail, xmit_head_done;
+	volatile i2c_dma_xmit_id xmit_head, xmit_tail;
 	volatile absolute_time_t deadline;
 
 	i2c_inst_t *i2c;
@@ -52,27 +66,27 @@ struct i2c_dma_inst {
 	uint command_channel, read_channel;
 };
 
-void i2c_dma_start_next_xmit(i2c_dma_inst_t *i2c_dma);
+void i2c_dma_start_next_xmit(i2c_dma_t *i2c_dma);
 
-inline static uint16_t i2c_dma_used_commands(i2c_dma_inst_t *i2c_dma) {
+inline static uint16_t i2c_dma_used_commands(i2c_dma_t *i2c_dma) {
 	return i2c_dma->command_tail - i2c_dma->command_head;
 }
 
-inline static uint16_t i2c_dma_available_commands(i2c_dma_inst_t *i2c_dma) {
+inline static uint16_t i2c_dma_available_commands(i2c_dma_t *i2c_dma) {
 	return COMMAND_MASK - i2c_dma_used_commands(i2c_dma);
 }
 
-inline static bool i2c_dma_xmit_empty(i2c_dma_inst_t *i2c_dma) {
-	return i2c_dma->xmit_head_done == i2c_dma->xmit_tail;
+inline static bool i2c_dma_xmit_empty(i2c_dma_t *i2c_dma) {
+	return i2c_dma->xmit_head == i2c_dma->xmit_tail;
 }
 
-inline static bool i2c_dma_xmit_full(i2c_dma_inst_t *i2c_dma) {
+inline static bool i2c_dma_xmit_full(i2c_dma_t *i2c_dma) {
 	// This ring buffer use head==tail as empty. So we loose 1 capacity as we do
 	// not keep a separate count.
-	return (i2c_dma->xmit_tail - i2c_dma->xmit_head_done) >= (XMIT_SIZE - 1);
+	return (i2c_dma->xmit_tail - i2c_dma->xmit_head) >= (XMIT_SIZE - 1);
 }
 
-inline static void i2c_dma_xmit_command_done(i2c_dma_inst_t *i2c_dma) {
+inline static void i2c_dma_xmit_mark_done(i2c_dma_t *i2c_dma) {
 	if (i2c_dma->xmit_head < i2c_dma->xmit_tail) {
 		i2c_dma_xmit_t *xmit = &i2c_dma->xmit[i2c_dma->xmit_head & XMIT_MASK];
 		i2c_dma->xmit_head += 1;
@@ -80,42 +94,63 @@ inline static void i2c_dma_xmit_command_done(i2c_dma_inst_t *i2c_dma) {
 	}
 }
 
-inline static void i2c_dma_xmit_read_done(i2c_dma_inst_t *i2c_dma) {
-	if (i2c_dma->xmit_head_done < i2c_dma->xmit_tail) {
-		i2c_dma->xmit_head_done += 1;
+i2c_dma_t *contexts[NUM_I2CS] = {NULL, NULL};
+
+static void i2c_dma_i2c_irq_handler(i2c_dma_t *i2c_dma) {
+	printf(
+	    "coucou inside %d\n",
+	    i2c_dma == contexts[0]   ? 0
+	    : i2c_dma == contexts[1] ? 1
+	                             : -1
+	);
+
+	if (i2c_dma->xmit_head == i2c_dma->xmit_tail) {
+		printf("none scheduled\n");
 	}
-}
 
-static i2c_dma_inst_t *context[NUM_DMA_CHANNELS] = {
-    NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+	i2c_hw_t	           *hw     = i2c_dma->i2c->hw;
+	const volatile uint32_t status = hw->intr_stat;
 
-static inline void
-i2c_dma_command_channel_irq_handler(i2c_dma_inst_t *i2c_dma, int channel) {
-	(void)(channel);
-	i2c_dma_xmit_t *xmit = &i2c_dma->xmit[i2c_dma->xmit_head & XMIT_MASK];
-	xmit->done += 1;
-	if (xmit->done >= 1) {
-		i2c_dma_xmit_command_done(i2c_dma);
-		if (xmit->dst == NULL) {
-			i2c_dma_xmit_read_done(i2c_dma);
+	/* printf( */
+	/*     "Status %x TX:%x STOP:%x\n", */
+	/*     status, */
+	/*     I2C_IC_INTR_STAT_R_TX_ABRT_BITS, */
+	/*     I2C_IC_INTR_STAT_R_STOP_DET_BITS */
+	/* ); */
+
+	if (status & I2C_IC_INTR_STAT_R_TX_ABRT_BITS) {
+
+		i2c_get_hw(i2c_dma->i2c)->clr_tx_abrt;
+
+		if (i2c_dma->xmit_head < i2c_dma->xmit_tail) {
+			i2c_dma->status[i2c_dma->xmit_head & STATUS_MASK] =
+			    I2C_DMA_XMIT_ABORTED;
 		}
 	}
 
-	if (i2c_dma->xmit_head < i2c_dma->xmit_tail) {
-		i2c_dma_start_next_xmit(i2c_dma);
-	} else {
-		i2c_dma->deadline = from_us_since_boot(-1);
+	if (status & I2C_IC_INTR_STAT_R_STOP_DET_BITS) {
+		i2c_get_hw(i2c_dma->i2c)->clr_stop_det;
+
+		i2c_dma_xmit_mark_done(i2c_dma);
+
+		if (i2c_dma->xmit_head == i2c_dma->xmit_tail) {
+			i2c_dma->deadline = from_us_since_boot(-1);
+		} else {
+			i2c_dma_start_next_xmit(i2c_dma);
+		}
 	}
 }
 
-static inline void
-i2c_dma_read_channel_irq_handler(i2c_dma_inst_t *i2c_dma, int channel) {
-	(void)(channel);
-	i2c_dma_xmit_read_done(i2c_dma);
+void i2c_dma_i2c0_irq_handler() {
+	i2c_dma_i2c_irq_handler(contexts[0]);
 }
 
-i2c_dma_inst_t *i2c_dma_init(i2c_inst_t *i2c, int baudrate, int sda, int scl) {
-	i2c_dma_inst_t *res = malloc(sizeof(i2c_dma_inst_t));
+void i2c_dma_i2c1_irq_handler() {
+	i2c_dma_i2c_irq_handler(contexts[1]);
+}
+
+i2c_dma_t *i2c_dma_init(i2c_inst_t *i2c, int baudrate, int sda, int scl) {
+	i2c_dma_t *res = malloc(sizeof(i2c_dma_t));
 	if (res == NULL) {
 		return res;
 	}
@@ -141,26 +176,24 @@ i2c_dma_inst_t *i2c_dma_init(i2c_inst_t *i2c, int baudrate, int sda, int scl) {
 	gpio_set_function(scl, GPIO_FUNC_I2C);
 	gpio_set_function(sda, GPIO_FUNC_I2C);
 
-	res->command_head   = 0;
-	res->command_tail   = 0;
-	res->xmit_head      = 1;
-	res->xmit_tail      = 1;
-	res->xmit_head_done = 1;
+	res->command_head = 0;
+	res->command_tail = 0;
+	res->xmit_head    = 1;
+	res->xmit_tail    = 1;
 
-	register_dma_channel_handler(
-	    DMA_IRQ_0,
-	    res->command_channel,
-	    (dma_channel_irq_handler_fn)i2c_dma_command_channel_irq_handler,
-	    res
-	);
-	register_dma_channel_handler(
-	    DMA_IRQ_0,
-	    res->read_channel,
-	    (dma_channel_irq_handler_fn)i2c_dma_read_channel_irq_handler,
-	    res
-	);
-	context[res->command_channel] = res;
-	context[res->read_channel]    = res;
+	i2c->hw->intr_mask =
+	    I2C_IC_INTR_MASK_M_STOP_DET_BITS | I2C_IC_INTR_MASK_M_TX_ABRT_BITS;
+
+	if (i2c == i2c0) {
+		contexts[0] = res;
+		irq_set_exclusive_handler(I2C0_IRQ, i2c_dma_i2c0_irq_handler);
+		irq_set_enabled(I2C0_IRQ, true);
+
+	} else if (i2c == i2c1) {
+		contexts[1] = res;
+		irq_set_exclusive_handler(I2C1_IRQ, i2c_dma_i2c1_irq_handler);
+		irq_set_enabled(I2C1_IRQ, true);
+	}
 
 	dma_channel_config command_config =
 	    dma_channel_get_default_config(res->command_channel);
@@ -193,21 +226,21 @@ i2c_dma_inst_t *i2c_dma_init(i2c_inst_t *i2c, int baudrate, int sda, int scl) {
 	return res;
 }
 
-void i2c_dma_deinit(i2c_dma_inst_t *i2c_dma) {
+void i2c_dma_deinit(i2c_dma_t *i2c_dma) {
 	if (i2c_dma->command_channel >= 0) {
 		dma_channel_unclaim(i2c_dma->command_channel);
-		context[i2c_dma->command_channel] = NULL;
+		contexts[i2c_dma->command_channel] = NULL;
 	}
 	if (i2c_dma->read_channel >= 0) {
 		dma_channel_unclaim(i2c_dma->read_channel);
-		context[i2c_dma->read_channel] = NULL;
+		contexts[i2c_dma->read_channel] = NULL;
 	}
 	i2c_deinit(i2c_dma->i2c);
 	free(i2c_dma);
 }
 
 int i2c_dma_reserve_xmit(
-    i2c_dma_inst_t *i2c_dma, uint8_t addr, size_t len, i2c_dma_xmit_id *xmit
+    i2c_dma_t *i2c_dma, uint8_t addr, size_t len, i2c_dma_xmit_id *xmit_id
 ) {
 	if (addr & 0x80) {
 		// we only support 7bit addresses.
@@ -237,27 +270,26 @@ int i2c_dma_reserve_xmit(
 		return PICO_ERROR_RESOURCE_IN_USE;
 	}
 
-	*xmit                = i2c_dma->xmit_tail;
-	i2c_dma_xmit_t *next = &i2c_dma->xmit[i2c_dma->xmit_tail & XMIT_MASK];
-	next->addr           = 0x7f & addr;
-	next->length         = len;
-	next->done           = 0;
-	next->dst            = NULL;
-	next->read_length    = 0;
-	next->offset         = i2c_dma->command_tail & COMMAND_MASK;
-	next->buffer_length  = len;
-	if (next->offset + len > COMMAND_SIZE) {
-		next->buffer_length += COMMAND_SIZE - next->offset;
-		next->offset = 0;
+	*xmit_id             = i2c_dma->xmit_tail;
+	i2c_dma_xmit_t *xmit = &i2c_dma->xmit[i2c_dma->xmit_tail & XMIT_MASK];
+	xmit->addr           = 0x7f & addr;
+	xmit->length         = len;
+	xmit->dst            = NULL;
+	xmit->read_length    = 0;
+	xmit->offset         = i2c_dma->command_tail & COMMAND_MASK;
+	xmit->buffer_length  = len;
+	if (xmit->offset + len > COMMAND_SIZE) {
+		xmit->buffer_length += COMMAND_SIZE - xmit->offset;
+		xmit->offset = 0;
 	}
 
-	i2c_dma->command_tail += next->buffer_length;
+	i2c_dma->command_tail += xmit->buffer_length;
 
 	restore_interrupts(saved);
 	return PICO_OK;
 }
 
-void i2c_dma_start_next_xmit(i2c_dma_inst_t *i2c_dma) {
+void i2c_dma_start_next_xmit(i2c_dma_t *i2c_dma) {
 	if (i2c_dma->xmit_head >= i2c_dma->xmit_tail) {
 		return;
 	}
@@ -266,7 +298,7 @@ void i2c_dma_start_next_xmit(i2c_dma_inst_t *i2c_dma) {
 	i2c_dma->i2c->hw->enable = 0;
 	i2c_dma->i2c->hw->tar    = next->addr;
 	i2c_dma->i2c->hw->enable = 1;
-	if (next->dst != NULL && next->done == 0) {
+	if (next->dst != NULL) {
 		dma_channel_set_write_addr(i2c_dma->read_channel, next->dst, false);
 		dma_channel_set_trans_count(
 		    i2c_dma->read_channel,
@@ -290,7 +322,8 @@ void i2c_dma_start_next_xmit(i2c_dma_inst_t *i2c_dma) {
 	);
 }
 
-int i2c_dma_commit_xmit(i2c_dma_inst_t *i2c_dma, i2c_dma_xmit_id id) {
+int i2c_dma_commit_xmit(i2c_dma_t *i2c_dma, i2c_dma_xmit_id id) {
+	printf("Committing\n");
 	uint32_t saved = save_and_disable_interrupts();
 	bool     start = i2c_dma->xmit_tail == i2c_dma->xmit_head;
 	if (id != i2c_dma->xmit_tail) {
@@ -298,8 +331,10 @@ int i2c_dma_commit_xmit(i2c_dma_inst_t *i2c_dma, i2c_dma_xmit_id id) {
 		return PICO_ERROR_INVALID_ARG;
 	}
 
+	i2c_dma->status[i2c_dma->xmit_tail & STATUS_MASK] = I2C_DMA_XMIT_SCHEDULED;
 	i2c_dma->xmit_tail += 1;
 	if (start == true) {
+		printf("scheduling\n");
 		i2c_dma_start_next_xmit(i2c_dma);
 	}
 
@@ -307,15 +342,26 @@ int i2c_dma_commit_xmit(i2c_dma_inst_t *i2c_dma, i2c_dma_xmit_id id) {
 	return PICO_OK;
 }
 
-bool i2c_dma_xmit_done(const i2c_dma_inst_t *i2c_dma, i2c_dma_xmit_id xmit) {
-	uint32_t saved = save_and_disable_interrupts();
-	bool     res   = i2c_dma->xmit_head_done > xmit;
+i2c_dma_xmit_status
+i2c_dma_xmit_get_status(const i2c_dma_t *i2c_dma, i2c_dma_xmit_id xmit) {
+	uint32_t            saved = save_and_disable_interrupts();
+	i2c_dma_xmit_status res;
+	if (i2c_dma->xmit_head <= xmit) {
+		res = I2C_DMA_XMIT_SCHEDULED;
+	} else if ((xmit + STATUS_SIZE) > i2c_dma->xmit_tail) {
+		// we still have a valid status; need to check the validity of above
+		// formula.
+		res = i2c_dma->status[xmit & STATUS_MASK] | I2C_DMA_XMIT_DONE;
+	} else {
+		res = I2C_DMA_XMIT_DONE | I2C_DMA_XMIT_EXPIRED;
+	}
+
 	restore_interrupts(saved);
 	return res;
 }
 
 int i2c_dma_xmit_write(
-    i2c_dma_inst_t *i2c_dma,
+    i2c_dma_t      *i2c_dma,
     i2c_dma_xmit_id xmit_id,
     size_t          offset,
     const uint8_t  *src,
@@ -344,7 +390,7 @@ int i2c_dma_xmit_write(
 }
 
 int i2c_dma_xmit_read(
-    i2c_dma_inst_t *i2c_dma,
+    i2c_dma_t      *i2c_dma,
     i2c_dma_xmit_id xmit_id,
     size_t          offset,
     uint8_t        *dst,
@@ -377,10 +423,10 @@ int i2c_dma_xmit_read(
 	return PICO_OK;
 }
 
-void i2c_dma_i2c_unblock(i2c_dma_inst_t *i2c_dma);
-bool i2c_dma_i2c_stucked(i2c_dma_inst_t *i2c_dma);
+void i2c_dma_i2c_unblock(i2c_dma_t *i2c_dma);
+bool i2c_dma_i2c_stucked(i2c_dma_t *i2c_dma);
 
-i2c_dma_xmit_id i2c_dma_check_and_failed_stalled(i2c_dma_inst_t *i2c_dma) {
+i2c_dma_xmit_id i2c_dma_check_and_failed_stalled(i2c_dma_t *i2c_dma) {
 	uint32_t saved = save_and_disable_interrupts();
 
 	if (get_absolute_time() < i2c_dma->deadline ||
@@ -388,8 +434,8 @@ i2c_dma_xmit_id i2c_dma_check_and_failed_stalled(i2c_dma_inst_t *i2c_dma) {
 		restore_interrupts(saved);
 		return 0;
 	}
-	i2c_dma_xmit_id xmit_id = i2c_dma->xmit_head_done;
-	i2c_dma_xmit_t *xmit = &i2c_dma->xmit[i2c_dma->xmit_head_done & XMIT_MASK];
+	i2c_dma_xmit_id xmit_id = i2c_dma->xmit_head;
+	i2c_dma_xmit_t *xmit    = &i2c_dma->xmit[i2c_dma->xmit_head & XMIT_MASK];
 
 	dma_channel_abort(i2c_dma->command_channel);
 	dma_channel_abort(i2c_dma->read_channel);
@@ -398,8 +444,7 @@ i2c_dma_xmit_id i2c_dma_check_and_failed_stalled(i2c_dma_inst_t *i2c_dma) {
 	    (1u << i2c_dma->command_channel) | (1u << i2c_dma->read_channel);
 
 	// mark the xmit done.
-	i2c_dma_xmit_command_done(i2c_dma);
-	i2c_dma_xmit_read_done(i2c_dma);
+	i2c_dma_xmit_mark_done(i2c_dma);
 
 	if (i2c_dma_i2c_stucked(i2c_dma) == true) {
 		printf("[i2c_dma]: bus is stucked, unblocking it\n");
@@ -428,7 +473,7 @@ i2c_dma_xmit_id i2c_dma_check_and_failed_stalled(i2c_dma_inst_t *i2c_dma) {
 		gpio_set_dir(pin, GPIO_OUT);                                           \
 	} while (0)
 
-bool i2c_dma_i2c_stucked(i2c_dma_inst_t *i2c_dma) {
+bool i2c_dma_i2c_stucked(i2c_dma_t *i2c_dma) {
 	pin_set_open_drain(i2c_dma->scl);
 	pin_set_open_drain(i2c_dma->sda);
 
@@ -440,7 +485,7 @@ bool i2c_dma_i2c_stucked(i2c_dma_inst_t *i2c_dma) {
 	return res;
 }
 
-void i2c_dma_i2c_unblock(i2c_dma_inst_t *i2c_dma) {
+void i2c_dma_i2c_unblock(i2c_dma_t *i2c_dma) {
 	i2c_deinit(i2c_dma->i2c);
 
 	pin_set_open_drain(i2c_dma->scl);
