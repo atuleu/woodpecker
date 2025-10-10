@@ -87,7 +87,8 @@ update_group(uint8_t offset, uint8_t qA_bm, uint8_t qB_bm, uint8_t sw_bm) {
 	for (uint8_t i = offset; i < offset + 5; ++i) {
 		uint8_t col_bm = _BV(i - offset);
 		Encoder_update(&encoders[i], (qA & col_bm) != 0, (qB & col_bm) != 0);
-		Frame_set_encoder(&frame, i, encoders[i].value);
+		Frame_set_encoder(&frame, i, encoders[i].value >> 1);
+		// Frame_set_encoder(&frame, i, 0);
 		Debouncer_push(&buttons[i], (sw & col_bm) != 0);
 	}
 }
@@ -116,6 +117,7 @@ int main() {
 
 		update_group(0, R1_QA_bm, R1_QB_bm, R2_SW_bm);
 		update_group(5, R3_QA_bm, R3_QB_bm, R4_SW_bm);
+		write_buttons_to_frame();
 
 		frame.SequenceID += 1;
 		UART_push_frame(&frame);

@@ -1,7 +1,7 @@
 set(CMAKE_TOOLCHAIN_FILE cmake/generic-gcc-avr.cmake)
 
 set(AVR_MCU attiny1617)
-set(AVR_SIZE_ARGS -B)
+set(AVR_SIZE_ARGS -A)
 
 set(AVR_UPLOADTOOL pymcuprog)
 set(PYMCUPROG_PORT

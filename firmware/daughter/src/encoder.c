@@ -21,11 +21,11 @@ void Encoder_update(struct Encoder *enc, bool qA, bool qB) {
 	Debouncer_push(&enc->_qA, qA);
 	Debouncer_push(&enc->_qB, qB);
 
-	enc->_state = (enc->_state << 2) | ((uint8_t)enc->_qA.state << 1) |
-	              ((uint8_t)enc->_qB.state << 0);
+	enc->_state = (enc->_state << 2) | (((uint8_t)enc->_qA.state << 1) & 0x02) |
+	              (((uint8_t)enc->_qB.state << 0) & 0x01);
 
 	// clang-format off
-	static int8_t transition_table[16] = {
+	const static int8_t transition_table[16] = {
 		+0 /*00*/,-1 /*01*/, -1 /*10*/, -0 /*11*/, // last is 00
 		+1 /*00*/,+0 /*01*/, -0 /*10*/, -1 /*11*/, // last is 01
 		-1 /*00*/,-0 /*01*/, +0 /*10*/, +1 /*11*/, // last is 10
