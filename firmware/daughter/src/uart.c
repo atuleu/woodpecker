@@ -9,7 +9,8 @@
 #include "frame.h"
 
 #define SIZE 32
-#define MASK 0x1f
+#define MASK (SIZE - 1)
+_Static_assert(SIZE > 0 && (SIZE & MASK) == 0, "SIZE must be a power of two");
 
 static char             buffer[SIZE];
 static volatile uint8_t head = 0, tail = 0;
@@ -33,12 +34,15 @@ static inline bool uart_empty() {
 	} while (0)
 
 uint8_t UART_available() {
+	uint8_t res = 0;
 	ATOMIC_BLOCK(ATOMIC_FORCEON) {
 		if (head <= tail) {
-			return tail - head;
+			res = tail - head;
+		} else {
+			res = tail + SIZE - head;
 		}
-		return tail + SIZE - head;
 	}
+	return MASK - res;
 }
 
 void init_UART(bool alternate) {
@@ -56,7 +60,8 @@ void init_UART(bool alternate) {
 	}
 
 	// sets the UART to 115200 baud from a 10MHz clock.
-	USART0.BAUD  = (uint16_t)(347);
+	// USART0.BAUD  = (uint16_t)(347); // for 115200
+	USART0.BAUD  = (uint16_t)(174); // for 230400
 	USART0.CTRLA = USART_RS485_OFF_gc;
 	USART0.CTRLC = USART_CMODE_ASYNCHRONOUS_gc | USART_PMODE_DISABLED_gc |
 	               USART_SBMODE_1BIT_gc | USART_CHSIZE_8BIT_gc;

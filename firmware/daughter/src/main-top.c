@@ -58,6 +58,7 @@ void init() {
 	init_10MHz_clock();
 	init_RTC_1kHz();
 	initPins();
+	init_UART(true);
 	for (unsigned int i = 0; i < 10; ++i) {
 		Encoder_init(&encoders[i]);
 		Debouncer_init(&buttons[i]);
@@ -110,6 +111,8 @@ int main() {
 			continue;
 		}
 		last = now;
+
+		// UART_putc(now);
 
 		update_group(0, R1_QA_bm, R1_QB_bm, R2_SW_bm);
 		update_group(5, R3_QA_bm, R3_QB_bm, R4_SW_bm);
