@@ -18,6 +18,8 @@
 #define PERIOD_us       (50 * 1000)
 #define BAUDRATE        400 * 1000
 #define CHANNEL_DEPHASE 512
+#define WAIT            false
+
 static bool schedule_render = true;
 
 void render(uint32_t now_ms, i2c_dma_t *top, i2c_dma_t *bot, bool schedule) {
@@ -81,6 +83,9 @@ void render(uint32_t now_ms, i2c_dma_t *top, i2c_dma_t *bot, bool schedule) {
 			    72
 			);
 		}
+	}
+	if (!WAIT) {
+		return;
 	}
 	for (uint addr = 0; addr < 3; ++addr) {
 		i2c_dma_xmit_status status = i2c_dma_xmit_wait(top, top_xmit[addr]);

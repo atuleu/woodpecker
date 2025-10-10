@@ -11,7 +11,7 @@ static void                      *contexts[NUM_DMA_CHANNELS * NUM_DMA_IRQS];
 static bool                       init = false;
 
 #define DECLARE_IRQ_HANDLER(n)                                                 \
-	void dma_channel_irq##n##_handler() {                                      \
+	void __isr __not_in_flash_func(dma_channel_irq##n##_handler)(void) {       \
 		uint ints       = dma_hw->ints##n;                                     \
 		dma_hw->ints##n = ints;                                                \
 		for (uint i = 0; i < NUM_DMA_CHANNELS; ++i) {                          \

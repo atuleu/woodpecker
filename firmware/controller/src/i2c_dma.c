@@ -14,6 +14,8 @@
 
 #include <hardware/timer.h>
 #include <pico/error.h>
+#include <pico/platform/compiler.h>
+#include <pico/platform/sections.h>
 #include <pico/time.h>
 #include <pico/types.h>
 #include <stdint.h>
@@ -124,11 +126,11 @@ static void i2c_dma_i2c_irq_handler(i2c_dma_t *i2c_dma) {
 	}
 }
 
-void i2c_dma_i2c0_irq_handler() {
+static void __isr __not_in_flash_func(i2c_dma_i2c0_irq_handler)(void) {
 	i2c_dma_i2c_irq_handler(contexts[0]);
 }
 
-void i2c_dma_i2c1_irq_handler() {
+static void __isr __not_in_flash_func(i2c_dma_i2c1_irq_handler)(void) {
 	i2c_dma_i2c_irq_handler(contexts[1]);
 }
 
@@ -167,15 +169,23 @@ i2c_dma_t *i2c_dma_init(i2c_inst_t *i2c, int baudrate, int sda, int scl) {
 	i2c->hw->intr_mask =
 	    I2C_IC_INTR_MASK_M_STOP_DET_BITS | I2C_IC_INTR_MASK_M_TX_ABRT_BITS;
 
-	if (i2c == i2c0) {
+	switch (i2c_get_index(i2c)) {
+	case 0:
 		contexts[0] = res;
 		irq_set_exclusive_handler(I2C0_IRQ, i2c_dma_i2c0_irq_handler);
 		irq_set_enabled(I2C0_IRQ, true);
-
-	} else if (i2c == i2c1) {
+		break;
+	case 1:
 		contexts[1] = res;
 		irq_set_exclusive_handler(I2C1_IRQ, i2c_dma_i2c1_irq_handler);
 		irq_set_enabled(I2C1_IRQ, true);
+		break;
+	default:
+		dma_channel_unclaim(res->read_channel);
+		dma_channel_unclaim(res->command_channel);
+		i2c_deinit(i2c);
+		free(res);
+		return NULL;
 	}
 
 	dma_channel_config command_config =
