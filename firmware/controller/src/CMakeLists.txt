@@ -17,6 +17,8 @@ set(SRC_FILES
 	i2c_dma.c
 	uart_rx_pio.h
 	uart_rx_pio.c
+	hid_sections.h
+	hid_sections.c
 )
 
 add_executable(woodpecker-controller ${SRC_FILES})

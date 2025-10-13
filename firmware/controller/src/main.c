@@ -11,6 +11,7 @@
 #include <stdint.h>
 #include <stdio.h>
 
+#include "hid_sections.h"
 #include "i2c_dma.h"
 #include "lp5864.h"
 
@@ -121,6 +122,13 @@ int main() {
 	/* 	netusb_task(); */
 	/* } */
 	/* netusb_deinit(); */
+
+	int err = hid_sections_init();
+	if (err != PICO_OK) {
+		printf("Could not initialize section readers: %d\n", err);
+		return err;
+	}
+	printf("Initialized section readers\n");
 
 	printf("Attempt to read the I2C chip\n");
 

@@ -1,3 +1,4 @@
+#include <hardware/timer.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
@@ -42,12 +43,17 @@ static bool init = false;
 void uart_rx_irq_handler(UART_Rx_t *uart, int channel) {
 	if ((uart->_count % 2 == 0 && uart->head >= UART_HALF_SIZE) ||
 	    (uart->_count % 2 == 1 && uart->head < UART_HALF_SIZE)) {
-		printf("warning: possible RX overflow");
+		printf("warning: possible RX overflow\n");
 	}
 
 	dma_channel_set_write_addr(
 	    channel,
-	    uart->buffer + (++uart->_count % 2) * UART_SIZE / 2,
+	    uart->buffer + (++uart->_count % 2) * UART_HALF_SIZE,
+	    false
+	);
+	dma_channel_set_trans_count(
+	    channel,
+	    dma_encode_transfer_count(UART_HALF_SIZE),
 	    true
 	);
 }
@@ -101,7 +107,12 @@ int UART_Rx_init(UART_Rx_t *uart, int pin, int baudrate) {
 	    &config,
 	    uart->buffer,
 	    (io_rw_8 *)&uart->_pio->rxf[uart->_sm] + 3,
-	    UART_SIZE,
+	    UART_HALF_SIZE,
+	    false
+	);
+	dma_channel_set_trans_count(
+	    uart->_dma,
+	    dma_encode_transfer_count(UART_HALF_SIZE),
 	    true
 	);
 
@@ -122,14 +133,24 @@ void UART_Rx_deinit(UART_Rx_t *uart) {
 size_t UART_Rx_available(UART_Rx_t *uart) {
 	uint32_t saved = save_and_disable_interrupts();
 
-	uint32_t tail = (1 + uart->_count & 0x01) * (UART_SIZE / 2) -
-	                dma_hw->ch->transfer_count;
+	io_rw_32 rem_count = dma_hw->ch[uart->_dma].transfer_count;
+	uint32_t head      = uart->head;
+	uint32_t tail = (1 + (uart->_count & 0x01)) * (UART_HALF_SIZE)-rem_count;
 	restore_interrupts(saved);
 
-	if (uart->head <= tail) {
-		return tail - uart->head;
+	printf(
+	    "_count: %u tail: %u head: %u tx_count:%X\n",
+	    uart->_count,
+	    tail,
+	    head,
+	    rem_count
+	);
+
+	busy_wait_ms(10);
+	if (head <= tail) {
+		return tail - head;
 	}
-	return UART_SIZE + tail - uart->head;
+	return UART_SIZE + tail - head;
 }
 
 uint8_t UART_Rx_getc(UART_Rx_t *uart) {
