@@ -7,22 +7,21 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-#define UART_SIZE 128
-
+#define UART_SIZE        16
+#define UART_PACKET_SIZE 9
 _Static_assert(
     UART_SIZE > 0 && (UART_SIZE & (UART_SIZE - 1)) == 0,
     "UART_SIZE should be a power of two"
 );
 
 struct UART_Rx {
-	uint8_t  buffer[UART_SIZE];
-	uint32_t head;
+	uint8_t  buffer[UART_SIZE * UART_PACKET_SIZE];
+	uint32_t head, tail;
 	int      pin;
-	PIO      _pio;
-	int      _sm;
-	int      _offset;
-	int      _dma;
-	int      _count;
+	PIO      pio;
+	int      sm;
+	int      offset;
+	int      dma;
 };
 typedef struct UART_Rx UART_Rx_t;
 
