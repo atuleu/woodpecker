@@ -15,7 +15,7 @@
 #include "lp5864.h"
 
 #define PERIOD_ticks    (6 * 256)
-#define PERIOD_us       (50 * 1000)
+#define PERIOD_us       (20 * 1000)
 #define BAUDRATE        400 * 1000
 #define CHANNEL_DEPHASE 512
 #define WAIT            false
@@ -191,6 +191,9 @@ int main() {
 	status = i2c_dma_xmit_wait(bot_bus, bot_xmit);
 	printf("%s\n", status == I2C_DMA_XMIT_DONE ? " OK" : "ERR");
 
+#define WINDOW_SIZE 64
+	int64_t         durations[WINDOW_SIZE];
+	size_t          i           = 0;
 	absolute_time_t last_update = -PERIOD_us;
 	while (true) {
 		i2c_dma_xmit_id failed = i2c_dma_check_and_failed_stalled(top_bus);
@@ -206,8 +209,34 @@ int main() {
 		if (absolute_time_diff_us(last_update, now) < PERIOD_us) {
 			continue;
 		}
-		render(now / 1000, top_bus, bot_bus, schedule_render);
 		last_update += PERIOD_us;
+
+		now = get_absolute_time();
+		render(now / 1000, top_bus, bot_bus, schedule_render);
+		absolute_time_t after = get_absolute_time();
+		durations[i++]        = absolute_time_diff_us(now, after);
+		i &= WINDOW_SIZE - 1;
+		if (i == 0) {
+			int64_t max  = 0;
+			int64_t min  = 1LL << 62;
+			int64_t mean = 0;
+			for (size_t j = 0; j < WINDOW_SIZE; ++j) {
+				min = MIN(durations[j], min);
+				max = MAX(durations[j], max);
+				mean += durations[j];
+			}
+			mean /= WINDOW_SIZE;
+			printf(
+			    "Render duration mean=%lld.%03lldms min=%lld.%03lld "
+			    "max=%lld.%03lld\n",
+			    mean / 1000,
+			    mean % 1000,
+			    min / 1000,
+			    min % 1000,
+			    max / 1000,
+			    max % 1000
+			);
+		}
 	}
 
 	return 0;
