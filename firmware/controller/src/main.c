@@ -123,7 +123,7 @@ int main() {
 	/* } */
 	/* netusb_deinit(); */
 
-	int err = hid_sections_init();
+	int err = 0; // hid_sections_init();
 	if (err != PICO_OK) {
 		printf("Could not initialize section readers: %d\n", err);
 		return err;

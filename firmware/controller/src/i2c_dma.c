@@ -221,15 +221,20 @@ i2c_dma_t *i2c_dma_init(i2c_inst_t *i2c, int baudrate, int sda, int scl) {
 }
 
 void i2c_dma_deinit(i2c_dma_t *i2c_dma) {
+	i2c_deinit(i2c_dma->i2c);
+
 	if (i2c_dma->command_channel >= 0) {
+		ATOMIC_CORE_BLOCK() {
+			contexts[i2c_dma->command_channel] = NULL;
+		}
 		dma_channel_unclaim(i2c_dma->command_channel);
-		contexts[i2c_dma->command_channel] = NULL;
 	}
 	if (i2c_dma->read_channel >= 0) {
 		dma_channel_unclaim(i2c_dma->read_channel);
-		contexts[i2c_dma->read_channel] = NULL;
+		ATOMIC_CORE_BLOCK() {
+			contexts[i2c_dma->read_channel] = NULL;
+		}
 	}
-	i2c_deinit(i2c_dma->i2c);
 	free(i2c_dma);
 }
 

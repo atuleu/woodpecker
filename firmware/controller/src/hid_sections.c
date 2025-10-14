@@ -4,6 +4,7 @@
 #include <pico/error.h>
 #include <pico/platform/sections.h>
 #include <pico/time.h>
+#include <stdint.h>
 #include <stdio.h>
 
 #define BAUDRATE     230400
@@ -36,17 +37,25 @@ _Static_assert(sizeof(section_frame_t) == 7, "Size of frame should be 7");
 struct hid_section {
 	UART_Rx_t uart_rx;
 
-	union {
-		uint8_t         buffer[sizeof(section_frame_t)];
-		section_frame_t frame;
-	};
-
-	uint8_t crc;
-
-	size_t idx;
 	size_t disp;
+	size_t crc_errors, framing_errors;
 };
 typedef struct hid_section hid_section_t;
+
+int hid_section_init(hid_section_t *section, int pin, int baudrate) {
+	int err = UART_Rx_init(&section->uart_rx, pin, baudrate);
+	if (err != PICO_OK) {
+		return err;
+	}
+	section->disp           = -1;
+	section->crc_errors     = 0;
+	section->framing_errors = 0;
+	return PICO_OK;
+}
+
+void hid_section_deinit(hid_section_t *section) {
+	UART_Rx_deinit(&section->uart_rx);
+}
 
 static inline uint8_t crc8_0x31_update(uint8_t crc, uint8_t data) {
 	const static uint8_t crc8_0x31[256] = {
@@ -77,77 +86,95 @@ static inline uint8_t crc8_0x31_update(uint8_t crc, uint8_t data) {
 	return crc8_0x31[crc ^ data];
 }
 
+struct __attribute__((packed)) section_packet {
+	uint8_t         header;
+	section_frame_t frame;
+	uint8_t         crc;
+} packet;
+
+typedef struct section_packet section_packet_t;
+_Static_assert(
+    sizeof(section_packet_t) == UART_PACKET_SIZE, "Invalid UART configuration"
+);
+
+inline static void
+hid_section_handle_frame(hid_section_t *section, section_frame_t *frame) {
+	if (section->disp++ % 1000 != 0) {
+		return;
+	}
+	if (frame->Type == 0) {
+		printf(
+		    "Got frame Type=ENCODER ID=%d SeqID=%d Buttons=%02X "
+		    "Encoders=[%d %d %d %d %d %d %d %d %d %d]\n",
+		    frame->ID,
+		    frame->SequenceID,
+		    frame->Buttons,
+		    frame->Encoder[0].A,
+		    frame->Encoder[0].B,
+		    frame->Encoder[1].A,
+		    frame->Encoder[1].B,
+		    frame->Encoder[2].A,
+		    frame->Encoder[2].B,
+		    frame->Encoder[3].A,
+		    frame->Encoder[3].B,
+		    frame->Encoder[4].A,
+		    frame->Encoder[4].B
+		);
+	} else {
+		printf(
+		    "Got frame Type=FADER ID=%d SeqID=%d Buttons=%02X "
+		    "Faders=[%d %d %d %d %d]\n",
+		    frame->ID,
+		    frame->SequenceID,
+		    frame->Buttons,
+		    frame->Fader[0],
+		    frame->Fader[1],
+		    frame->Fader[2],
+		    frame->Fader[3],
+		    frame->Fader[4]
+		);
+	}
+}
+
 static void hid_section_work(hid_section_t *section) {
-	size_t avail;
-	do {
-		avail = UART_Rx_available(&section->uart_rx);
-		printf("avail:%d\n", avail);
-		if (avail == 0) {
+	union {
+		section_packet_t as_packet;
+		uint8_t          as_buffer[UART_PACKET_SIZE];
+	} p;
+
+	while (true) {
+		int res = UART_Rx_get(
+		    &section->uart_rx,
+		    p.as_buffer,
+		    sizeof(section_packet_t)
+		);
+		if (res <= 0) {
 			break;
 		}
 
-		uint8_t c = UART_Rx_unsafe_getc(&section->uart_rx);
-		if (section->idx < 0 && c != 0x55) {
-			continue;
-		} else {
-			section->idx = 0;
-			section->crc = 0;
-			continue;
+		if (p.as_packet.header != 0x55) {
+			section->framing_errors += 1;
+			break;
 		}
-		if (section->idx < sizeof(section_frame_t)) {
-			section->buffer[section->idx] = c;
-			section->crc                  = crc8_0x31_update(section->crc, c);
-			++section->idx;
-			continue;
+
+		for (size_t i = 0; i < sizeof(section_frame_t); ++i) {
+			p.as_packet.crc =
+			    crc8_0x31_update(p.as_packet.crc, p.as_buffer[i + 1]);
 		}
-		// this is the last char.
-		section->idx = 0;
-		if (c != section->crc) {
-			// invalid CRC
-			continue;
+		if (p.as_packet.crc != 0) {
+			section->crc_errors += 1;
+			break;
 		}
-		if (++section->disp % 1000 == 0) {
-			if (section->frame.Type == 0) {
-				printf(
-				    "Got new frame Type=ENCODER ID=%d SeqID=%d Buttons=0x%02X "
-				    "Encoder=[%d %d %d %d %d %d %d %d %d %d]\n",
-				    section->frame.ID,
-				    section->frame.SequenceID,
-				    section->frame.Buttons,
-				    section->frame.Encoder[0].A,
-				    section->frame.Encoder[0].B,
-				    section->frame.Encoder[1].A,
-				    section->frame.Encoder[1].B,
-				    section->frame.Encoder[2].A,
-				    section->frame.Encoder[2].B,
-				    section->frame.Encoder[3].A,
-				    section->frame.Encoder[3].B,
-				    section->frame.Encoder[4].A,
-				    section->frame.Encoder[4].B
-				);
-			}
-		} else {
-			printf(
-			    "Got new frame Type=FADER ID=%d SeqID=%d Buttons=0x%02X "
-			    "Fader=[%d %d %d %d %d]\n",
-			    section->frame.ID,
-			    section->frame.SequenceID,
-			    section->frame.Buttons,
-			    section->frame.Fader[0],
-			    section->frame.Fader[1],
-			    section->frame.Fader[2],
-			    section->frame.Fader[3],
-			    section->frame.Fader[4]
-			);
-		}
-	} while (avail > 0);
+
+		hid_section_handle_frame(section, &p.as_packet.frame);
+	}
 }
 
 struct hid_sections {
 	int               irq;
 	repeating_timer_t timer;
 
-	struct hid_section sections[6];
+	struct hid_section sections[NUM_SECTIONS];
 };
 
 static struct hid_sections sections = {
@@ -174,39 +201,39 @@ int hid_sections_init() {
 	}
 
 	int pins[6] = {2, 3, 4, 23, 24, 25};
-	for (size_t i = 0; i < 6; ++i) {
-		int err =
-		    UART_Rx_init(&sections.sections[i].uart_rx, pins[i], BAUDRATE);
+	for (size_t i = 0; i < NUM_SECTIONS; ++i) {
+		int err = hid_section_init(&sections.sections[i], pins[i], BAUDRATE);
 		if (err != PICO_OK) {
 			_hid_sections_deinit(i);
 			return err;
 		}
-		sections.sections[i].idx = -1;
 	}
 
 	sections.irq = user_irq_claim_unused(false);
 	if (sections.irq < 0) {
-		_hid_sections_deinit(6);
+		_hid_sections_deinit(NUM_SECTIONS);
 		return PICO_ERROR_INSUFFICIENT_RESOURCES;
 	}
 	irq_set_exclusive_handler(sections.irq, hid_section_irq_handler);
+
 	irq_set_enabled(sections.irq, true);
-	// irq_set_priority(sections.irq, PICO_DEFAULT_IRQ_PRIORITY + 100);
+	// sets the lowest priority for this user IRQ. we need it to be prempted.
+	irq_set_priority(sections.irq, PICO_LOWEST_IRQ_PRIORITY);
 	if (add_repeating_timer_us(
 	        500,
 	        hid_section_repeated_timer,
 	        &sections,
 	        &sections.timer
 	    ) == false) {
-		_hid_sections_deinit(0);
+		_hid_sections_deinit(NUM_SECTIONS);
 		return PICO_ERROR_INSUFFICIENT_RESOURCES;
 	}
 
 	return PICO_OK;
 }
 
-void hid_section_deinit() {
-	_hid_sections_deinit(6);
+void hid_sections_deinit() {
+	_hid_sections_deinit(NUM_SECTIONS);
 }
 
 void _hid_sections_deinit(size_t num_sections) {
@@ -220,6 +247,6 @@ void _hid_sections_deinit(size_t num_sections) {
 	}
 
 	for (size_t i = 0; i < num_sections; ++i) {
-		UART_Rx_deinit(&sections.sections[i].uart_rx);
+		hid_section_deinit(&sections.sections[i]);
 	}
 }

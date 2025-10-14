@@ -6,7 +6,7 @@
 	.pio_version 0 // only requires PIO version 0
 
 .program uart_rx
-
+.define PUBLIC IRQ_READY 0
 ; Slightly more fleshed-out 8n1 UART receiver which handles framing errors and
 ; break conditions more gracefully.
 ; IN pin 0 and JMP pin are both mapped to the GPIO used as UART RX.
@@ -17,7 +17,7 @@ check_high:
 	jmp sync_high
 wait_loop:
 	jmp y-- check_high [6]
-	irq  0 rel
+	irq set IRQ_READY rel
 
 .wrap_target
 start:
