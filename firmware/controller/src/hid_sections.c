@@ -142,6 +142,7 @@ static void hid_section_work(hid_section_t *section) {
 		uint8_t          as_buffer[UART_PACKET_SIZE];
 	} p;
 
+	bool bad = false;
 	while (true) {
 		int res = UART_Rx_get(
 		    &section->uart_rx,
@@ -154,6 +155,7 @@ static void hid_section_work(hid_section_t *section) {
 
 		if (p.as_packet.header != 0x55) {
 			section->framing_errors += 1;
+			bad = true;
 			break;
 		}
 
@@ -163,10 +165,36 @@ static void hid_section_work(hid_section_t *section) {
 		}
 		if (p.as_packet.crc != 0) {
 			section->crc_errors += 1;
+			bad = true;
 			break;
 		}
 
 		hid_section_handle_frame(section, &p.as_packet.frame);
+	}
+	if (bad == false) {
+		return;
+	}
+	if (section->disp++ % 1000 == 0) {
+		printf(
+		    "Got invalid frame: stats: rx: %d rx_error: %d frame_error:%d "
+		    "crc_error:%d\n",
+		    section->uart_rx.tail,
+		    section->uart_rx.tx_errors,
+		    section->framing_errors,
+		    section->crc_errors
+		);
+		printf(
+		    "%02X %02X %02X %02X %02X %02X %02X %02X %02X\n",
+		    p.as_buffer[0],
+		    p.as_buffer[1],
+		    p.as_buffer[2],
+		    p.as_buffer[3],
+		    p.as_buffer[4],
+		    p.as_buffer[5],
+		    p.as_buffer[6],
+		    p.as_buffer[7],
+		    p.as_buffer[8]
+		);
 	}
 }
 
@@ -183,9 +211,10 @@ static struct hid_sections sections = {
 };
 
 static void __isr __not_in_flash_func(hid_section_irq_handler)(void) {
-	for (size_t i = 0; i < 6; ++i) {
+	for (size_t i = 0; i < NUM_SECTIONS; ++i) {
 		hid_section_work(&sections.sections[i]);
 	}
+	irq_clear(sections.irq);
 }
 
 static bool hid_section_repeated_timer(__unused repeating_timer_t *rt) {
@@ -220,7 +249,7 @@ int hid_sections_init() {
 	// sets the lowest priority for this user IRQ. we need it to be prempted.
 	irq_set_priority(sections.irq, PICO_LOWEST_IRQ_PRIORITY);
 	if (add_repeating_timer_us(
-	        500,
+	        250,
 	        hid_section_repeated_timer,
 	        &sections,
 	        &sections.timer

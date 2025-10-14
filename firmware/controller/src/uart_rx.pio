@@ -16,10 +16,9 @@ check_high:
 	jmp pin wait_loop
 	jmp sync_high
 wait_loop:
-	jmp y-- check_high [6]
+	jmp y-- check_high [5]
 	irq set IRQ_READY rel
 
-.wrap_target
 start:
     wait 0 pin 0        ; Stall until start bit is asserted
     set x, 7    [10]    ; Preload bit counter, then delay until halfway through
@@ -33,7 +32,7 @@ bitloop:                ; the first data bit (12 cycles incl wait, set).
 
 good_stop:              ; No delay before returning to start; a little slack is
     push                ; important in case the TX clock is slightly too fast.
-.wrap
+	jmp start
 
 % c-sdk {
 static inline void uart_rx_program_init(PIO pio, uint sm, uint offset, uint pin, uint baud) {

@@ -172,14 +172,18 @@ i2c_dma_t *i2c_dma_init(i2c_inst_t *i2c, int baudrate, int sda, int scl) {
 
 	switch (i2c_get_index(i2c)) {
 	case 0:
-		contexts[0] = res;
-		irq_set_exclusive_handler(I2C0_IRQ, i2c_dma_i2c0_irq_handler);
-		irq_set_enabled(I2C0_IRQ, true);
+		ATOMIC_CORE_BLOCK() {
+			contexts[0] = res;
+			irq_set_exclusive_handler(I2C0_IRQ, i2c_dma_i2c0_irq_handler);
+			irq_set_enabled(I2C0_IRQ, true);
+		}
 		break;
 	case 1:
-		contexts[1] = res;
-		irq_set_exclusive_handler(I2C1_IRQ, i2c_dma_i2c1_irq_handler);
-		irq_set_enabled(I2C1_IRQ, true);
+		ATOMIC_CORE_BLOCK() {
+			contexts[1] = res;
+			irq_set_exclusive_handler(I2C1_IRQ, i2c_dma_i2c1_irq_handler);
+			irq_set_enabled(I2C1_IRQ, true);
+		}
 		break;
 	default:
 		dma_channel_unclaim(res->read_channel);
@@ -222,18 +226,27 @@ i2c_dma_t *i2c_dma_init(i2c_inst_t *i2c, int baudrate, int sda, int scl) {
 
 void i2c_dma_deinit(i2c_dma_t *i2c_dma) {
 	i2c_deinit(i2c_dma->i2c);
-
-	if (i2c_dma->command_channel >= 0) {
+	switch (i2c_get_index(i2c_dma->i2c)) {
+	case 0:
 		ATOMIC_CORE_BLOCK() {
-			contexts[i2c_dma->command_channel] = NULL;
+			irq_set_enabled(I2C0_IRQ, false);
+			contexts[0] = NULL;
+			irq_remove_handler(I2C0_IRQ, i2c_dma_i2c0_irq_handler);
 		}
+		break;
+	case 1:
+		ATOMIC_CORE_BLOCK() {
+			irq_set_enabled(I2C1_IRQ, false);
+			contexts[0] = NULL;
+			irq_remove_handler(I2C1_IRQ, i2c_dma_i2c1_irq_handler);
+		}
+		break;
+	}
+	if (i2c_dma->command_channel >= 0) {
 		dma_channel_unclaim(i2c_dma->command_channel);
 	}
 	if (i2c_dma->read_channel >= 0) {
 		dma_channel_unclaim(i2c_dma->read_channel);
-		ATOMIC_CORE_BLOCK() {
-			contexts[i2c_dma->read_channel] = NULL;
-		}
 	}
 	free(i2c_dma);
 }
@@ -424,11 +437,11 @@ bool i2c_dma_i2c_stucked(i2c_dma_t *i2c_dma);
 i2c_dma_xmit_id i2c_dma_check_and_failed_stalled(i2c_dma_t *i2c_dma) {
 	i2c_dma_xmit_id xmit_id;
 	ATOMIC_CORE_BLOCK() {
-
 		if (get_absolute_time() < i2c_dma->deadline ||
 		    i2c_dma_xmit_empty(i2c_dma)) {
 			return 0;
 		}
+
 		xmit_id              = i2c_dma->xmit_head;
 		i2c_dma_xmit_t *xmit = &i2c_dma->xmit[i2c_dma->xmit_head & XMIT_MASK];
 

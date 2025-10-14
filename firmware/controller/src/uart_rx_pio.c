@@ -1,5 +1,7 @@
 #include "uart_rx_pio.h"
 
+#include <hardware/irq.h>
+#include <hardware/pio.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <string.h>
@@ -58,7 +60,6 @@ static UART_Rx_t *contexts[NUM_PIOS * NUM_PIO_STATE_MACHINES] = {
 #endif
 
 void uart_rx_dma_irq_handler(UART_Rx_t *uart, int channel) {
-	printf("DMA done\n");
 	uart->tail += 1;
 	uart->deadline = from_us_since_boot(-1);
 	pio_sm_restart_at_offset(uart->pio, uart->sm, uart->offset);
@@ -82,8 +83,10 @@ inline static void _uart_pio_irq0_handler(PIO pio) {
 	uint32_t ints = pio->ints0;
 	for (size_t i = 0; i < 4; ++i) {
 		UART_Rx_t *uart = contexts[i + PIO_NUM(pio) * NUM_PIO_STATE_MACHINES];
-		if (ints & (1u << (pis_interrupt0 + i)) && uart != NULL) {
-			uart_rx_pio_irq_handler(uart);
+		if (ints & (1u << (pis_interrupt0 + i))) {
+			if (uart != NULL) {
+				uart_rx_pio_irq_handler(uart);
+			}
 			pio_interrupt_clear(pio, i);
 		}
 	}
@@ -158,13 +161,15 @@ int UART_Rx_init(UART_Rx_t *uart, int pin, int baudrate) {
 		    uart_pio1_irq0_handler
 		);
 	}
-
+	// irq_set_priority(pio_get_irq_num(uart->pio, 0),
+	// PICO_HIGHEST_IRQ_PRIORITY);
 	pio_set_irqn_source_enabled(
 	    uart->pio,
 	    0,
 	    pio_get_relative_sm_interrupt_source(uart_rx_IRQ_READY, uart->sm),
 	    true
 	);
+
 	irq_set_enabled(pio_get_irq_num(uart->pio, 0), true);
 
 	uart_rx_program_init(uart->pio, uart->sm, uart->offset, pin, baudrate);
