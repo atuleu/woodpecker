@@ -1,4 +1,5 @@
 #include "dma_shared_irq.h"
+#include "atomic.h"
 #include <hardware/dma.h>
 #include <hardware/irq.h>
 #include <hardware/platform_defs.h>
@@ -6,9 +7,14 @@
 #include <hardware/sync.h>
 #include <string.h>
 
-static dma_channel_irq_handler_fn handlers[NUM_DMA_CHANNELS * NUM_DMA_IRQS];
-static void                      *contexts[NUM_DMA_CHANNELS * NUM_DMA_IRQS];
-static bool                       init = false;
+#if NUM_DMA_IRQS ==2 && NUM_DMA_CHANNELS == 12
+static dma_channel_irq_handler_fn handlers[NUM_DMA_CHANNELS * NUM_DMA_IRQS] = {
+    NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+    NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+static void *contexts[NUM_DMA_CHANNELS * NUM_DMA_IRQS] = {
+    NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+    NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+#endif
 
 #define DECLARE_IRQ_HANDLER(n)                                                 \
 	void __isr __not_in_flash_func(dma_channel_irq##n##_handler)(void) {       \
@@ -45,49 +51,39 @@ void register_dma_channel_handler(
 	assert(irq_num == DMA_IRQ_0 || irq_num == DMA_IRQ_1);
 	assert(channel < NUM_DMA_CHANNELS);
 
-	uint32_t saved = save_and_disable_interrupts();
-
-	if (init == false) {
-		init = true;
-		memset(context, 0, sizeof(void *) * NUM_DMA_CHANNELS * NUM_DMA_IRQS);
-		memset(
-		    handlers,
-		    0,
-		    sizeof(dma_channel_irq_handler_fn) * NUM_DMA_CHANNELS * NUM_DMA_IRQS
-		);
-	}
-
 	if (irq_num == DMA_IRQ_0) {
 		irq_set_exclusive_handler(irq_num, dma_channel_irq0_handler);
 		dma_channel_set_irq0_enabled(channel, true);
-		contexts[channel] = context;
-		handlers[channel] = handler;
+		ATOMIC_CORE_BLOCK() {
+			contexts[channel] = context;
+			handlers[channel] = handler;
+		}
 	}
 
 	if (irq_num == DMA_IRQ_1) {
 		irq_set_exclusive_handler(irq_num, dma_channel_irq1_handler);
 		dma_channel_set_irq1_enabled(channel, true);
-		contexts[channel + 1 * NUM_DMA_CHANNELS] = context;
-		handlers[channel + 1 * NUM_DMA_CHANNELS] = handler;
+		ATOMIC_CORE_BLOCK() {
+			contexts[channel + 1 * NUM_DMA_CHANNELS] = context;
+			handlers[channel + 1 * NUM_DMA_CHANNELS] = handler;
+		}
 	}
 
 	irq_set_enabled(irq_num, true);
-	restore_interrupts(saved);
 }
 
 void unregister_dma_channel_handler(uint irq_num, int channel) {
 	assert(irq_num == DMA_IRQ_0 || irq_num == DMA_IRQ_1);
 	assert(channel < NUM_DMA_CHANNELS);
-	uint32_t saved = save_and_disable_interrupts();
+	ATOMIC_CORE_BLOCK() {
+		if (irq_num == DMA_IRQ_0) {
+			contexts[channel] = NULL;
+			handlers[channel] = NULL;
+		}
 
-	if (irq_num == DMA_IRQ_0) {
-		contexts[channel] = NULL;
-		handlers[channel] = NULL;
+		if (irq_num == DMA_IRQ_1) {
+			contexts[channel + NUM_DMA_CHANNELS] = NULL;
+			handlers[channel + NUM_DMA_CHANNELS] = NULL;
+		}
 	}
-
-	if (irq_num == DMA_IRQ_1) {
-		contexts[channel + 1 * NUM_DMA_CHANNELS] = NULL;
-		handlers[channel + 1 * NUM_DMA_CHANNELS] = NULL;
-	}
-	restore_interrupts(saved);
 }

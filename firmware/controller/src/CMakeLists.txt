@@ -19,6 +19,7 @@ set(SRC_FILES
 	uart_rx_pio.c
 	hid_sections.h
 	hid_sections.c
+	atomic.h
 )
 
 add_executable(woodpecker-controller ${SRC_FILES})

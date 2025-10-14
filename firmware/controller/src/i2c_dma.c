@@ -1,4 +1,5 @@
 #include "i2c_dma.h"
+#include "atomic.h"
 #include "dma_shared_irq.h"
 
 #include <hardware/dma.h>
@@ -240,37 +241,34 @@ int i2c_dma_reserve_xmit(
 		return PICO_ERROR_INVALID_ARG;
 	}
 
-	uint32_t saved = save_and_disable_interrupts();
-	size_t   available =
-	    MAX(COMMAND_SIZE - (i2c_dma->command_tail & COMMAND_MASK),
-	        (i2c_dma->command_head & COMMAND_MASK));
+	ATOMIC_CORE_BLOCK() {
+		size_t available =
+		    MAX(COMMAND_SIZE - (i2c_dma->command_tail & COMMAND_MASK),
+		        (i2c_dma->command_head & COMMAND_MASK));
 
-	if (available < len) {
-		restore_interrupts(saved);
-		return PICO_ERROR_INSUFFICIENT_RESOURCES;
+		if (available < len) {
+			return PICO_ERROR_INSUFFICIENT_RESOURCES;
+		}
+
+		if (i2c_dma_xmit_full(i2c_dma)) {
+			return PICO_ERROR_RESOURCE_IN_USE;
+		}
+
+		*xmit_id             = i2c_dma->xmit_tail;
+		i2c_dma_xmit_t *xmit = &i2c_dma->xmit[i2c_dma->xmit_tail & XMIT_MASK];
+		xmit->addr           = 0x7f & addr;
+		xmit->length         = len;
+		xmit->dst            = NULL;
+		xmit->read_length    = 0;
+		xmit->offset         = i2c_dma->command_tail & COMMAND_MASK;
+		xmit->buffer_length  = len;
+		if (xmit->offset + len > COMMAND_SIZE) {
+			xmit->buffer_length += COMMAND_SIZE - xmit->offset;
+			xmit->offset = 0;
+		}
+
+		i2c_dma->command_tail += xmit->buffer_length;
 	}
-
-	if (i2c_dma_xmit_full(i2c_dma)) {
-		restore_interrupts(saved);
-		return PICO_ERROR_RESOURCE_IN_USE;
-	}
-
-	*xmit_id             = i2c_dma->xmit_tail;
-	i2c_dma_xmit_t *xmit = &i2c_dma->xmit[i2c_dma->xmit_tail & XMIT_MASK];
-	xmit->addr           = 0x7f & addr;
-	xmit->length         = len;
-	xmit->dst            = NULL;
-	xmit->read_length    = 0;
-	xmit->offset         = i2c_dma->command_tail & COMMAND_MASK;
-	xmit->buffer_length  = len;
-	if (xmit->offset + len > COMMAND_SIZE) {
-		xmit->buffer_length += COMMAND_SIZE - xmit->offset;
-		xmit->offset = 0;
-	}
-
-	i2c_dma->command_tail += xmit->buffer_length;
-
-	restore_interrupts(saved);
 	return PICO_OK;
 }
 
@@ -308,38 +306,37 @@ void i2c_dma_start_next_xmit(i2c_dma_t *i2c_dma) {
 }
 
 int i2c_dma_commit_xmit(i2c_dma_t *i2c_dma, i2c_dma_xmit_id id) {
-	uint32_t saved = save_and_disable_interrupts();
-	bool     start = i2c_dma->xmit_tail == i2c_dma->xmit_head;
-	if (id != i2c_dma->xmit_tail) {
-		restore_interrupts(saved);
-		return PICO_ERROR_INVALID_ARG;
-	}
+	ATOMIC_CORE_BLOCK() {
+		bool start = i2c_dma->xmit_tail == i2c_dma->xmit_head;
+		if (id != i2c_dma->xmit_tail) {
+			return PICO_ERROR_INVALID_ARG;
+		}
 
-	i2c_dma->status[i2c_dma->xmit_tail & STATUS_MASK] = I2C_DMA_XMIT_SCHEDULED;
-	i2c_dma->xmit_tail += 1;
-	if (start == true) {
-		i2c_dma_start_next_xmit(i2c_dma);
+		i2c_dma->status[i2c_dma->xmit_tail & STATUS_MASK] =
+		    I2C_DMA_XMIT_SCHEDULED;
+		i2c_dma->xmit_tail += 1;
+		if (start == true) {
+			i2c_dma_start_next_xmit(i2c_dma);
+		}
 	}
-
-	restore_interrupts(saved);
 	return PICO_OK;
 }
 
 i2c_dma_xmit_status
 i2c_dma_xmit_get_status(const i2c_dma_t *i2c_dma, i2c_dma_xmit_id xmit) {
-	uint32_t            saved = save_and_disable_interrupts();
 	i2c_dma_xmit_status res;
-	if (i2c_dma->xmit_head <= xmit) {
-		res = I2C_DMA_XMIT_SCHEDULED;
-	} else if ((xmit + STATUS_SIZE) > i2c_dma->xmit_tail) {
-		// we still have a valid status; need to check the validity of above
-		// formula.
-		res = i2c_dma->status[xmit & STATUS_MASK] | I2C_DMA_XMIT_DONE;
-	} else {
-		res = I2C_DMA_XMIT_DONE | I2C_DMA_XMIT_EXPIRED;
-	}
+	ATOMIC_CORE_BLOCK() {
 
-	restore_interrupts(saved);
+		if (i2c_dma->xmit_head <= xmit) {
+			res = I2C_DMA_XMIT_SCHEDULED;
+		} else if ((xmit + STATUS_SIZE) > i2c_dma->xmit_tail) {
+			// we still have a valid status; need to check the validity of above
+			// formula.
+			res = i2c_dma->status[xmit & STATUS_MASK] | I2C_DMA_XMIT_DONE;
+		} else {
+			res = I2C_DMA_XMIT_DONE | I2C_DMA_XMIT_EXPIRED;
+		}
+	}
 	return res;
 }
 
@@ -420,31 +417,30 @@ void i2c_dma_i2c_unblock(i2c_dma_t *i2c_dma);
 bool i2c_dma_i2c_stucked(i2c_dma_t *i2c_dma);
 
 i2c_dma_xmit_id i2c_dma_check_and_failed_stalled(i2c_dma_t *i2c_dma) {
-	uint32_t saved = save_and_disable_interrupts();
+	i2c_dma_xmit_id xmit_id;
+	ATOMIC_CORE_BLOCK() {
 
-	if (get_absolute_time() < i2c_dma->deadline ||
-	    i2c_dma_xmit_empty(i2c_dma)) {
-		restore_interrupts(saved);
-		return 0;
+		if (get_absolute_time() < i2c_dma->deadline ||
+		    i2c_dma_xmit_empty(i2c_dma)) {
+			return 0;
+		}
+		xmit_id              = i2c_dma->xmit_head;
+		i2c_dma_xmit_t *xmit = &i2c_dma->xmit[i2c_dma->xmit_head & XMIT_MASK];
+
+		dma_channel_abort(i2c_dma->command_channel);
+		dma_channel_abort(i2c_dma->read_channel);
+		// clear any misfired interrupt from disabled and know
+		dma_hw->ints0 =
+		    (1u << i2c_dma->command_channel) | (1u << i2c_dma->read_channel);
+
+		// mark the xmit done.
+		i2c_dma_xmit_mark_done(i2c_dma);
+
+		if (i2c_dma_i2c_stucked(i2c_dma) == true) {
+			printf("[i2c_dma]: bus is stucked, unblocking it\n");
+			i2c_dma_i2c_unblock(i2c_dma);
+		}
 	}
-	i2c_dma_xmit_id xmit_id = i2c_dma->xmit_head;
-	i2c_dma_xmit_t *xmit    = &i2c_dma->xmit[i2c_dma->xmit_head & XMIT_MASK];
-
-	dma_channel_abort(i2c_dma->command_channel);
-	dma_channel_abort(i2c_dma->read_channel);
-	// clear any misfired interrupt from disabled and know
-	dma_hw->ints0 =
-	    (1u << i2c_dma->command_channel) | (1u << i2c_dma->read_channel);
-
-	// mark the xmit done.
-	i2c_dma_xmit_mark_done(i2c_dma);
-
-	if (i2c_dma_i2c_stucked(i2c_dma) == true) {
-		printf("[i2c_dma]: bus is stucked, unblocking it\n");
-		i2c_dma_i2c_unblock(i2c_dma);
-	}
-
-	restore_interrupts(saved);
 	// report an xmit has failed.
 	return xmit_id;
 }
