@@ -6,25 +6,26 @@
 	.pio_version 0 // only requires PIO version 0
 
 .program uart_rx
-.define PUBLIC IRQ_READY 0
+	.define PUBLIC IRQ_READY 0
+	.define PUBLIC SUBDIV 16
 ; Slightly more fleshed-out 8n1 UART receiver which handles framing errors and
 ; break conditions more gracefully.
 ; IN pin 0 and JMP pin are both mapped to the GPIO used as UART RX.
 sync_high:
-	set y 19
+	set y 9
 check_high:
 	jmp pin wait_loop
 	jmp sync_high
 wait_loop:
-	jmp y-- check_high [5]
+	jmp y-- check_high [SUBDIV -2]
 	irq set IRQ_READY rel
 
 start:
     wait 0 pin 0        ; Stall until start bit is asserted
-    set x, 7    [10]    ; Preload bit counter, then delay until halfway through
+    set x, 7    [3 * SUBDIV/2 -2]    ; Preload bit counter, then delay until halfway through
 bitloop:                ; the first data bit (12 cycles incl wait, set).
     in pins, 1          ; Shift data bit into ISR
-    jmp x-- bitloop [6] ; Loop 8 times, each loop iteration is 8 cycles
+    jmp x-- bitloop [SUBDIV -2] ; Loop 8 times, each loop iteration is 8 cycles
     jmp pin good_stop   ; Check stop bit (should be high)
 
     wait 1 pin 0        ; and wait for line to return to idle state.
@@ -48,7 +49,7 @@ static inline void uart_rx_program_init(PIO pio, uint sm, uint offset, uint pin,
     // Deeper FIFO as we're not doing any TX
     sm_config_set_fifo_join(&c, PIO_FIFO_JOIN_RX);
     // SM transmits 1 bit per 8 execution cycles.
-    float div = (float)SYS_CLK_HZ / (8 * baud);
+    float div = (float)SYS_CLK_HZ / (uart_rx_SUBDIV * baud);
     sm_config_set_clkdiv(&c, div);
 
     pio_sm_init(pio, sm, offset, &c);
