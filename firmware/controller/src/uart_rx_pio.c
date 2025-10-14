@@ -206,7 +206,7 @@ int UART_Rx_get(UART_Rx_t *uart, uint8_t *buffer, size_t len) {
 		for (size_t i = 0; i < res; ++i) {
 			memcpy(
 			    &buffer[i * UART_PACKET_SIZE],
-			    &uart->buffer[uart->head++ & UART_MASK],
+			    &uart->buffer[(uart->head++ & UART_MASK) * UART_PACKET_SIZE],
 			    UART_PACKET_SIZE
 			);
 		}

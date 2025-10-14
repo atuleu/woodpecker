@@ -134,6 +134,14 @@ hid_section_handle_frame(hid_section_t *section, section_frame_t *frame) {
 		    frame->Fader[4]
 		);
 	}
+	printf(
+	    "RX stats: rx: %d rx_error: %d frame_error:%d "
+	    "crc_error:%d\n",
+	    section->uart_rx.tail,
+	    section->uart_rx.tx_errors,
+	    section->framing_errors,
+	    section->crc_errors
+	);
 }
 
 static void hid_section_work(hid_section_t *section) {
@@ -159,11 +167,11 @@ static void hid_section_work(hid_section_t *section) {
 			break;
 		}
 
+		uint8_t crc = 0;
 		for (size_t i = 0; i < sizeof(section_frame_t); ++i) {
-			p.as_packet.crc =
-			    crc8_0x31_update(p.as_packet.crc, p.as_buffer[i + 1]);
+			crc = crc8_0x31_update(crc, p.as_buffer[i + 1]);
 		}
-		if (p.as_packet.crc != 0) {
+		if (p.as_packet.crc != crc) {
 			section->crc_errors += 1;
 			bad = true;
 			break;
@@ -174,7 +182,7 @@ static void hid_section_work(hid_section_t *section) {
 	if (bad == false) {
 		return;
 	}
-	if (section->disp++ % 1000 == 0) {
+	if (section->disp++ % 1000 < 1) {
 		printf(
 		    "Got invalid frame: stats: rx: %d rx_error: %d frame_error:%d "
 		    "crc_error:%d\n",
