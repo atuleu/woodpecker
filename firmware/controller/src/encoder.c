@@ -42,6 +42,11 @@ int encoder_push_fader(encoder_t *enc, uint8_t value, encoder_event_t *event) {
 	return 1;
 }
 
+static inline int8_t diff_4bits(uint8_t old, uint8_t new) {
+	uint8_t diff = (new - old) & 0x0f;
+	return (int8_t)((diff & 0x08) - 0x08);
+}
+
 int encoder_push_knob(encoder_t *enc, uint8_t value, encoder_event_t *event) {
 	if (enc->ID.type != KNOB) {
 		return 0;
@@ -57,7 +62,7 @@ int encoder_push_knob(encoder_t *enc, uint8_t value, encoder_event_t *event) {
 	}
 
 	event->ID    = enc->ID;
-	event->delta = value - enc->value;
+	event->delta = diff_4bits(enc->value, value);
 	enc->value   = value;
 	return 1;
 }
