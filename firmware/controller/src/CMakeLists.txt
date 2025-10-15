@@ -20,6 +20,8 @@ set(SRC_FILES
 	hid.h
 	hid.c
 	atomic.h
+	encoder.h
+	encoder.c
 )
 
 add_executable(woodpecker-controller ${SRC_FILES})
@@ -34,6 +36,7 @@ target_link_libraries(
 			pico_lwip_http
 			pico_unique_id
 			pico_httpd_content
+			pico_util
 			hardware_i2c
 			hardware_dma
 			hardware_pio

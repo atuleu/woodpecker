@@ -1,11 +1,18 @@
 #include "hid.h"
-#include "section_rx.h"
+
+#include <stdint.h>
+#include <stdio.h>
+
 #include <hardware/irq.h>
 #include <pico/error.h>
 #include <pico/platform/sections.h>
 #include <pico/time.h>
-#include <stdint.h>
-#include <stdio.h>
+#include <pico/util/queue.h>
+#include <string.h>
+
+#include "atomic.h"
+#include "encoder.h"
+#include "section_rx.h"
 
 #define BAUDRATE                  230400
 #define BACKGROUND_TASK_PERIOD_us 250
@@ -20,6 +27,22 @@ struct section_receiver {
 	size_t disp;
 };
 typedef struct section_receiver section_receiver_t;
+
+struct hid {
+	int               irq;
+	repeating_timer_t timer;
+
+	struct section_receiver receivers[NUM_RECEIVERS];
+	encoder_t               encoders[HID_NUM_ENCODERS];
+	queue_t                 events;
+};
+
+#define HID_ENCODER_IDX(row, col) ((row)*HID_NUM_SECTIONS * 5 + (col))
+
+static struct hid sections = {
+    .irq   = -1,
+    .timer = {.user_data = NULL},
+};
 
 int section_receiver_init(section_receiver_t *rx, int pin, int baudrate) {
 	int err = section_rx_init(&rx->uart, pin, baudrate);
@@ -37,7 +60,71 @@ void section_receiver_deinit(section_receiver_t *section) {
 inline static void section_frame_printf(section_frame_t *frame) {}
 
 inline static void
-hid_section_handle_frame(section_receiver_t *section, section_frame_t *frame) {}
+hid_section_handle_frame(section_receiver_t *section, section_frame_t *frame) {
+	if (frame->ID >= HID_NUM_SECTIONS) {
+		return;
+	}
+	size_t col_offset = 5 * frame->ID;
+
+	encoder_event_t event;
+
+#define may_push(expr)                                                         \
+	do {                                                                       \
+		int res = expr;                                                        \
+		if (res == 1) {                                                        \
+			queue_try_add(&sections.events, &event);                           \
+		}                                                                      \
+	} while (0)
+
+	switch (frame->Type) {
+	case FRAME_ENCODER:
+		for (size_t i = 0; i < 5; ++i) {
+			may_push(encoder_push_button(
+			    &sections.encoders[HID_ENCODER_IDX(3, col_offset + i)],
+			    frame->Buttons & (1 << (9 - i)),
+			    &event
+			));
+			may_push(encoder_push_knob(
+			    &sections.encoders[HID_ENCODER_IDX(3, col_offset + i)],
+			    (i & 0x01) ? frame->Encoder[i / 2].B : frame->Encoder[i / 2].A,
+			    &event
+			));
+
+			size_t j = i + 5;
+			may_push(encoder_push_button(
+			    &sections.encoders[HID_ENCODER_IDX(2, col_offset + i)],
+			    frame->Buttons & (1 << (9 - j)),
+			    &event
+			));
+			may_push(encoder_push_knob(
+			    &sections.encoders[HID_ENCODER_IDX(2, col_offset + i)],
+			    (j & 0x01) ? frame->Encoder[j / 2].B : frame->Encoder[j / 2].A,
+			    &event
+			));
+		}
+	case FRAME_FADER:
+		for (size_t i = 0; i < 5; ++i) {
+			may_push(encoder_push_button(
+			    &sections.encoders[HID_ENCODER_IDX(1, col_offset + i)],
+			    frame->Buttons & (1 << (9 - i)),
+			    &event
+			));
+			may_push(encoder_push_fader(
+			    &sections.encoders[HID_ENCODER_IDX(1, col_offset + i)],
+			    frame->Fader[i],
+			    &event
+			));
+
+			size_t j = i + 5;
+			may_push(encoder_push_button(
+			    &sections.encoders[HID_ENCODER_IDX(0, col_offset + i)],
+			    frame->Buttons & (1 << (9 - j)),
+			    &event
+			));
+		}
+		break;
+	}
+}
 
 static void section_receiver_work(section_receiver_t *section) {
 	bool disp =
@@ -73,19 +160,6 @@ static void section_receiver_work(section_receiver_t *section) {
 	}
 }
 
-struct hid {
-	int               irq;
-	repeating_timer_t timer;
-
-	struct section_receiver receivers[NUM_RECEIVERS];
-	encoder_t               encoders[HID_NUM_ENCODERS];
-};
-
-static struct hid sections = {
-    .irq   = -1,
-    .timer = {.user_data = NULL},
-};
-
 static void __isr __not_in_flash_func(hid_section_irq_handler)(void) {
 	for (size_t i = 0; i < NUM_RECEIVERS; ++i) {
 		section_receiver_work(&sections.receivers[i]);
@@ -104,6 +178,27 @@ int hid_init() {
 	if (sections.irq >= 0) {
 		return PICO_ERROR_INVALID_STATE;
 	}
+
+	for (size_t i = 0; i < HID_NUM_SECTIONS * 5; ++i) {
+		encoder_init(
+		    &sections.encoders[HID_ENCODER_IDX(0, i)],
+		    (struct encoder_ID){.type = BUTTON, .row = 0, .col = i}
+		);
+		encoder_init(
+		    &sections.encoders[HID_ENCODER_IDX(1, i)],
+		    (struct encoder_ID){.type = FADER, .row = 1, .col = i}
+		);
+		encoder_init(
+		    &sections.encoders[HID_ENCODER_IDX(2, i)],
+		    (struct encoder_ID){.type = KNOB, .row = 2, .col = i}
+		);
+		encoder_init(
+		    &sections.encoders[HID_ENCODER_IDX(3, i)],
+		    (struct encoder_ID){.type = KNOB, .row = 3, .col = i}
+		);
+	}
+
+	queue_init(&sections.events, sizeof(encoder_event_t), 64);
 
 	int pins[6] = {2, 3, 4, 23, 24, 25};
 	for (size_t i = 0; i < NUM_RECEIVERS; ++i) {
@@ -146,6 +241,7 @@ void _hid_sections_deinit(size_t num_sections) {
 	if (sections.irq >= 0) {
 		irq_set_enabled(sections.irq, false);
 		irq_remove_handler(sections.irq, hid_section_irq_handler);
+		queue_free(&sections.events);
 	}
 
 	if (sections.timer.user_data != NULL) {
@@ -155,4 +251,16 @@ void _hid_sections_deinit(size_t num_sections) {
 	for (size_t i = 0; i < num_sections; ++i) {
 		section_receiver_deinit(&sections.receivers[i]);
 	}
+}
+
+int hid_get_state(encoder_t *encoders, size_t len) {
+	int res = (len < HID_NUM_ENCODERS) ? len : HID_NUM_ENCODERS;
+	ATOMIC_CORE_BLOCK() {
+		memcpy(encoders, sections.encoders, res * sizeof(encoder_t));
+	}
+	return res;
+}
+
+int hid_pull_event(hid_event_t *event) {
+	return queue_try_remove(&sections.events, event) ? 1 : 0;
 }

@@ -37,6 +37,12 @@ struct __attribute__((packed)) section_frame {
 };
 typedef struct section_frame section_frame_t;
 
+enum section_frame_type {
+	FRAME_ENCODER = 0,
+	FRAME_FADER   = 1,
+};
+typedef enum section_frame_type section_frame_type_e;
+
 struct __attribute__((packed)) section_packet {
 	uint8_t         header;
 	section_frame_t frame;

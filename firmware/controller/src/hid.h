@@ -4,6 +4,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#include "encoder.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -14,43 +16,8 @@ extern "C" {
 
 #define HID_NUM_ENCODERS (20 * HID_NUM_SECTIONS)
 
-struct __attribute__((packed)) color {
-	uint8_t R, G, B;
-};
-typedef struct color color_t;
-
-enum encoder_type {
-	BUTTON,
-	FADER,
-	KNOB,
-};
-
-struct __attribute__((packed)) encoder_ID {
-	enum encoder_type type : 2;
-	uint8_t           row : 2;
-	uint8_t           col : 4;
-};
-
-struct encoder {
-	struct encoder_ID ID;
-	color_t           color;
-	absolute_time_t   last_change;
-	bool              button;
-	uint8_t           value;
-};
-typedef struct encoder encoder_t;
-
-struct hid_event {
-	struct encoder_ID ID;
-
-	union {
-		uint8_t fader;
-		bool    button;
-		int8_t  knob_delta;
-	};
-};
 typedef struct hid_event hid_event_t;
-int hid_init();
+int                      hid_init();
 
 void hid_deinit();
 
