@@ -5,43 +5,49 @@
 
 #include "i2c_dma.h"
 
-struct __attribute__((packed)) Chip_en {
+struct __attribute__((packed)) LP5864_Chip_en {
 	uint8_t EN : 1;
 	uint8_t _reserved : 7;
 };
 
 #define LP5864_Chip_en_ADDRESS 0x000
-struct LP5864_Config {
-	struct __attribute__((packed)) {
-		uint8_t PWM_Frequency : 1;
-		uint8_t Data_Ref_Mode : 1;
-		uint8_t Max_Line_Num : 4;
-	} Dev_initial;
 
-	struct __attribute__((packed)) {
-		uint8_t CS_ON_Shift : 1;
-		uint8_t PWM_PHASE_Shift : 1;
-		uint8_t PWM_Scale_Mode : 1;
-		uint8_t SW_BLK : 1;
-	} Dev_config1;
-
-	struct __attribute__((packed)) {
-		uint8_t LSD_removal : 1;
-		uint8_t LOD_removal : 1;
-		uint8_t Comp_Group1 : 2;
-		uint8_t Comp_Group2 : 2;
-		uint8_t Comp_Group3 : 2;
-	} Dev_config2;
-
-	struct __attribute__((packed)) {
-		uint8_t Up_Deghost_enable : 1;
-		uint8_t Maximum_Current : 3;
-		uint8_t Up_Deghost : 2;
-		uint8_t Down_Deghost : 2;
-	} Dev_config3;
+struct __attribute__((packed)) LP5864_Dev_initial {
+	uint8_t PWM_Frequency : 1;
+	uint8_t Data_Ref_Mode : 1;
+	uint8_t Max_Line_Num : 4;
+	uint8_t _reserved : 2;
 };
 
-#define LP5864_Config_ADDRESS 0x001
+#define LP5864_Dev_initial_ADDRESS 0x001
+
+struct __attribute__((packed)) LP5864_Dev_config1 {
+	uint8_t CS_ON_Shift : 1;
+	uint8_t PWM_PHASE_Shift : 1;
+	uint8_t PWM_Scale_Mode : 1;
+	uint8_t SW_BLK : 1;
+};
+
+#define LP5864_Dev_config1_ADDRESS 0x002
+
+struct __attribute__((packed)) LP5864_Dev_config2 {
+	uint8_t LSD_removal : 1;
+	uint8_t LOD_removal : 1;
+	uint8_t Comp_Group1 : 2;
+	uint8_t Comp_Group2 : 2;
+	uint8_t Comp_Group3 : 2;
+};
+
+#define LP5864_Dev_config2_ADDRESS 0x003
+
+struct __attribute__((packed)) LP5864_Dev_config3 {
+	uint8_t Up_Deghost_enable : 1;
+	uint8_t Maximum_Current : 3;
+	uint8_t Up_Deghost : 2;
+	uint8_t Down_Deghost : 2;
+};
+
+#define LP5864_Dev_config3_ADDRESS 0x004
 
 struct LP5864_PWM_Group {
 	uint8_t Global_bri;

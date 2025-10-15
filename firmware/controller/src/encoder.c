@@ -1,17 +1,27 @@
 #include "encoder.h"
+#include <pico/types.h>
 
 void encoder_init(encoder_t *enc, struct encoder_ID ID) {
-	enc->ID         = ID;
-	enc->initButton = false;
-	enc->initValue  = false;
+	enc->ID          = ID;
+	enc->initButton  = false;
+	enc->initValue   = false;
+	enc->color.B     = 255;
+	enc->color.G     = 255;
+	enc->color.R     = 255;
+	enc->last_change = from_us_since_boot(-1LL);
 }
 
-int encoder_push_button(encoder_t *enc, bool button, encoder_event_t *event) {
+int encoder_push_button(encoder_t *enc, bool button, absolute_time_t now, encoder_event_t *event) {
 	if (enc->initButton == false) {
 		enc->initButton = true;
 		enc->button     = button;
 		return 0;
 	}
+
+	if (button == false) {
+		enc->last_change = now;
+	}
+
 	if (enc->button == button) {
 		return 0;
 	}
@@ -22,7 +32,7 @@ int encoder_push_button(encoder_t *enc, bool button, encoder_event_t *event) {
 	return 1;
 }
 
-int encoder_push_fader(encoder_t *enc, uint8_t value, encoder_event_t *event) {
+int encoder_push_fader(encoder_t *enc, uint8_t value, absolute_time_t now, encoder_event_t *event) {
 	if (enc->ID.type != FADER) {
 		return 0;
 	}
@@ -35,6 +45,7 @@ int encoder_push_fader(encoder_t *enc, uint8_t value, encoder_event_t *event) {
 	if (enc->value == value) {
 		return 0;
 	}
+	enc->last_change = now;
 
 	enc->value   = value;
 	event->ID    = enc->ID;
@@ -47,7 +58,7 @@ static inline int8_t diff_4bits(uint8_t old, uint8_t new) {
 	return (int8_t)((diff & 0x08) - 0x08);
 }
 
-int encoder_push_knob(encoder_t *enc, uint8_t value, encoder_event_t *event) {
+int encoder_push_knob(encoder_t *enc, uint8_t value, absolute_time_t now, encoder_event_t *event) {
 	if (enc->ID.type != KNOB) {
 		return 0;
 	}
@@ -60,6 +71,8 @@ int encoder_push_knob(encoder_t *enc, uint8_t value, encoder_event_t *event) {
 	if (enc->value == value) {
 		return 0;
 	}
+
+	enc->last_change = now;
 
 	event->ID    = enc->ID;
 	event->delta = diff_4bits(enc->value, value);

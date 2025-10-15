@@ -47,9 +47,9 @@ typedef struct encoder_event encoder_event_t;
 
 void encoder_init(encoder_t *enc, struct encoder_ID ID);
 
-int encoder_push_button(encoder_t *enc, bool button, encoder_event_t *event);
-int encoder_push_fader(encoder_t *enc, uint8_t value, encoder_event_t *event);
-int encoder_push_knob(encoder_t *enc, uint8_t value, encoder_event_t *event);
+int encoder_push_button(encoder_t *enc, bool button, absolute_time_t now, encoder_event_t *event);
+int encoder_push_fader(encoder_t *enc, uint8_t value, absolute_time_t now, encoder_event_t *event);
+int encoder_push_knob(encoder_t *enc, uint8_t value, absolute_time_t now, encoder_event_t *event);
 
 #ifdef __cplusplus
 }

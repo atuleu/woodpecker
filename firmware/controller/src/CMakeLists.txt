@@ -22,6 +22,8 @@ set(SRC_FILES
 	atomic.h
 	encoder.h
 	encoder.c
+	hid_visual.c
+	hid_visual.h
 )
 
 add_executable(woodpecker-controller ${SRC_FILES})

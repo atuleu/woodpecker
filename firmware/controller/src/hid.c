@@ -17,7 +17,7 @@
 #define BAUDRATE                  230400
 #define BACKGROUND_TASK_PERIOD_us 250
 #define SECOND_us                 (1000 * 1000)
-#define NUM_RECEIVERS             2
+#define NUM_RECEIVERS             6
 
 _Static_assert(sizeof(section_frame_t) == 7, "Size of frame should be 7");
 

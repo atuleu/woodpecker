@@ -4,6 +4,7 @@ BasedOnStyle: LLVM
 IndentWidth: 4
 UseTab: ForIndentation
 TabWidth: 4
+ColumnLimit: 80
 ---
 Language: Cpp
 AllowShortFunctionsOnASingleLine: Empty
