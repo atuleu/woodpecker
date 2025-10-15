@@ -16,14 +16,13 @@ extern "C" {
 
 #define HID_NUM_ENCODERS (20 * HID_NUM_SECTIONS)
 
-typedef struct hid_event hid_event_t;
-int                      hid_init();
+int hid_init();
 
 void hid_deinit();
 
 int hid_get_state(encoder_t *encoders, size_t len);
 
-int hid_pull_event(hid_event_t *event);
+int hid_pull_event(encoder_event_t *event);
 
 #ifdef __cplusplus
 }

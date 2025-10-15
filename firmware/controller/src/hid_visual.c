@@ -136,6 +136,7 @@ int hid_visual_init() {
 		}
 	}
 
+	visuals.last_update = -UPDATE_PERIOD_us;
 	return PICO_OK;
 }
 
@@ -269,6 +270,91 @@ void hid_render(encoder_t *encoders, size_t num_encoders, absolute_time_t now) {
 			break;
 		}
 	}
+	int err = _hid_schedule_update(&d);
+	if (err != PICO_OK) {
+		printf("[hid_visual] Could not schedule update %d\n", err);
+	}
+}
+
+void _hid_render_rainbow(
+    uint32_t now_ms, i2c_dma_t *top, i2c_dma_t *bot, bool schedule
+) {
+#define CHANNEL_DEPHASE 51
+#define PERIOD_ticks    (6 * 256)
+
+	union hid_update d;
+	// makes a rainbow effect
+	for (uint i = 0; i < 144 * 3; ++i) {
+		uint32_t phase =
+		    ((i / 3) * 50 + i * CHANNEL_DEPHASE + now_ms / 2) % PERIOD_ticks;
+		if (phase < 256) {
+			d.dots[i] = phase;
+		} else if (phase < 3 * 256) {
+			d.dots[i] = 255;
+		} else if (phase < 4 * 256) {
+			d.dots[i] = 4 * 256 - 1 - phase;
+		} else {
+			d.dots[i] = 0;
+		}
+	}
+	int err = _hid_schedule_update(&d);
+	if (err != PICO_OK) {
+		printf("[hid_visual] Could not schedule update %d\n", err);
+	}
+}
+
+void _hid_render_full(
+    uint32_t now_ms, i2c_dma_t *top, i2c_dma_t *bot, bool schedule
+) {
+	union hid_update d;
+	memset(d.dots, 0xff, NUM_DOTS);
+	int err = _hid_schedule_update(&d);
+	if (err != PICO_OK) {
+		printf("[hid_visual] Could not schedule update %d\n", err);
+	}
+}
+
+#define WINDOW_SIZE 64
+static int64_t durations[WINDOW_SIZE];
+size_t renders = 0;
+
+void _hid_perform_render(absolute_time_t now) {
+	if (now < from_us_since_boot(STARTUP_ANIMATE_DURATION_us)) {
+		_hid_animate_startup(now / 1000);
+		return;
+	}
+
+	encoder_t encoders[HID_NUM_ENCODERS];
+	hid_get_state(encoders, HID_NUM_ENCODERS);
+
+	hid_render(encoders, HID_NUM_ENCODERS, now);
+}
+
+void _hid_visual_push_ctime(absolute_time_t start, absolute_time_t end) {
+	durations[renders++] = absolute_time_diff_us(start, end);
+	renders &= WINDOW_SIZE - 1;
+	if (renders != 0) {
+		return;
+	}
+	int64_t max  = 0;
+	int64_t min  = 1LL << 62;
+	int64_t mean = 0;
+	for (size_t j = 0; j < WINDOW_SIZE; ++j) {
+		min = MIN(durations[j], min);
+		max = MAX(durations[j], max);
+		mean += durations[j];
+	}
+	mean /= WINDOW_SIZE;
+	printf(
+	    "[hid_visual] render duration mean=%lld.%03lldms min=%lld.%03lld "
+	    "max=%lld.%03lld\n",
+	    mean / 1000,
+	    mean % 1000,
+	    min / 1000,
+	    min % 1000,
+	    max / 1000,
+	    max % 1000
+	);
 }
 
 void hid_visual_task() {
@@ -276,12 +362,13 @@ void hid_visual_task() {
 	if (absolute_time_diff_us(visuals.last_update, now) < UPDATE_PERIOD_us) {
 		return;
 	}
-	if (now < from_us_since_boot(STARTUP_ANIMATE_DURATION_us)) {
-		_hid_animate_startup(now / 1000);
+
+	size_t periods;
+	for (periods = 0; visuals.last_update < now; ++periods) {
+		visuals.last_update += UPDATE_PERIOD_us;
 	}
-
-	encoder_t encoders[HID_NUM_ENCODERS];
-	hid_get_state(encoders, HID_NUM_ENCODERS);
-
-	hid_render(encoders, HID_NUM_ENCODERS, now);
+	if (periods > 1) {
+		printf("[hid_visual]: missed %d update.\n", periods - 1);
+	}
+	_hid_visual_push_ctime(now, get_absolute_time());
 }

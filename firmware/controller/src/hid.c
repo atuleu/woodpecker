@@ -59,8 +59,9 @@ void section_receiver_deinit(section_receiver_t *section) {
 
 inline static void section_frame_printf(section_frame_t *frame) {}
 
-inline static void
-hid_section_handle_frame(section_receiver_t *section, section_frame_t *frame) {
+inline static void hid_section_handle_frame(
+    section_receiver_t *section, section_frame_t *frame, absolute_time_t now
+) {
 	if (frame->ID >= HID_NUM_SECTIONS) {
 		return;
 	}
@@ -82,11 +83,13 @@ hid_section_handle_frame(section_receiver_t *section, section_frame_t *frame) {
 			may_push(encoder_push_button(
 			    &sections.encoders[HID_ENCODER_IDX(3, col_offset + i)],
 			    frame->Buttons & (1 << (9 - i)),
+			    now,
 			    &event
 			));
 			may_push(encoder_push_knob(
 			    &sections.encoders[HID_ENCODER_IDX(3, col_offset + i)],
 			    (i & 0x01) ? frame->Encoder[i / 2].B : frame->Encoder[i / 2].A,
+			    now,
 			    &event
 			));
 
@@ -94,11 +97,13 @@ hid_section_handle_frame(section_receiver_t *section, section_frame_t *frame) {
 			may_push(encoder_push_button(
 			    &sections.encoders[HID_ENCODER_IDX(2, col_offset + i)],
 			    frame->Buttons & (1 << (9 - j)),
+			    now,
 			    &event
 			));
 			may_push(encoder_push_knob(
 			    &sections.encoders[HID_ENCODER_IDX(2, col_offset + i)],
 			    (j & 0x01) ? frame->Encoder[j / 2].B : frame->Encoder[j / 2].A,
+			    now,
 			    &event
 			));
 		}
@@ -107,11 +112,13 @@ hid_section_handle_frame(section_receiver_t *section, section_frame_t *frame) {
 			may_push(encoder_push_button(
 			    &sections.encoders[HID_ENCODER_IDX(1, col_offset + i)],
 			    frame->Buttons & (1 << (9 - i)),
+			    now,
 			    &event
 			));
 			may_push(encoder_push_fader(
 			    &sections.encoders[HID_ENCODER_IDX(1, col_offset + i)],
 			    frame->Fader[i],
+			    now,
 			    &event
 			));
 
@@ -119,6 +126,7 @@ hid_section_handle_frame(section_receiver_t *section, section_frame_t *frame) {
 			may_push(encoder_push_button(
 			    &sections.encoders[HID_ENCODER_IDX(0, col_offset + i)],
 			    frame->Buttons & (1 << (9 - j)),
+			    now,
 			    &event
 			));
 		}
@@ -126,7 +134,8 @@ hid_section_handle_frame(section_receiver_t *section, section_frame_t *frame) {
 	}
 }
 
-static void section_receiver_work(section_receiver_t *section) {
+static void
+section_receiver_work(section_receiver_t *section, absolute_time_t now) {
 	bool disp =
 	    (section->disp++ % (SECOND_us / BACKGROUND_TASK_PERIOD_us)) == 0;
 
@@ -139,7 +148,7 @@ static void section_receiver_work(section_receiver_t *section) {
 			break;
 		}
 
-		hid_section_handle_frame(section, &frame);
+		hid_section_handle_frame(section, &frame, now);
 		if (disp) {
 			section_frame_printf(&frame);
 		}
@@ -161,8 +170,9 @@ static void section_receiver_work(section_receiver_t *section) {
 }
 
 static void __isr __not_in_flash_func(hid_section_irq_handler)(void) {
+	absolute_time_t now = get_absolute_time();
 	for (size_t i = 0; i < NUM_RECEIVERS; ++i) {
-		section_receiver_work(&sections.receivers[i]);
+		section_receiver_work(&sections.receivers[i], now);
 	}
 	irq_clear(sections.irq);
 }
@@ -261,6 +271,6 @@ int hid_get_state(encoder_t *encoders, size_t len) {
 	return res;
 }
 
-int hid_pull_event(hid_event_t *event) {
+int hid_pull_event(encoder_event_t *event) {
 	return queue_try_remove(&sections.events, event) ? 1 : 0;
 }

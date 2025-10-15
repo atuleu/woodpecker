@@ -1,250 +1,77 @@
-
-#include <hardware/gpio.h>
-#include <hardware/i2c.h>
-
-#include <pico/error.h>
-#include <pico/platform/common.h>
-#include <pico/stdlib.h>
-
-#include <pico/time.h>
-#include <pico/types.h>
 #include <stdint.h>
 #include <stdio.h>
 
+#include <hardware/gpio.h>
+#include <hardware/i2c.h>
+#include <pico/error.h>
+#include <pico/multicore.h>
+#include <pico/platform/common.h>
+#include <pico/stdlib.h>
+#include <pico/time.h>
+#include <pico/types.h>
+
+#include "encoder.h"
 #include "hid.h"
+#include "hid_visual.h"
 #include "i2c_dma.h"
 #include "lp5864.h"
+#include "netusb.h"
 
-#define PERIOD_ticks    (6 * 256)
-#define PERIOD_us       (20 * 1000)
-#define BAUDRATE        400 * 1000
-#define CHANNEL_DEPHASE 512
-#define WAIT            false
+#define PERIOD_us (20 * 1000)
+#define BAUDRATE  400 * 1000
+#define WAIT      false
 
 static bool schedule_render = true;
 
-void render(uint32_t now_ms, i2c_dma_t *top, i2c_dma_t *bot, bool schedule) {
-	uint8_t dots[144 * 3];
-	// makes a rainbow effect
-	for (uint i = 0; i < 144 * 3; ++i) {
-		uint32_t phase =
-		    ((i / 3) * 50 + i * CHANNEL_DEPHASE + now_ms / 2) % PERIOD_ticks;
-		if (phase < 256) {
-			dots[i] = phase;
-		} else if (phase < 3 * 256) {
-			dots[i] = 255;
-		} else if (phase < 4 * 256) {
-			dots[i] = 4 * 256 - 1 - phase;
-		} else {
-			dots[i] = 0;
-		}
-	}
-	static i2c_dma_xmit_id top_xmit[3], bot_xmit[3];
-	for (uint8_t addr = 0; addr < 3; ++addr) {
-		if (schedule) {
-			int err = lp5864_schedule_write(
-			    top,
-			    addr,
-			    0x200,
-			    dots + 0 + 144 * addr,
-			    72,
-			    &top_xmit[addr]
-			);
-			if (err != PICO_OK) {
-				printf(
-				    "could not schedule top[%d] write last: %d err: %d!\n",
-				    addr,
-				    top_xmit,
-				    err
-				);
-			}
-			err = lp5864_schedule_write(
-			    bot,
-			    addr,
-			    0x200,
-			    dots + 72 + 144 * addr,
-			    72,
-			    &bot_xmit[addr]
-			);
-			if (err != PICO_OK) {
-				printf(
-				    "could not schedule bot[%d] write last: %d err:%d!\n",
-				    addr,
-				    bot_xmit,
-				    err
-				);
-			}
-		} else {
-			lp5864_write_blocking(i2c0, addr, 0x200, dots + addr * 144, 72);
-			lp5864_write_blocking(
-			    i2c1,
-			    addr,
-			    0x200,
-			    dots + addr * 144 + 72,
-			    72
-			);
-		}
-	}
-	if (!WAIT) {
+void core1_main() {
+	multicore_lockout_victim_init();
+
+	int err = hid_init();
+	if (err != PICO_OK) {
+		printf("[hid] Initialization failed: %d\n", err);
 		return;
 	}
-	for (uint addr = 0; addr < 3; ++addr) {
-		i2c_dma_xmit_status status = i2c_dma_xmit_wait(top, top_xmit[addr]);
-		printf(
-		    "Top[%d] status: %s\n",
-		    addr,
-		    status & I2C_DMA_XMIT_ABORTED ? "ERR" : "OK"
-		);
-		status = i2c_dma_xmit_wait(bot, bot_xmit[addr]);
-		printf(
-		    "Bot[%d] status: %s\n",
-		    addr,
-		    status & I2C_DMA_XMIT_ABORTED ? "ERR" : "OK"
-		);
+	printf("[hid] Initialized.\n");
+
+	err = hid_visual_init();
+	if (err != PICO_OK) {
+		printf("[hid_visual] Initialization failed:%d\n", err);
+		return;
 	}
-	/* while (i2c_dma_xmit_done(top, top_xmit) && i2c_dma_xmit_done(bot,
-	 * bot_xmit) */
-	/* ) { */
-	/* 	tight_loop_contents(); */
-	/* } */
+	printf("[hid_visual] Initialized.\n");
+	while (true) {
+		hid_visual_task();
+	}
+}
+
+void pull_encoder_events() {
+	encoder_event_t event;
+
+	while (true) {
+		if (hid_pull_event(&event) == 0) {
+			return;
+		}
+	}
 }
 
 int main() {
 	stdio_init_all();
 
-	printf("Woodpecker hello-world\n");
-
-	/* if (netusb_init() == false) { */
-	/* 	printf("could not initialize netusb. Bye!\n"); */
-	/* } */
-
-	/* while (true) { */
-	/* 	netusb_task(); */
-	/* } */
-	/* netusb_deinit(); */
-
-	int err = hid_init();
-	if (err != PICO_OK) {
-		printf("Could not initialize section readers: %d\n", err);
-		return err;
+	multicore_launch_core1(core1_main);
+	while (multicore_lockout_victim_is_initialized(1) == false) {
+		tight_loop_contents();
 	}
-	printf("Initialized section readers\n");
 
-	printf("Attempt to read the I2C chip\n");
+	printf("Woodpecker\n");
 
-	i2c_dma_t *top_bus = i2c_dma_init(i2c0, BAUDRATE, 12, 9);
-	if (top_bus == NULL) {
-		printf("Unable to initialize top I2C\n");
-		return 1;
-	}
-	i2c_dma_t *bot_bus = i2c_dma_init(i2c1, BAUDRATE, 22, 19);
-	if (bot_bus == NULL) {
-		printf("Unable to initialize bot I2C\n");
+	if (netusb_init() == false) {
+		printf("[netusb]:could not initialize netusb!\n");
 		return 1;
 	}
 
-	uint8_t buffer[2];
-	buffer[0] = 0x01;
-	buffer[1] = (4 << 3);
-	printf("Writing Top Config: ");
-	i2c_dma_xmit_id top_xmit, bot_xmit;
-	int res = lp5864_schedule_write(top_bus, 0, 0, buffer, 2, &top_xmit);
-	if (res != PICO_OK) {
-		return 1;
-	}
-	i2c_dma_xmit_status status = i2c_dma_xmit_wait(top_bus, top_xmit);
-	printf("%s\n", status == I2C_DMA_XMIT_DONE ? " OK" : "ERR");
-
-	printf("Writing Bot Config: ");
-	res = lp5864_schedule_write(bot_bus, 0, 0, buffer, 2, &bot_xmit);
-	if (res != PICO_OK) {
-		return 1;
-	}
-	status = i2c_dma_xmit_wait(bot_bus, bot_xmit);
-	printf("%s\n", status == I2C_DMA_XMIT_DONE ? " OK" : "ERR");
-
-	struct LP5864_Current_Compensation config = {
-	    .Group1 = 90,
-	    .Group2 = 40,
-	    .Group3 = 127,
-	};
-
-	printf("Writing Top CC: ");
-	res = lp5864_schedule_write(
-	    top_bus,
-	    0,
-	    LP5864_CC_ADDRESS,
-	    &config,
-	    3,
-	    &top_xmit
-	);
-	if (res != PICO_OK) {
-		return 1;
-	}
-	status = i2c_dma_xmit_wait(top_bus, top_xmit);
-	printf("%s\n", status == I2C_DMA_XMIT_DONE ? " OK" : "ERR");
-
-	printf("Writing Bot CC: ");
-	res = lp5864_schedule_write(
-	    bot_bus,
-	    0,
-	    LP5864_CC_ADDRESS,
-	    &config,
-	    3,
-	    &bot_xmit
-	);
-	if (res != PICO_OK) {
-		return 1;
-	}
-	status = i2c_dma_xmit_wait(bot_bus, bot_xmit);
-	printf("%s\n", status == I2C_DMA_XMIT_DONE ? " OK" : "ERR");
-
-#define WINDOW_SIZE 64
-	int64_t         durations[WINDOW_SIZE];
-	size_t          i           = 0;
-	absolute_time_t last_update = -PERIOD_us;
 	while (true) {
-		i2c_dma_xmit_id failed = i2c_dma_check_and_failed_stalled(top_bus);
-		if (failed != PICO_OK) {
-			printf("Top xmit %d failed.\n", failed);
-		}
-		failed = i2c_dma_check_and_failed_stalled(bot_bus);
-		if (failed != PICO_OK) {
-			printf("Bot xmit %d failed.\n", failed);
-		}
-
-		absolute_time_t now = get_absolute_time();
-		if (absolute_time_diff_us(last_update, now) < PERIOD_us) {
-			continue;
-		}
-		last_update += PERIOD_us;
-
-		now = get_absolute_time();
-		render(now / 1000, top_bus, bot_bus, schedule_render);
-		absolute_time_t after = get_absolute_time();
-		durations[i++]        = absolute_time_diff_us(now, after);
-		i &= WINDOW_SIZE - 1;
-		if (i == 0) {
-			int64_t max  = 0;
-			int64_t min  = 1LL << 62;
-			int64_t mean = 0;
-			for (size_t j = 0; j < WINDOW_SIZE; ++j) {
-				min = MIN(durations[j], min);
-				max = MAX(durations[j], max);
-				mean += durations[j];
-			}
-			mean /= WINDOW_SIZE;
-			printf(
-			    "Render duration mean=%lld.%03lldms min=%lld.%03lld "
-			    "max=%lld.%03lld\n",
-			    mean / 1000,
-			    mean % 1000,
-			    min / 1000,
-			    min % 1000,
-			    max / 1000,
-			    max % 1000
-			);
-		}
+		netusb_task();
+		pull_encoder_events();
 	}
 
 	return 0;

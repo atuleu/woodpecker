@@ -42,6 +42,7 @@ target_link_libraries(
 			hardware_i2c
 			hardware_dma
 			hardware_pio
+			pico_multicore
 )
 pico_generate_pio_header(
 	woodpecker-controller ${CMAKE_CURRENT_SOURCE_DIR}/uart_rx.pio
