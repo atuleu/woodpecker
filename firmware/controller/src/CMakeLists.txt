@@ -15,10 +15,10 @@ set(SRC_FILES
 	dma_shared_irq.c
 	i2c_dma.h
 	i2c_dma.c
-	uart_rx_pio.h
-	uart_rx_pio.c
-	hid_sections.h
-	hid_sections.c
+	section_rx.h
+	section_rx.c
+	hid.h
+	hid.c
 	atomic.h
 )
 
