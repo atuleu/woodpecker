@@ -58,9 +58,9 @@ int _hid_visual_schedule_lp5864_config(
 	config_gen.as_struct.Dev_initial = (struct LP5864_Dev_initial
 	){.PWM_Frequency = 0, .Data_Ref_Mode = 0, .Max_Line_Num = 4};
 
-	config_CC.as_CC.Group1 = 90;  // Blue
-	config_CC.as_CC.Group2 = 40;  // Green
-	config_CC.as_CC.Group3 = 127; // Red
+	config_CC.as_CC.Group3 = 74; // 127; // Red
+	config_CC.as_CC.Group2 = 50; // 40;  // Green
+	config_CC.as_CC.Group1 = 60; // 90;  // Blue
 
 	int err = lp5864_schedule_write(
 	    bus,

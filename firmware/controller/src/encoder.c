@@ -7,9 +7,28 @@ void encoder_init(encoder_t *enc, struct encoder_ID ID) {
 	enc->ID         = ID;
 	enc->initButton = false;
 	enc->initValue  = false;
-	enc->color.B    = 255;
-	enc->color.G    = 255;
-	enc->color.R    = 255;
+	switch (ID.row) {
+	case 0:
+		enc->color.B = 255;
+		enc->color.G = 255;
+		enc->color.R = 255;
+		break;
+	case 1:
+		enc->color.B = 255;
+		enc->color.G = 255;
+		enc->color.R = 255;
+		break;
+	case 2:
+		enc->color.B = 255;
+		enc->color.G = 255;
+		enc->color.R = 255;
+		break;
+	case 3:
+		enc->color.B = 255;
+		enc->color.G = 255;
+		enc->color.R = 255;
+		break;
+	}
 
 	enc->last_change = from_us_since_boot(-1LL);
 }
