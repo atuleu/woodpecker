@@ -1,14 +1,16 @@
 #include "encoder.h"
 #include <pico/types.h>
+#include <stdint.h>
 #include <stdio.h>
 
 void encoder_init(encoder_t *enc, struct encoder_ID ID) {
-	enc->ID          = ID;
-	enc->initButton  = false;
-	enc->initValue   = false;
-	enc->color.B     = 255;
-	enc->color.G     = 255;
-	enc->color.R     = 255;
+	enc->ID         = ID;
+	enc->initButton = false;
+	enc->initValue  = false;
+	enc->color.B    = 255;
+	enc->color.G    = 255;
+	enc->color.R    = 255;
+
 	enc->last_change = from_us_since_boot(-1LL);
 }
 
@@ -63,8 +65,8 @@ int encoder_push_fader(
 }
 
 static inline int8_t diff_4bits(uint8_t old, uint8_t new) {
-	uint8_t diff = (new - old) & 0x0f;
-	return (int8_t)((diff & 0x08) - 0x08);
+	uint8_t diff = (int8_t)(new - old) & 0x0f;
+	return (int8_t)(((int8_t)diff ^ 0x08) - 0x08);
 }
 
 int encoder_push_knob(
@@ -83,16 +85,6 @@ int encoder_push_knob(
 	if (enc->value == value) {
 		return 0;
 	}
-
-	printf(
-	    "%lld.%06lld Knob %d%02d %d old:%d\n",
-	    now / 1000000,
-	    now % 1000000,
-	    enc->ID.row + 1,
-	    enc->ID.col + 1,
-	    value,
-	    enc->value
-	);
 
 	enc->last_change = now;
 
