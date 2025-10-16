@@ -20,7 +20,7 @@
 #define BACKGROUND_TASK_PERIOD_us 300
 #define SECOND_us                 (1000 * 1000)
 #define NUM_RECEIVERS             6
-#define STATS_UPDATE_PERIOD_us    (2 * 1000 * 1000)
+#define STATS_UPDATE_PERIOD_us    (1000 * 1000)
 
 struct hid {
 	int               irq;
@@ -259,6 +259,8 @@ int hid_pull_event(encoder_event_t *event) {
 	return queue_try_remove(&sections.events, event) ? 1 : 0;
 }
 
+static size_t toDisplay = 0;
+
 void hid_task() {
 	for (size_t i = 0; i < NUM_RECEIVERS; ++i) {
 		section_rx_check_and_unblock(&sections.receivers[i]);
@@ -280,19 +282,21 @@ void hid_task() {
 		printf("[hid] stats update miss %d\n", periods - 1);
 	}
 
-	for (size_t i = 0; i < NUM_RECEIVERS; ++i) {
-		section_rx_stats_t stats;
-		section_rx_get_stats(&sections.receivers[i], &stats);
-		const char *type = i / 3 == 0 ? "top" : "bottom";
-		printf(
-		    "[hid/receiver/%s/%d] stats: received:%d locked_errors:%d "
-		    "frame_errors:%d crc_errors:%d\n",
-		    type,
-		    (i % 3),
-		    stats.received,
-		    stats.locked_errors,
-		    stats.framing_errors,
-		    stats.crc_errors
-		);
+	section_rx_stats_t stats;
+	section_rx_get_stats(&sections.receivers[toDisplay], &stats);
+	const char *type = toDisplay / 3 == 0 ? "top" : "bottom";
+	printf(
+	    "[hid/receiver/%s/%d] stats: received:%d locked_errors:%d "
+	    "frame_errors:%d crc_errors:%d\n",
+	    type,
+	    (toDisplay % 3),
+	    stats.received,
+	    stats.locked_errors,
+	    stats.framing_errors,
+	    stats.crc_errors
+	);
+	toDisplay += 1;
+	if (toDisplay >= NUM_RECEIVERS) {
+		toDisplay = 0;
 	}
 }

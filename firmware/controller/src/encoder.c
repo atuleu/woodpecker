@@ -1,5 +1,6 @@
 #include "encoder.h"
 #include <pico/types.h>
+#include <stdio.h>
 
 void encoder_init(encoder_t *enc, struct encoder_ID ID) {
 	enc->ID          = ID;
@@ -58,7 +59,9 @@ static inline int8_t diff_4bits(uint8_t old, uint8_t new) {
 	return (int8_t)((diff & 0x08) - 0x08);
 }
 
-int encoder_push_knob(encoder_t *enc, uint8_t value, absolute_time_t now, encoder_event_t *event) {
+int encoder_push_knob(
+    encoder_t *enc, uint8_t value, absolute_time_t now, encoder_event_t *event
+) {
 	if (enc->ID.type != KNOB) {
 		return 0;
 	}
@@ -68,9 +71,20 @@ int encoder_push_knob(encoder_t *enc, uint8_t value, absolute_time_t now, encode
 		enc->value     = value;
 		return 0;
 	}
+
 	if (enc->value == value) {
 		return 0;
 	}
+
+	printf(
+	    "%lld.%06lld Knob %d%02d %d old:%d\n",
+	    now / 1000000,
+	    now % 1000000,
+	    enc->ID.row + 1,
+	    enc->ID.col + 1,
+	    value,
+	    enc->value
+	);
 
 	enc->last_change = now;
 
