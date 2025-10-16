@@ -94,11 +94,12 @@ inline static void hid_section_handle_frame(
 	case FRAME_FADER:
 		for (size_t i = 0; i < 5; ++i) {
 			may_push(encoder_push_button(
-			    &sections.encoders[HID_ENCODER_IDX(1, col_offset + i)],
-			    frame->Buttons & (1 << (9 - i)),
+			    &sections.encoders[HID_ENCODER_IDX(0, col_offset + i)],
+			    frame->Buttons & (1 << i),
 			    now,
 			    &event
 			));
+
 			may_push(encoder_push_fader(
 			    &sections.encoders[HID_ENCODER_IDX(1, col_offset + i)],
 			    frame->Fader[i],
@@ -108,8 +109,8 @@ inline static void hid_section_handle_frame(
 
 			size_t j = i + 5;
 			may_push(encoder_push_button(
-			    &sections.encoders[HID_ENCODER_IDX(0, col_offset + i)],
-			    frame->Buttons & (1 << (9 - j)),
+			    &sections.encoders[HID_ENCODER_IDX(1, col_offset + i)],
+			    frame->Buttons & (1 << j),
 			    now,
 			    &event
 			));

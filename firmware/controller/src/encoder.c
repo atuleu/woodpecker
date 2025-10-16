@@ -12,7 +12,9 @@ void encoder_init(encoder_t *enc, struct encoder_ID ID) {
 	enc->last_change = from_us_since_boot(-1LL);
 }
 
-int encoder_push_button(encoder_t *enc, bool button, absolute_time_t now, encoder_event_t *event) {
+int encoder_push_button(
+    encoder_t *enc, bool button, absolute_time_t now, encoder_event_t *event
+) {
 	if (enc->initButton == false) {
 		enc->initButton = true;
 		enc->button     = button;
@@ -33,19 +35,25 @@ int encoder_push_button(encoder_t *enc, bool button, absolute_time_t now, encode
 	return 1;
 }
 
-int encoder_push_fader(encoder_t *enc, uint8_t value, absolute_time_t now, encoder_event_t *event) {
+#define ABS(a) ((a) < 0 ? (-(a)) : (a))
+
+int encoder_push_fader(
+    encoder_t *enc, uint8_t value, absolute_time_t now, encoder_event_t *event
+) {
 	if (enc->ID.type != FADER) {
 		return 0;
 	}
+
 	if (enc->initValue == false) {
 		enc->initValue = true;
 		enc->value     = value;
 		return 0;
 	}
 
-	if (enc->value == value) {
+	if (ABS(enc->value - value) < 2) {
 		return 0;
 	}
+
 	enc->last_change = now;
 
 	enc->value   = value;
