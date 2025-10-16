@@ -19,14 +19,15 @@
 #define BOT_SCL_PIN      19
 #define UPDATE_PERIOD_us (30 * 1000)
 
-#define STARTUP_ANIMATE_DURATION_us (2 * 1000 * 1000)
-#define STARTUP_ANIMATE_DURATION_ms (2 * 1000)
-#define NUM_PIXELS                  (6 * 8 * HID_NUM_SECTIONS)
-#define NUM_DOTS                    (3 * NUM_PIXELS)
-#define norm2(x, y)                 ((x) * (x) + (y) * (y))
-#define MAX_DIST                    norm2(6 * HID_NUM_SECTIONS, 8)
-#define UPDATE_ANIMATION_ms         (uint16_t)(500)
-#define UPDATE_ANIMATION_us         (uint64_t)(UPDATE_ANIMATION_ms * 1000)
+#define STARTUP_ANIMATE_DURATION_ms (2000)
+#define STARTUP_ANIMATE_DURATION_us (STARTUP_ANIMATE_DURATION_ms * 1000)
+
+#define NUM_PIXELS          (6 * 8 * HID_NUM_SECTIONS)
+#define NUM_DOTS            (3 * NUM_PIXELS)
+#define norm2(x, y)         ((x) * (x) + (y) * (y))
+#define MAX_DIST            norm2(6 * HID_NUM_SECTIONS - 1, 8 - 1)
+#define UPDATE_ANIMATION_ms (uint16_t)(500)
+#define UPDATE_ANIMATION_us (uint64_t)((uint64_t)UPDATE_ANIMATION_ms * 1000)
 
 struct hid_visual {
 	i2c_dma_t      *top_bus, *bot_bus;
@@ -199,8 +200,12 @@ int _hid_schedule_update(union hid_update *update) {
 void _hid_animate_startup(uint32_t now_ms) {
 	union hid_update d;
 
-	size_t x = -1;
-	size_t y = 0;
+	size_t  x = -1;
+	size_t  y = 0;
+	uint8_t minVal =
+	    MIN(MIN(30, (30 * now_ms) / 200),
+	        30 * (STARTUP_ANIMATE_DURATION_ms - now_ms) / 200);
+
 	for (size_t i = 0; i < NUM_PIXELS; ++i) {
 		++x;
 		if (x == HID_NUM_SECTIONS * 6) {
@@ -208,24 +213,19 @@ void _hid_animate_startup(uint32_t now_ms) {
 			++y;
 		}
 
-		uint32_t phase =
-		    STARTUP_ANIMATE_DURATION_ms / 2 -
-		    norm2(x, y) * STARTUP_ANIMATE_DURATION_ms / (2 * MAX_DIST) +
-		    now_ms - STARTUP_ANIMATE_DURATION_ms / 2;
-		if (phase < 255) {
-			_hid_set_pixel(&d, x, y, (color_t){.R = 0, .G = phase, .B = phase});
-		} else if (phase < (1000 - 255)) {
-			_hid_set_pixel(&d, x, y, (color_t){.R = 0, .G = 255, .B = 255});
-		} else if (phase < 1000) {
-			_hid_set_pixel(
-			    &d,
-			    x,
-			    y,
-			    (color_t){.R = 0, .G = 1000 - phase, .B = 1000 - phase}
-			);
-		} else {
-			_hid_set_pixel(&d, x, y, (color_t){.R = 0, .G = 0, .B = 0});
+		int32_t phase = (int32_t)(-norm2(x, y) * STARTUP_ANIMATE_DURATION_ms) /
+		                    (2 * MAX_DIST) +
+		                now_ms;
+
+		uint8_t v = minVal;
+		if (phase > 0 && phase < 127) {
+			v = MAX(v, 2 * phase);
+		} else if (phase < ((STARTUP_ANIMATE_DURATION_ms / 4) - 127)) {
+			v = 255;
+		} else if (phase < (STARTUP_ANIMATE_DURATION_ms / 4)) {
+			uint8_t v = MAX(30, (STARTUP_ANIMATE_DURATION_ms / 4) - 2 * phase);
 		}
+		_hid_set_pixel(&d, x, y, (color_t){.R = 0, .G = v, .B = v});
 	}
 
 	int err = _hid_schedule_update(&d);
