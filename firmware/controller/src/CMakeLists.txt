@@ -24,6 +24,8 @@ set(SRC_FILES
 	encoder.c
 	hid_visual.c
 	hid_visual.h
+	ctime_prob.h
+	ctime_prob.cpp
 )
 
 add_executable(woodpecker-controller ${SRC_FILES})

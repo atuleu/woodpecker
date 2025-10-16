@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "ctime_prob.h"
 #include "encoder.h"
 #include "hid.h"
 #include "hid_visual.h"
@@ -24,7 +25,7 @@
 #define NUM_DOTS                    (3 * NUM_PIXELS)
 #define norm2(x, y)                 ((x) * (x) + (y) * (y))
 #define MAX_DIST                    norm2(6 * HID_NUM_SECTIONS, 8)
-#define UPDATE_ANIMATION_ms         (uint16_t)(2 * 1000)
+#define UPDATE_ANIMATION_ms         (uint16_t)(500)
 #define UPDATE_ANIMATION_us         (uint64_t)(UPDATE_ANIMATION_ms * 1000)
 
 struct hid_visual {
@@ -146,7 +147,7 @@ void hid_visual_deinit() {
 }
 
 union hid_update {
-	struct {
+	struct __attribute__((packed)) {
 		uint8_t B;
 		uint8_t G;
 		uint8_t R;
@@ -205,7 +206,8 @@ void _hid_animate_startup(uint32_t now_ms) {
 
 		uint32_t phase =
 		    STARTUP_ANIMATE_DURATION_ms / 2 -
-		    norm2(x, y) * STARTUP_ANIMATE_DURATION_ms / (2 * MAX_DIST);
+		    norm2(x, y) * STARTUP_ANIMATE_DURATION_ms / (2 * MAX_DIST) +
+		    now_ms - STARTUP_ANIMATE_DURATION_ms / 2;
 		if (phase < 255) {
 			_hid_set_pixel(&d, i, (color_t){.R = 0, .G = phase, .B = phase});
 		} else if (phase < (1000 - 255)) {
@@ -227,8 +229,9 @@ void _hid_animate_startup(uint32_t now_ms) {
 	}
 }
 
-color_t color_mult(uint16_t frac_up, uint16_t frac_down, color_t c) {
-#define scale(v) (uint32_t)(MIN(255, ((uint32_t)(v)*frac_up) / frac_down))
+color_t color_mult(float s, color_t c) {
+#define CLAMP(v, low, high) MIN(MAX(v, low), high)
+#define scale(v)            (uint8_t)(CLAMP(s * (float)(v), 0, 255))
 	return (color_t){.R = scale(c.R), .G = scale(c.G), .B = scale(c.B)};
 }
 
@@ -245,20 +248,20 @@ void hid_render(encoder_t *encoders, size_t num_encoders, absolute_time_t now) {
 		int64_t ellapsed  = absolute_time_diff_us(enc->last_change, now);
 		if (ellapsed > 0 && ellapsed < UPDATE_ANIMATION_us) {
 			c = color_mult(
-			    2 * UPDATE_ANIMATION_ms - ellapsed / 1000,
-			    2 * UPDATE_ANIMATION_ms,
+			    (4.0f - 3.0 * (float)(ellapsed) / (float)(UPDATE_ANIMATION_us)
+			    ) / 4.0f,
 			    enc->color
 			);
 		} else {
-			c = color_mult(1, 2, enc->color);
+			c = color_mult(0.25, enc->color);
 		}
 
-		switch (encoders->ID.row) {
+		switch (enc->ID.row) {
 		case 0:
 			_hid_set_pixel(&d, 7 * 6 * HID_NUM_SECTIONS + pixel_col, c);
 			break;
 		case 1:
-			_hid_set_pixel(&d, 6 * 6 * HID_NUM_SECTIONS + pixel_col, c);
+			_hid_set_pixel(&d, 5 * 6 * HID_NUM_SECTIONS + pixel_col, c);
 			break;
 		case 2:
 			_hid_set_pixel(&d, 3 * 6 * HID_NUM_SECTIONS + pixel_col, c);
@@ -276,15 +279,13 @@ void hid_render(encoder_t *encoders, size_t num_encoders, absolute_time_t now) {
 	}
 }
 
-void _hid_render_rainbow(
-    uint32_t now_ms, i2c_dma_t *top, i2c_dma_t *bot, bool schedule
-) {
-#define CHANNEL_DEPHASE 51
+void _hid_render_rainbow(uint32_t now_ms) {
+#define CHANNEL_DEPHASE 512
 #define PERIOD_ticks    (6 * 256)
 
 	union hid_update d;
 	// makes a rainbow effect
-	for (uint i = 0; i < 144 * 3; ++i) {
+	for (uint i = 0; i < NUM_DOTS; ++i) {
 		uint32_t phase =
 		    ((i / 3) * 50 + i * CHANNEL_DEPHASE + now_ms / 2) % PERIOD_ticks;
 		if (phase < 256) {
@@ -318,7 +319,7 @@ void _hid_render_full(
 static int64_t durations[WINDOW_SIZE];
 size_t renders = 0;
 
-void _hid_perform_render(absolute_time_t now) {
+static void _hid_perform_render(absolute_time_t now) {
 	if (now < from_us_since_boot(STARTUP_ANIMATE_DURATION_us)) {
 		_hid_animate_startup(now / 1000);
 		return;
@@ -330,45 +331,44 @@ void _hid_perform_render(absolute_time_t now) {
 	hid_render(encoders, HID_NUM_ENCODERS, now);
 }
 
-void _hid_visual_push_ctime(absolute_time_t start, absolute_time_t end) {
-	durations[renders++] = absolute_time_diff_us(start, end);
-	renders &= WINDOW_SIZE - 1;
-	if (renders != 0) {
-		return;
-	}
-	int64_t max  = 0;
-	int64_t min  = 1LL << 62;
-	int64_t mean = 0;
-	for (size_t j = 0; j < WINDOW_SIZE; ++j) {
-		min = MIN(durations[j], min);
-		max = MAX(durations[j], max);
-		mean += durations[j];
-	}
-	mean /= WINDOW_SIZE;
-	printf(
-	    "[hid_visual] render duration mean=%lld.%03lldms min=%lld.%03lld "
-	    "max=%lld.%03lld\n",
-	    mean / 1000,
-	    mean % 1000,
-	    min / 1000,
-	    min % 1000,
-	    max / 1000,
-	    max % 1000
-	);
-}
+#ifndef NDEBUG1
+static ctime_prob_t *ctime = NULL;
+static ctime_prob_t *ctime_render = NULL;
+#endif
 
 void hid_visual_task() {
+#ifndef NDEBUG1
+	if (ctime == NULL) {
+		ctime        = ctime_prob_init(64, "visual_update");
+		ctime_render = ctime_prob_init(64, "visual_render");
+	}
+#endif
+
 	absolute_time_t now = get_absolute_time();
+#ifndef NDEBUG
+	int64_t diff = absolute_time_diff_us(visuals.last_update, now);
+#endif
 	if (absolute_time_diff_us(visuals.last_update, now) < UPDATE_PERIOD_us) {
 		return;
 	}
-
-	size_t periods;
-	for (periods = 0; visuals.last_update < now; ++periods) {
+#ifndef NDEBUG
+	ctime_prob_push(ctime, diff);
+#endif
+	int periods = 0;
+	while (absolute_time_diff_us(visuals.last_update, now) >= UPDATE_PERIOD_us
+	) {
 		visuals.last_update += UPDATE_PERIOD_us;
+		++periods;
 	}
 	if (periods > 1) {
-		printf("[hid_visual]: missed %d update.\n", periods - 1);
+		printf("Missed render: %d\n", periods - 1);
 	}
-	_hid_visual_push_ctime(now, get_absolute_time());
+
+	_hid_perform_render(now);
+#ifndef NDEBUG1
+	ctime_prob_push(
+	    ctime_render,
+	    absolute_time_diff_us(now, get_absolute_time())
+	);
+#endif
 }

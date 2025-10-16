@@ -11,11 +11,12 @@
 #include <string.h>
 
 #include "atomic.h"
+#include "ctime_prob.h"
 #include "encoder.h"
 #include "section_rx.h"
 
 #define BAUDRATE                  230400
-#define BACKGROUND_TASK_PERIOD_us 250
+#define BACKGROUND_TASK_PERIOD_us 300
 #define SECOND_us                 (1000 * 1000)
 #define NUM_RECEIVERS             6
 
@@ -30,6 +31,7 @@ typedef struct section_receiver section_receiver_t;
 
 struct hid {
 	int               irq;
+	alarm_pool_t     *alarm_pool;
 	repeating_timer_t timer;
 
 	struct section_receiver receivers[NUM_RECEIVERS];
@@ -72,7 +74,7 @@ inline static void hid_section_handle_frame(
 #define may_push(expr)                                                         \
 	do {                                                                       \
 		int res = expr;                                                        \
-		if (res == 1) {                                                        \
+		if (res != 0) {                                                        \
 			queue_try_add(&sections.events, &event);                           \
 		}                                                                      \
 	} while (0)
@@ -82,7 +84,7 @@ inline static void hid_section_handle_frame(
 		for (size_t i = 0; i < 5; ++i) {
 			may_push(encoder_push_button(
 			    &sections.encoders[HID_ENCODER_IDX(3, col_offset + i)],
-			    frame->Buttons & (1 << (9 - i)),
+			    frame->Buttons & (1 << i),
 			    now,
 			    &event
 			));
@@ -96,7 +98,7 @@ inline static void hid_section_handle_frame(
 			size_t j = i + 5;
 			may_push(encoder_push_button(
 			    &sections.encoders[HID_ENCODER_IDX(2, col_offset + i)],
-			    frame->Buttons & (1 << (9 - j)),
+			    frame->Buttons & (1 << j),
 			    now,
 			    &event
 			));
@@ -107,6 +109,7 @@ inline static void hid_section_handle_frame(
 			    &event
 			));
 		}
+		break;
 	case FRAME_FADER:
 		for (size_t i = 0; i < 5; ++i) {
 			may_push(encoder_push_button(
@@ -136,8 +139,8 @@ inline static void hid_section_handle_frame(
 
 static void
 section_receiver_work(section_receiver_t *section, absolute_time_t now) {
-	bool disp =
-	    (section->disp++ % (SECOND_us / BACKGROUND_TASK_PERIOD_us)) == 0;
+	bool disp = false;
+	//	    (section->disp++ % (SECOND_us / BACKGROUND_TASK_PERIOD_us)) == 0;
 
 	section_rx_check_and_unblock(&section->uart);
 
@@ -169,12 +172,25 @@ section_receiver_work(section_receiver_t *section, absolute_time_t now) {
 	}
 }
 
+#ifndef NDEBUG
+static ctime_prob_t *ctime = NULL;
+#endif
+
 static void __isr __not_in_flash_func(hid_section_irq_handler)(void) {
+#ifndef NDEBUG
+	if (ctime == NULL) {
+		ctime = ctime_prob_init(4096, "hid_background");
+	}
+#endif
 	absolute_time_t now = get_absolute_time();
 	for (size_t i = 0; i < NUM_RECEIVERS; ++i) {
 		section_receiver_work(&sections.receivers[i], now);
 	}
 	irq_clear(sections.irq);
+
+#ifndef NDEBUG
+	ctime_prob_push(ctime, absolute_time_diff_us(now, get_absolute_time()));
+#endif
 }
 
 static bool hid_section_repeated_timer(__unused repeating_timer_t *rt) {
@@ -230,7 +246,16 @@ int hid_init() {
 	irq_set_enabled(sections.irq, true);
 	// sets the lowest priority for this user IRQ. we need it to be prempted.
 	irq_set_priority(sections.irq, PICO_LOWEST_IRQ_PRIORITY);
-	if (add_repeating_timer_us(
+
+	if (get_core_num() == 0) {
+		alarm_pool_init_default();
+		sections.alarm_pool = alarm_pool_get_default();
+	} else {
+		sections.alarm_pool = alarm_pool_create_with_unused_hardware_alarm(1);
+	}
+
+	if (alarm_pool_add_repeating_timer_us(
+	        sections.alarm_pool,
 	        250,
 	        hid_section_repeated_timer,
 	        &sections,

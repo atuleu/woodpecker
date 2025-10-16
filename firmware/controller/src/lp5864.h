@@ -14,9 +14,9 @@ struct __attribute__((packed)) LP5864_Chip_en {
 
 struct __attribute__((packed)) LP5864_Dev_initial {
 	uint8_t PWM_Frequency : 1;
-	uint8_t Data_Ref_Mode : 1;
+	uint8_t Data_Ref_Mode : 2;
 	uint8_t Max_Line_Num : 4;
-	uint8_t _reserved : 2;
+	uint8_t _reserved : 1;
 };
 
 #define LP5864_Dev_initial_ADDRESS 0x001
