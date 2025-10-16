@@ -19,3 +19,4 @@ inline void init_RTC_1kHz() {
 typedef uint8_t absolute_time_t;
 
 #define get_absolute_time() (RTC.CNTL)
+#define absolute_time_diff_ms(from, to) (uint8_t)((to) - (from))

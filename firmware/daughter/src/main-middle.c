@@ -21,9 +21,9 @@
 #define COL5_bm _BV(4)
 
 #define R5_SW_bp 5
-#define R5_SW_bm _BV(5)
+#define R5_SW_bm _BV(R5_SW_bp)
 #define R6_SW_bp 6
-#define R6_SW_bm _BV(6)
+#define R6_SW_bm _BV(R6_SW_bp)
 
 #define ALL_ROW_bm (R5_SW_bm | R6_SW_bm)
 
@@ -103,8 +103,8 @@ int main() {
 	uint8_t nextFader  = 5;
 	while (true) {
 		uint8_t now = get_absolute_time();
-		if ((now - lastFader) >= FADER_UPDATE_PERIOD_ms) {
-			lastFader += FADER_UPDATE_PERIOD_ms;
+		if (absolute_time_diff_ms(lastFader, now) >= FADER_UPDATE_PERIOD_ms) {
+			lastFader = lastFader + FADER_UPDATE_PERIOD_ms;
 			// start a new read sequence, invalidate all results.
 			ADC_start();
 			nextFader = 0;
@@ -113,6 +113,7 @@ int main() {
 		if (now == lastButton) {
 			continue;
 		}
+		lastButton = now;
 
 		update_group(0, R5_SW_bm);
 		update_group(5, R6_SW_bm);

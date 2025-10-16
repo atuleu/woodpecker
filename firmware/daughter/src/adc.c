@@ -76,6 +76,6 @@ uint16_t ADC_result(uint8_t index) {
 		if (next > index) {
 			return results[index];
 		}
-		return ADC_RESULT_NOT_READY;
 	}
+	return ADC_RESULT_NOT_READY;
 }
