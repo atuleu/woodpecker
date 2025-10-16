@@ -1,3 +1,4 @@
+#include <hardware/sync.h>
 #include <stdint.h>
 #include <stdio.h>
 
@@ -44,6 +45,36 @@ void core1_main() {
 	}
 }
 
+void printf_event(encoder_event_t *event) {
+	switch (event->ID.type) {
+	case BUTTON:
+		printf(
+		    "Encoder %d%02d button: %s\n",
+		    event->ID.row + 1,
+		    event->ID.col + 1,
+		    event->button ? "DOWN" : "UP"
+		);
+		break;
+	case KNOB:
+		printf(
+		    "Encoder %d%02d knob: %d\n",
+		    event->ID.row + 1,
+		    event->ID.col + 1,
+		    event->delta
+		);
+
+		break;
+	case FADER:
+		printf(
+		    "Encoder %d%02d fader: %02x\n",
+		    event->ID.row + 1,
+		    event->ID.col + 1,
+		    event->fader
+		);
+		break;
+	}
+}
+
 void pull_encoder_events() {
 	encoder_event_t event;
 
@@ -51,6 +82,7 @@ void pull_encoder_events() {
 		if (hid_pull_event(&event) == 0) {
 			return;
 		}
+		printf_event(&event);
 	}
 }
 
