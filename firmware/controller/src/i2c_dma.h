@@ -57,6 +57,8 @@ int i2c_dma_xmit_read(
     bool            norestart
 );
 
+void i2c_dma_debugf(i2c_dma_t *i2c_dma);
+
 #ifdef __cplusplus
 }
 #endif
