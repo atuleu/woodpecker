@@ -16,6 +16,8 @@ extern "C" {
 
 #define HID_NUM_ENCODERS (20 * HID_NUM_SECTIONS)
 
+#define HID_ENCODER_IDX(row, col) ((row)*HID_NUM_SECTIONS * 5 + (col))
+
 int hid_init();
 
 void hid_deinit();

@@ -33,8 +33,6 @@ struct hid {
 	absolute_time_t last_update;
 };
 
-#define HID_ENCODER_IDX(row, col) ((row)*HID_NUM_SECTIONS * 5 + (col))
-
 static struct hid sections = {
     .irq   = -1,
     .timer = {.user_data = NULL},

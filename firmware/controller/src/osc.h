@@ -32,7 +32,7 @@ typedef struct OSC_argument OSC_argument_t;
 void OSC_argument_free(OSC_argument_t *arg);
 
 struct OSC_message {
-	char	      *address;
+	const char    *address;
 	OSC_argument_t argument;
 };
 

@@ -31,8 +31,6 @@ static const ip4_addr_t netusb_gateway = INIT_IP4(0, 0, 0, 0);
 
 static dhcp_entry_t netusb_dhcp_entries[] = {
     {{0}, INIT_MYSUBNET_IP(11), 24 * 60 * 60},
-    {{0}, INIT_MYSUBNET_IP(12), 24 * 60 * 60},
-    {{0}, INIT_MYSUBNET_IP(13), 24 * 60 * 60},
 };
 
 static const dhcp_config_t netusb_dhcp_config = {
@@ -54,8 +52,8 @@ static err_t linkoutput_fn(__unused struct netif *netif, struct pbuf *p) {
 			tud_network_xmit(p, 0 /*unused arg*/);
 			return ERR_OK;
 		}
+		tud_task();
 	}
-	tud_task();
 }
 
 static err_t netif_init_cb(struct netif *netif) {
@@ -178,6 +176,7 @@ bool netusb_init(void) {
 	while (dhserv_init(&netusb_dhcp_config) != ERR_OK) {
 		tight_loop_contents();
 	}
+
 	httpd_init();
 	mdns_resp_init();
 	mdns_resp_add_netif(intf, "woodpecker");
@@ -204,6 +203,6 @@ const ip4_addr_t *netusb_own_ip() {
 }
 
 const ip4_addr_t *netusb_broadcast_ip() {
-	static const ip4_addr_t broadcast = INIT_MYSUBNET_IP(255);
+	static const ip4_addr_t broadcast = INIT_MYSUBNET_IP(11);
 	return &broadcast;
 }

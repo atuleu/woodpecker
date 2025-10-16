@@ -4,6 +4,7 @@
 #include <lwip/def.h>
 #include <lwip/err.h>
 #include <lwip/ip_addr.h>
+#include <lwip/opt.h>
 #include <lwip/pbuf.h>
 #include <lwip/udp.h>
 #include <stdint.h>
@@ -40,6 +41,12 @@ err_t osc_init() {
 		return err;
 	}
 	udp_recv(pcb, osc_recv_proc, NULL);
+
+	err = udp_connect(pcb, netusb_broadcast_ip(), OSC_PORT_OUT);
+	if (err != ERR_OK) {
+		osc_deinit();
+		return err;
+	}
 	return ERR_OK;
 }
 
@@ -143,19 +150,26 @@ err_t osc_send(const OSC_message_t *m) {
 	if (m == NULL || m->address == NULL) {
 		return ERR_ARG;
 	}
-	uint16_t size = osc_strlen(m->address) + 4 +
-	                osc_argument_size(&m->argument
-	                ); // we need 4 char to encode a single argument type.
+	// we need 4 char to encode a single argument type.
+	uint16_t size =
+	    osc_strlen(m->address) + 4 + osc_argument_size(&m->argument);
+
+	if (size > PBUF_POOL_BUFSIZE) {
+		return ERR_BUF;
+	}
 
 	struct pbuf *packet = pbuf_alloc(PBUF_TRANSPORT, size, PBUF_POOL);
-	uint16_t     cur    = 0;
+	if (packet == NULL) {
+		return ERR_BUF;
+	}
+	uint16_t cur = 0;
 	cur += osc_encode_string(packet->payload, m->address);
 	cur += osc_encode_string(
 	    &((char *)packet->payload)[cur],
 	    osc_type_tag[m->argument.type]
 	);
 	cur += osc_argument_encode(&((char *)packet->payload)[cur], &m->argument);
-	err_t err = udp_sendto(pcb, packet, netusb_broadcast_ip(), OSC_PORT_OUT);
+	err_t err = udp_send(pcb, packet);
 	pbuf_free(packet);
 	return err;
 }
