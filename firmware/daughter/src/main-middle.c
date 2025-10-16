@@ -82,7 +82,7 @@ void update_group(uint8_t offset, uint8_t sw_bm) {
 	uint16_t buttonUpdate = 0;
 	for (uint8_t i = offset; i < offset + 5; ++i) {
 		uint8_t col_bm = _BV(i - offset);
-		Debouncer_push(&buttons[i], (sw & col_bm) != 0);
+		Debouncer_5ms_push(&buttons[i], (sw & col_bm) != 0);
 	}
 }
 

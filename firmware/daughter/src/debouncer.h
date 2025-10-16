@@ -9,4 +9,5 @@ struct Debouncer {
 };
 
 void Debouncer_init(struct Debouncer *debouncer);
-bool Debouncer_push(struct Debouncer *debouncer, bool value);
+bool Debouncer_5ms_push(struct Debouncer *debouncer, bool value);
+bool Debouncer_2ms_push(struct Debouncer *debouncer, bool value);
