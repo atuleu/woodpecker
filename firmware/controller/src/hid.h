@@ -11,7 +11,7 @@ extern "C" {
 #endif
 
 #ifndef HID_NUM_SECTIONS
-#define HID_NUM_SECTIONS 1
+#define HID_NUM_SECTIONS 3
 #endif
 
 #define HID_NUM_ENCODERS (20 * HID_NUM_SECTIONS)

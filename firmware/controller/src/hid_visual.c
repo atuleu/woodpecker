@@ -157,10 +157,14 @@ union hid_update {
 };
 
 static inline void
-_hid_set_pixel(union hid_update *update, size_t i, color_t color) {
-	update->pixels[i].B = color.B;
-	update->pixels[i].G = color.G;
-	update->pixels[i].R = color.R;
+_hid_set_pixel(union hid_update *update, size_t x, size_t y, color_t color) {
+	uint8_t section = x / 6;
+	uint8_t col     = x % 6;
+	size_t  idx     = section * 48 + y * 6 + col;
+
+	update->pixels[idx].B = color.B;
+	update->pixels[idx].G = color.G;
+	update->pixels[idx].R = color.R;
 }
 
 int _hid_schedule_update(union hid_update *update) {
@@ -175,7 +179,7 @@ int _hid_schedule_update(union hid_update *update) {
             &xmit
         );
 		if (err != PICO_OK) {
-			return err;
+			return err - 2 * i;
 		}
 		err = lp5864_schedule_write(
 		    visuals.bot_bus,
@@ -186,7 +190,7 @@ int _hid_schedule_update(union hid_update *update) {
 		    &xmit
 		);
 		if (err != PICO_OK) {
-			return err;
+			return err - 2 * i - 1;
 		}
 	}
 	return PICO_OK;
@@ -209,23 +213,26 @@ void _hid_animate_startup(uint32_t now_ms) {
 		    norm2(x, y) * STARTUP_ANIMATE_DURATION_ms / (2 * MAX_DIST) +
 		    now_ms - STARTUP_ANIMATE_DURATION_ms / 2;
 		if (phase < 255) {
-			_hid_set_pixel(&d, i, (color_t){.R = 0, .G = phase, .B = phase});
+			_hid_set_pixel(&d, x, y, (color_t){.R = 0, .G = phase, .B = phase});
 		} else if (phase < (1000 - 255)) {
-			_hid_set_pixel(&d, i, (color_t){.R = 0, .G = 255, .B = 255});
+			_hid_set_pixel(&d, x, y, (color_t){.R = 0, .G = 255, .B = 255});
 		} else if (phase < 1000) {
 			_hid_set_pixel(
 			    &d,
-			    i,
+			    x,
+			    y,
 			    (color_t){.R = 0, .G = 1000 - phase, .B = 1000 - phase}
 			);
 		} else {
-			_hid_set_pixel(&d, i, (color_t){.R = 0, .G = 0, .B = 0});
+			_hid_set_pixel(&d, x, y, (color_t){.R = 0, .G = 0, .B = 0});
 		}
 	}
 
 	int err = _hid_schedule_update(&d);
 	if (err != PICO_OK) {
 		printf("[hid_visual] Could not schedule update %d\n", err);
+		i2c_dma_debugf(visuals.top_bus);
+		i2c_dma_debugf(visuals.bot_bus);
 	}
 }
 
@@ -258,24 +265,26 @@ void hid_render(encoder_t *encoders, size_t num_encoders, absolute_time_t now) {
 
 		switch (enc->ID.row) {
 		case 0:
-			_hid_set_pixel(&d, 7 * 6 * HID_NUM_SECTIONS + pixel_col, c);
+			_hid_set_pixel(&d, pixel_col, 7, c);
 			break;
 		case 1:
-			_hid_set_pixel(&d, 5 * 6 * HID_NUM_SECTIONS + pixel_col, c);
+			_hid_set_pixel(&d, pixel_col, 5, c);
 			break;
 		case 2:
-			_hid_set_pixel(&d, 3 * 6 * HID_NUM_SECTIONS + pixel_col, c);
-			_hid_set_pixel(&d, 2 * 6 * HID_NUM_SECTIONS + pixel_col, c);
+			_hid_set_pixel(&d, pixel_col, 3, c);
+			_hid_set_pixel(&d, pixel_col, 2, c);
 			break;
 		case 3:
-			_hid_set_pixel(&d, 1 * 6 * HID_NUM_SECTIONS + pixel_col, c);
-			_hid_set_pixel(&d, pixel_col, c);
+			_hid_set_pixel(&d, pixel_col, 1, c);
+			_hid_set_pixel(&d, pixel_col, 0, c);
 			break;
 		}
 	}
 	int err = _hid_schedule_update(&d);
 	if (err != PICO_OK) {
 		printf("[hid_visual] Could not schedule update %d\n", err);
+		i2c_dma_debugf(visuals.top_bus);
+		i2c_dma_debugf(visuals.bot_bus);
 	}
 }
 
@@ -365,7 +374,7 @@ void hid_visual_task() {
 	}
 
 	_hid_perform_render(now);
-#ifndef NDEBUG1
+#ifndef NDEBUG
 	ctime_prob_push(
 	    ctime_render,
 	    absolute_time_diff_us(now, get_absolute_time())
