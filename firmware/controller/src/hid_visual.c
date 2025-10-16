@@ -361,7 +361,7 @@ void hid_visual_task() {
 		++periods;
 	}
 	if (periods > 1) {
-		printf("Missed render: %d\n", periods - 1);
+		printf("[hid_visual] missed render: %d\n", periods - 1);
 	}
 
 	_hid_perform_render(now);

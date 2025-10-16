@@ -26,10 +26,11 @@ struct __attribute__((packed)) section_frame {
 		uint8_t Fader[5];
 
 		struct __attribute__((packed)) {
-			// Absolute encoder state is keeped. We do not expect to see more
-			// than 16increment in a single ms(it is not event possible). Even
-			// with frame loss, getting 1 increment so keeping a 16bit index of
-			// the internal position is robust and fine.
+			// Absolute encoder state is keeped. We do not expect to see
+			// more than 16increment in a single ms(it is not event
+			// possible). Even with frame loss, getting 1 increment so
+			// keeping a 16bit index of the internal position is robust and
+			// fine.
 			uint8_t A : 4; // state should be absolute.
 			uint8_t B : 4; // state should be absolute.
 		} Encoder[5];
@@ -55,6 +56,7 @@ struct section_rx_stats {
 	size_t received, locked_errors, framing_errors, crc_errors;
 };
 typedef struct section_rx_stats section_rx_stats_t;
+
 struct section_rx {
 	uint8_t         buffer[SECTION_RX_SIZE * sizeof(section_packet_t)];
 	uint32_t        head, tail;
@@ -76,8 +78,8 @@ void section_rx_deinit(section_rx_t *rx);
 // Returns the number of available packet
 size_t section_rx_available(section_rx_t *rx);
 
-// Copy as many available packet on buffer. return the number of copied packed.
-// Returns the number of packet written (0 or 1).
+// Copy as many available packet on buffer. return the number of copied
+// packed. Returns the number of packet written (0 or 1).
 int section_rx_get(section_rx_t *rx, section_frame_t *frame);
 
 void section_rx_get_stats(section_rx_t *rx, section_rx_stats_t *stats);

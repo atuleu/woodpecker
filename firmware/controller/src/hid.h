@@ -20,6 +20,8 @@ int hid_init();
 
 void hid_deinit();
 
+void hid_task();
+
 int hid_get_state(encoder_t *encoders, size_t len);
 
 int hid_pull_event(encoder_event_t *event);

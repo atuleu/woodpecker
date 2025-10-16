@@ -110,7 +110,6 @@ void uart_rx_dma_irq_handler(section_rx_t *rx, int channel) {
 		rx->tail += 1;
 	} while (0);
 
-	rx->deadline = from_us_since_boot(-1);
 	pio_sm_restart_at_offset(rx->pio, rx->sm, rx->offset);
 }
 
@@ -125,7 +124,7 @@ inline static void uart_rx_pio_irq_handler(section_rx_t *rx) {
 	    dma_encode_transfer_count(sizeof(section_packet_t)),
 	    true
 	);
-	rx->deadline = make_timeout_time_ms(5);
+	rx->deadline = make_timeout_time_us(5000);
 }
 
 inline static void _uart_pio_irq0_handler(PIO pio) {
@@ -157,7 +156,6 @@ int section_rx_init(section_rx_t *rx, int pin, int baudrate) {
 	rx->crc_errors     = 0;
 	rx->framing_errors = 0;
 	rx->pin            = pin;
-	rx->deadline       = from_us_since_boot(-1);
 
 	if (pio_claim_free_sm(&rx->pio, &rx->sm) == false) {
 		return PICO_ERROR_INSUFFICIENT_RESOURCES;
@@ -213,8 +211,7 @@ int section_rx_init(section_rx_t *rx, int pin, int baudrate) {
 		    uart_pio1_irq0_handler
 		);
 	}
-	// irq_set_priority(pio_get_irq_num(uart->pio, 0),
-	// PICO_HIGHEST_IRQ_PRIORITY);
+	irq_set_priority(pio_get_irq_num(rx->pio, 0), PICO_HIGHEST_IRQ_PRIORITY);
 	pio_set_irqn_source_enabled(
 	    rx->pio,
 	    0,
@@ -266,8 +263,8 @@ int section_rx_get(section_rx_t *rx, section_frame_t *frame) {
 
 bool section_rx_check_and_unblock(section_rx_t *rx) {
 	ATOMIC_CORE_BLOCK() {
-		if (absolute_time_diff_us(rx->deadline, get_absolute_time()) < 0) {
-
+		int64_t diff = absolute_time_diff_us(rx->deadline, get_absolute_time());
+		if (dma_channel_is_busy(rx->dma) == false || diff < 0) {
 			return false;
 		}
 

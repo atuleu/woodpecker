@@ -41,6 +41,7 @@ void core1_main() {
 	}
 	printf("[hid_visual] Initialized.\n");
 	while (true) {
+		hid_task();
 		hid_visual_task();
 	}
 }

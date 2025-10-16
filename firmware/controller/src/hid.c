@@ -1,5 +1,6 @@
 #include "hid.h"
 
+#include <pico/types.h>
 #include <stdint.h>
 #include <stdio.h>
 
@@ -19,24 +20,17 @@
 #define BACKGROUND_TASK_PERIOD_us 300
 #define SECOND_us                 (1000 * 1000)
 #define NUM_RECEIVERS             6
-
-_Static_assert(sizeof(section_frame_t) == 7, "Size of frame should be 7");
-
-struct section_receiver {
-	section_rx_t uart;
-
-	size_t disp;
-};
-typedef struct section_receiver section_receiver_t;
+#define STATS_UPDATE_PERIOD_us    (2 * 1000 * 1000)
 
 struct hid {
 	int               irq;
 	alarm_pool_t     *alarm_pool;
 	repeating_timer_t timer;
 
-	struct section_receiver receivers[NUM_RECEIVERS];
-	encoder_t               encoders[HID_NUM_ENCODERS];
-	queue_t                 events;
+	section_rx_t    receivers[NUM_RECEIVERS];
+	encoder_t       encoders[HID_NUM_ENCODERS];
+	queue_t         events;
+	absolute_time_t last_update;
 };
 
 #define HID_ENCODER_IDX(row, col) ((row)*HID_NUM_SECTIONS * 5 + (col))
@@ -46,23 +40,10 @@ static struct hid sections = {
     .timer = {.user_data = NULL},
 };
 
-int section_receiver_init(section_receiver_t *rx, int pin, int baudrate) {
-	int err = section_rx_init(&rx->uart, pin, baudrate);
-	if (err != PICO_OK) {
-		return err;
-	}
-	rx->disp = 0;
-	return PICO_OK;
-}
-
-void section_receiver_deinit(section_receiver_t *section) {
-	section_rx_deinit(&section->uart);
-}
-
 inline static void section_frame_printf(section_frame_t *frame) {}
 
 inline static void hid_section_handle_frame(
-    section_receiver_t *section, section_frame_t *frame, absolute_time_t now
+    section_rx_t *rx, section_frame_t *frame, absolute_time_t now
 ) {
 	if (frame->ID >= HID_NUM_SECTIONS) {
 		return;
@@ -137,38 +118,16 @@ inline static void hid_section_handle_frame(
 	}
 }
 
-static void
-section_receiver_work(section_receiver_t *section, absolute_time_t now) {
-	bool disp = false;
-	//	    (section->disp++ % (SECOND_us / BACKGROUND_TASK_PERIOD_us)) == 0;
-
-	section_rx_check_and_unblock(&section->uart);
+static void section_receiver_work(section_rx_t *rx, absolute_time_t now) {
 
 	section_frame_t frame;
 	while (true) {
-		int res = section_rx_get(&section->uart, &frame);
+		int res = section_rx_get(rx, &frame);
 		if (res == 0) {
 			break;
 		}
 
-		hid_section_handle_frame(section, &frame, now);
-		if (disp) {
-			section_frame_printf(&frame);
-		}
-	}
-
-	if (disp) {
-		section_rx_stats_t stats;
-		section_rx_get_stats(&section->uart, &stats);
-		printf(
-		    "Got receiver stats for pin %d: rx: %d rx_error: %d frame_error:%d "
-		    "crc_error:%d\n",
-		    section->uart.pin,
-		    stats.received,
-		    stats.locked_errors,
-		    stats.framing_errors,
-		    stats.crc_errors
-		);
+		hid_section_handle_frame(rx, &frame, now);
 	}
 }
 
@@ -226,10 +185,9 @@ int hid_init() {
 
 	queue_init(&sections.events, sizeof(encoder_event_t), 64);
 
-	int pins[6] = {2, 3, 4, 23, 24, 25};
+	int pins[6] = {2, 3, 4, 25, 24, 23};
 	for (size_t i = 0; i < NUM_RECEIVERS; ++i) {
-		int err =
-		    section_receiver_init(&sections.receivers[i], pins[i], BAUDRATE);
+		int err = section_rx_init(&sections.receivers[i], pins[i], BAUDRATE);
 		if (err != PICO_OK) {
 			_hid_sections_deinit(i);
 			return err;
@@ -265,6 +223,7 @@ int hid_init() {
 		return PICO_ERROR_INSUFFICIENT_RESOURCES;
 	}
 
+	sections.last_update = -STATS_UPDATE_PERIOD_us;
 	return PICO_OK;
 }
 
@@ -284,7 +243,7 @@ void _hid_sections_deinit(size_t num_sections) {
 	}
 
 	for (size_t i = 0; i < num_sections; ++i) {
-		section_receiver_deinit(&sections.receivers[i]);
+		section_rx_deinit(&sections.receivers[i]);
 	}
 }
 
@@ -298,4 +257,42 @@ int hid_get_state(encoder_t *encoders, size_t len) {
 
 int hid_pull_event(encoder_event_t *event) {
 	return queue_try_remove(&sections.events, event) ? 1 : 0;
+}
+
+void hid_task() {
+	for (size_t i = 0; i < NUM_RECEIVERS; ++i) {
+		section_rx_check_and_unblock(&sections.receivers[i]);
+	}
+
+	absolute_time_t now = get_absolute_time();
+	if (absolute_time_diff_us(sections.last_update, now) <
+	    STATS_UPDATE_PERIOD_us) {
+		return;
+	}
+
+	size_t periods = 0;
+	while (absolute_time_diff_us(sections.last_update, now) >=
+	       STATS_UPDATE_PERIOD_us) {
+		periods += 1;
+		sections.last_update += STATS_UPDATE_PERIOD_us;
+	}
+	if (periods > 1) {
+		printf("[hid] stats update miss %d\n", periods - 1);
+	}
+
+	for (size_t i = 0; i < NUM_RECEIVERS; ++i) {
+		section_rx_stats_t stats;
+		section_rx_get_stats(&sections.receivers[i], &stats);
+		const char *type = i / 3 == 0 ? "top" : "bottom";
+		printf(
+		    "[hid/receiver/%s/%d] stats: received:%d locked_errors:%d "
+		    "frame_errors:%d crc_errors:%d\n",
+		    type,
+		    (i % 3),
+		    stats.received,
+		    stats.locked_errors,
+		    stats.framing_errors,
+		    stats.crc_errors
+		);
+	}
 }
