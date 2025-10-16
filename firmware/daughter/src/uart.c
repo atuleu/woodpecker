@@ -59,7 +59,7 @@ void init_UART(bool alternate) {
 		PORTB.DIRSET = PIN2_bm;
 	}
 
-	// sets the UART to 115200 baud from a 10MHz clock.
+	// sets the UART to 230400 baud from a 10MHz clock.
 	// USART0.BAUD  = (uint16_t)(347); // for 115200
 	USART0.BAUD  = (uint16_t)(174); // for 230400
 	USART0.CTRLA = USART_RS485_OFF_gc;

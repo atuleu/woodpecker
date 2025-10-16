@@ -53,10 +53,13 @@ void init() {
 	init_10MHz_clock();
 	init_RTC_1kHz();
 	initPins();
+	init_UART(true);
 	ADC_init();
 	for (unsigned int i = 0; i < 10; ++i) {
 		Debouncer_init(&buttons[i]);
-		Fader_init(&faders[i / 2]);
+		if ((i & 0x01) == 0x00) {
+			Fader_init(&faders[i / 2]);
+		}
 	}
 	_delay_us(20);
 	frame.ID = ((uint8_t)((PORTA.IN & ADDR1_bm) != 0) << 1) |
