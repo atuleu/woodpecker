@@ -186,7 +186,7 @@ void pull_encoder_events() {
 	encoder_event_t event;
 
 	while (true) {
-		if (hid_pull_event(&event) == 0) {
+		if (hid_pull_event(&event) != PICO_OK) {
 			return;
 		}
 		send_event_to_osc(&event);

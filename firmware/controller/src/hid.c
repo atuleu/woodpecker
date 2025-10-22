@@ -1,7 +1,6 @@
 #include "hid.h"
 
 #include <pico/types.h>
-#include <stdint.h>
 #include <stdio.h>
 
 #include <hardware/irq.h>
@@ -12,7 +11,6 @@
 #include <string.h>
 
 #include "atomic.h"
-#include "ctime_prob.h"
 #include "encoder.h"
 #include "section_rx.h"
 
@@ -29,7 +27,7 @@ struct hid {
 
 	section_rx_t    receivers[NUM_RECEIVERS];
 	encoder_t       encoders[HID_NUM_ENCODERS];
-	queue_t         events;
+	queue_t         events, updates;
 	absolute_time_t last_update;
 };
 
@@ -183,6 +181,7 @@ int hid_init() {
 	}
 
 	queue_init(&sections.events, sizeof(encoder_event_t), 64);
+	queue_init(&sections.updates, sizeof(encoder_update_t), 64);
 
 	int pins[6] = {2, 3, 4, 25, 24, 23};
 	for (size_t i = 0; i < NUM_RECEIVERS; ++i) {
@@ -255,12 +254,36 @@ int hid_get_state(encoder_t *encoders, size_t len) {
 }
 
 int hid_pull_event(encoder_event_t *event) {
-	return queue_try_remove(&sections.events, event) ? 1 : 0;
+	return queue_try_remove(&sections.events, event) ? PICO_OK
+	                                                 : PICO_ERROR_LOCK_REQUIRED;
 }
 
 static size_t toDisplay = 0;
 
+int hid_push_update(encoder_update_t *update) {
+	return queue_try_add(&sections.updates, update) ? PICO_OK
+	                                                : PICO_ERROR_LOCK_REQUIRED:
+}
+
+void _hid_pull_pending_updates() {
+	encoder_update_t update;
+	while (true) {
+		if (queue_try_remove(&sections.updates, &update) == false) {
+			break;
+		}
+		size_t idx = HID_ENCODER_IDX(update.ID.row, update.ID.col);
+		if (idx >= HID_NUM_ENCODERS) {
+			continue;
+		}
+		ATOMIC_CORE_BLOCK() {
+			sections.encoders[idx].color = update.color;
+		}
+	}
+}
+
 void hid_task() {
+	_hid_pull_pending_updates();
+
 	for (size_t i = 0; i < NUM_RECEIVERS; ++i) {
 		section_rx_check_and_unblock(&sections.receivers[i]);
 	}
