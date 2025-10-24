@@ -1,7 +1,6 @@
 #include <hardware/sync.h>
 #include <lwip/err.h>
 #include <pico/util/queue.h>
-#include <stdint.h>
 #include <stdio.h>
 
 #include <hardware/gpio.h>
@@ -12,13 +11,12 @@
 #include <pico/stdlib.h>
 #include <pico/time.h>
 #include <pico/types.h>
+#include <string.h>
 
 #include "atomic.h"
 #include "encoder.h"
 #include "hid.h"
 #include "hid_visual.h"
-#include "i2c_dma.h"
-#include "lp5864.h"
 #include "netusb.h"
 #include "osc.h"
 
@@ -150,6 +148,81 @@ void send_event_to_osc(encoder_event_t *event) {
 		    err,
 		    get_osc_address(event->ID)
 		);
+	}
+}
+
+int32_t parse_hex_color(const char *str) {
+	if (str[0] != '#') {
+		return -1;
+	}
+	char *str_end = NULL;
+	int   color   = strtol(str + 1, &str_end, 16);
+	if (str_end != str + 7) {
+		return -1;
+	}
+	return color;
+}
+
+static inline color_t color_from_int32_t(int32_t c) {
+	return (color_t){
+	    .R = (c & 0x00ff0000) >> 16,
+	    .G = (c & 0x0000ff00) >> 8,
+	    .B = (c & 0x000000ff) >> 0,
+	};
+}
+
+void on_osc_message(void *arg, OSC_message_t *message) {
+	(void)arg;
+
+	if (strncmp(message->address, "/Enc", 4) != 0 ||
+	    strlen(message->address) != 7) {
+		printf("[osc] Invalid address %s\n", message->address);
+		return;
+	}
+	encoder_update_t update;
+	switch (message->address[4]) {
+	case '1':
+	case '2':
+	case '3':
+	case '4':
+		update.ID.row = message->address[4] - '1';
+		break;
+	default:
+		printf("[osc] Invalid encoder number %s\n", &message->address[4]);
+		return;
+	}
+	char *str_end = NULL;
+	int   col     = strtol(&message->address[5], &str_end, 10);
+	if (str_end != &message->address[7] || col <= 0 || col > 15) {
+		printf("[osc] Invalid encoder number %s\n", &message->address[4]);
+		return;
+	}
+	update.ID.col = col - 1;
+	int32_t color;
+	switch (message->argument.type) {
+	case OSC_INT32:
+	case OSC_RGBA:
+		color = message->argument.data.integer;
+		break;
+	case OSC_STRING:
+		color = parse_hex_color(message->argument.data.string);
+		if (color < 0) {
+			printf(
+			    "[osc] Wrong update for %s: %s.\n",
+			    message->address,
+			    message->argument.data.string
+			);
+			return;
+		}
+		break;
+	default:
+		printf("[osc] Unsupported type for %s update.\b", message->address);
+		return;
+	}
+	update.color = color_from_int32_t(color);
+
+	if (hid_push_update(&update) != PICO_OK) {
+		printf("[osc] dropped update for %s.\n", message->address);
 	}
 }
 

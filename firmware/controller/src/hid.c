@@ -262,7 +262,7 @@ static size_t toDisplay = 0;
 
 int hid_push_update(encoder_update_t *update) {
 	return queue_try_add(&sections.updates, update) ? PICO_OK
-	                                                : PICO_ERROR_LOCK_REQUIRED:
+	                                                : PICO_ERROR_LOCK_REQUIRED;
 }
 
 void _hid_pull_pending_updates() {
@@ -273,6 +273,15 @@ void _hid_pull_pending_updates() {
 		}
 		size_t idx = HID_ENCODER_IDX(update.ID.row, update.ID.col);
 		if (idx >= HID_NUM_ENCODERS) {
+			printf(
+			    "[hid] Invalid encoder address %d%02d: ignoring update "
+			    "%02x%02x%02x.\n",
+			    update.ID.row + 1,
+			    update.ID.col + 1,
+			    update.color.R,
+			    update.color.G,
+			    update.color.B
+			);
 			continue;
 		}
 		ATOMIC_CORE_BLOCK() {
