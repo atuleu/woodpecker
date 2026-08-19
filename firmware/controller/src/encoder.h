@@ -45,6 +45,12 @@ struct encoder_event {
 };
 typedef struct encoder_event encoder_event_t;
 
+struct encoder_update {
+	struct encoder_ID ID;
+	color_t           color;
+};
+typedef struct encoder_update encoder_update_t;
+
 void encoder_init(encoder_t *enc, struct encoder_ID ID);
 
 int encoder_push_button(encoder_t *enc, bool button, absolute_time_t now, encoder_event_t *event);
