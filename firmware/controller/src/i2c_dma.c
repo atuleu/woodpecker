@@ -241,7 +241,7 @@ void i2c_dma_deinit(i2c_dma_t *i2c_dma) {
 	case 1:
 		ATOMIC_CORE_BLOCK() {
 			irq_set_enabled(I2C1_IRQ, false);
-			contexts[0] = NULL;
+			contexts[1] = NULL;
 			irq_remove_handler(I2C1_IRQ, i2c_dma_i2c1_irq_handler);
 		}
 		break;

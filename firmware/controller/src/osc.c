@@ -7,6 +7,7 @@
 #include <lwip/opt.h>
 #include <lwip/pbuf.h>
 #include <lwip/udp.h>
+#include <pico/error.h>
 #include <stdint.h>
 #include <stdio.h>
 
@@ -57,9 +58,16 @@ void osc_deinit() {
 	}
 }
 
-inline static uint16_t osc_strlen(const char *str) {
-	uint16_t res = strlen(str);
-	return res + 4 - res % 4;
+inline static uint16_t osc_pad_strlen(uint16_t len) {
+	return len + 4 - len % 4;
+}
+
+inline static uint16_t _strnlen(const char *str, size_t buffer_len) {
+	const char *end = memchr(str, '\0', buffer_len);
+	if (end == NULL) {
+		return buffer_len + 1;
+	}
+	return end - str;
 }
 
 inline static uint16_t osc_encode_string(char *dst, const char *str) {
@@ -102,7 +110,7 @@ inline static uint16_t osc_argument_size(const OSC_argument_t *a) {
 	case OSC_FALSE:
 		return 0;
 	case OSC_STRING:
-		return osc_strlen(a->data.string);
+		return osc_pad_strlen(strlen(a->data.string));
 	}
 	return 0;
 }
@@ -125,25 +133,37 @@ inline static uint16_t osc_argument_encode(char *dst, const OSC_argument_t *a) {
 	return 0;
 }
 
-inline static uint16_t osc_argument_parse(OSC_argument_t *a, const char *src) {
+inline static int osc_argument_parse(
+    OSC_argument_t *a, const char *src, uint16_t len, uint16_t *read
+) {
 	switch (a->type) {
 	case OSC_RGBA:
 	case OSC_FLOAT32:
 	case OSC_INT32: {
+		if (len < 4) {
+			return PICO_ERROR_BUFFER_TOO_SMALL;
+		}
 		uint32_t be_value;
 		memcpy(&be_value, src, sizeof(uint32_t));
 		a->data.integer = lwip_ntohl(be_value);
-		return sizeof(uint32_t);
+		*read           = sizeof(uint32_t);
+		return PICO_OK;
 	}
 	case OSC_TRUE:
 	case OSC_FALSE:
-		return 0;
+		*read = 0;
+		return PICO_OK;
 	case OSC_STRING: {
 		a->data.string = (char *)src;
-		return osc_strlen(src);
+		uint16_t l     = _strnlen(src, len);
+		if (l == len + 1) {
+			return PICO_ERROR_INVALID_DATA;
+		}
+		*read = osc_pad_strlen(l);
+		return PICO_OK;
 	}
 	}
-	return 0;
+	return PICO_ERROR_NOT_FOUND;
 }
 
 err_t osc_send(const OSC_message_t *m) {
@@ -151,8 +171,8 @@ err_t osc_send(const OSC_message_t *m) {
 		return ERR_ARG;
 	}
 	// we need 4 char to encode a single argument type.
-	uint16_t size =
-	    osc_strlen(m->address) + 4 + osc_argument_size(&m->argument);
+	uint16_t size = osc_pad_strlen(strlen(m->address)) + 4 +
+	                osc_argument_size(&m->argument);
 
 	if (size > PBUF_POOL_BUFSIZE) {
 		return ERR_BUF;
@@ -181,30 +201,54 @@ static void osc_recv_proc(
     const ip_addr_t *addr,
     u16_t            port
 ) {
+	(void)arg;
 	static OSC_message_t res;
 
-	size_t address_len = osc_strlen(p->payload);
+	size_t address_len = _strnlen(p->payload, p->len);
+	if (address_len == p->len + 1) {
+		printf(
+		    "[osc]: invalid formatted message: .address is not NULL "
+		    "terminated.\n"
+		);
+		pbuf_free(p);
+		return;
+	}
+	address_len = osc_pad_strlen(address_len);
 	if (address_len >= (p->len - 4)) {
 		printf(
 		    "[osc]: invalid formatted message .address=%s\n",
 		    (char *)p->payload
 		);
+		pbuf_free(p);
 		return;
 	}
 
 	res.address = p->payload;
 
 	const char *type_tag        = p->payload + address_len;
-	size_t      type_tag_length = strlen(type_tag);
+	size_t      type_tag_length = _strnlen(type_tag, p->len - address_len);
+	if (type_tag_length == p->len - address_len + 1) {
+		printf(
+		    "[osc]: invalid formatted message .address=%s: .type_tag is not "
+		    "null terminated\n",
+		    res.address
+		);
+		pbuf_free(p);
+		return;
+	}
 	if (type_tag_length < 2 || type_tag[0] != ',') {
 		printf(
 		    "[osc]: invalid formatted message .address=%s,.type_tag=%s\n",
 		    res.address,
 		    type_tag
 		);
+		pbuf_free(p);
+		return;
 	}
 	if (type_tag_length > 2) {
-		printf("[osc]: only single argument message are supported");
+		printf("[osc]: only single argument message are supported\n");
+		pbuf_free(p);
+		return;
 	}
 	res.argument.type = osc_from_type_tag(type_tag[1]);
 	if (res.argument.type == OSC_TYPE_UNKNOWN) {
@@ -213,10 +257,30 @@ static void osc_recv_proc(
 		    res.address,
 		    type_tag
 		);
+		pbuf_free(p);
 		return;
 	}
-	size_t offset = address_len + osc_strlen(type_tag);
-	offset += osc_argument_parse(&res.argument, p->payload + offset);
+	size_t offset = address_len + osc_pad_strlen(type_tag_length);
+
+	uint16_t read = 0;
+	int      err  = osc_argument_parse(
+        &res.argument,
+        p->payload + offset,
+        p->len - offset,
+        &read
+    );
+	if (err != PICO_OK) {
+		printf(
+		    "[osc]: invalid formatted message .address=%s,.type_tag=%s: could "
+		    "not parse argument: %d\n",
+		    res.address,
+		    type_tag,
+		    err
+		);
+		pbuf_free(p);
+		return;
+	}
+	offset += read;
 
 	if (recv_fn != NULL) {
 		recv_fn(recv_arg, &res);

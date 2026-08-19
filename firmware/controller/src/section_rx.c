@@ -106,8 +106,10 @@ void uart_rx_dma_irq_handler(section_rx_t *rx, int channel) {
 		}
 		if (crc != p->crc) {
 			rx->crc_errors += 1;
+			break;
 		}
 		rx->tail += 1;
+
 	} while (0);
 
 	pio_sm_restart_at_offset(rx->pio, rx->sm, rx->offset);
@@ -230,9 +232,9 @@ void section_rx_deinit(section_rx_t *rx) {
 	pio_sm_set_enabled(rx->pio, rx->sm, false);
 	pio_sm_unclaim(rx->pio, rx->sm);
 
-	unregister_dma_channel_handler(DMA_IRQ_1, rx->sm);
-	dma_channel_abort(rx->sm);
-	dma_channel_unclaim(rx->sm);
+	unregister_dma_channel_handler(DMA_IRQ_0, rx->dma);
+	dma_channel_abort(rx->dma);
+	dma_channel_unclaim(rx->dma);
 }
 
 size_t UART_Rx_available(section_rx_t *rx) {

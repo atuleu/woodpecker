@@ -105,16 +105,20 @@ int hid_visual_init() {
 	printf("[hid_visuals] Initializing LP5864 chips\n");
 
 	for (size_t i = 0; i < HID_NUM_SECTIONS; ++i) {
-		_hid_visual_schedule_lp5864_config(
-		    visuals.top_bus,
-		    i,
-		    xmit_top + 2 * i
-		);
-		_hid_visual_schedule_lp5864_config(
-		    visuals.bot_bus,
-		    i,
-		    xmit_bot + 2 * i
-		);
+		if (_hid_visual_schedule_lp5864_config(
+		        visuals.top_bus,
+		        i,
+		        xmit_top + 2 * i
+		    ) != PICO_OK) {
+			return PICO_ERROR_BUFFER_TOO_SMALL;
+		}
+		if (_hid_visual_schedule_lp5864_config(
+		        visuals.bot_bus,
+		        i,
+		        xmit_bot + 2 * i
+		    ) != PICO_OK) {
+			return PICO_ERROR_BUFFER_TOO_SMALL;
+		}
 	}
 
 	i2c_dma_xmit_wait(visuals.top_bus, xmit_top[2 * HID_NUM_SECTIONS - 1]);
@@ -223,7 +227,7 @@ void _hid_animate_startup(uint32_t now_ms) {
 		} else if (phase < ((STARTUP_ANIMATE_DURATION_ms / 4) - 127)) {
 			v = 255;
 		} else if (phase < (STARTUP_ANIMATE_DURATION_ms / 4)) {
-			uint8_t v = MAX(30, (STARTUP_ANIMATE_DURATION_ms / 4) - 2 * phase);
+			v = MAX(30, (STARTUP_ANIMATE_DURATION_ms / 4) - 2 * phase);
 		}
 		_hid_set_pixel(&d, x, y, (color_t){.R = 0, .G = v, .B = v});
 	}
