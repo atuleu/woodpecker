@@ -12,9 +12,9 @@ void Fader_init(struct Fader *f) {
 }
 
 static inline uint8_t fader_map(uint16_t value10b) {
-// this computes a 5% deadgap on both end at 8bit, keeping it an 16bit integer
+// this computes a 1% deadgap on both end at 8bit, keeping it an 16bit integer
 // without overflow. We miss a few value, but who cares.
-#define DEADGAP 13
+#define DEADGAP 3
 	value10b = CLAMP(value10b >> 2, DEADGAP, 255 - DEADGAP);
 
 	return ((value10b - DEADGAP) * 255) / (255 - DEADGAP - DEADGAP);

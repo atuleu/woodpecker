@@ -17,7 +17,10 @@ project(
 )
 
 if(CMAKE_C_COMPILER_VERSION VERSION_LESS 13)
-	message(FATAL_ERROR "Only made for gcc-avr >= 13")
+	message(
+		FATAL_ERROR
+			"Only made for gcc-avr >= 13, got ${CMAKE_C_COMPILER_VERSION} on ${CMAKE_C_COMPILER}"
+	)
 endif()
 
 include(cmake/pymcuprog.cmake)
