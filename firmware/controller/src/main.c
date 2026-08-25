@@ -5,6 +5,8 @@
 
 #include <hardware/gpio.h>
 #include <hardware/i2c.h>
+#include <hardware/watchdog.h>
+#include <pico/bootrom.h>
 #include <pico/error.h>
 #include <pico/multicore.h>
 #include <pico/platform/common.h>
@@ -169,14 +171,24 @@ static inline color_t color_from_int32_t(int32_t c) {
 	};
 }
 
+void on_osc_encoder_message(OSC_message_t *message);
+void on_osc_control_message(OSC_message_t *message);
+
 void on_osc_message(void *arg, OSC_message_t *message) {
 	(void)arg;
+	if (strncmp(message->address, "/Enc", 4) == 0) {
+		on_osc_encoder_message(message);
+	} else if (strncmp(message->address, "/Woodpecker", 11) == 0) {
+		on_osc_control_message(message);
+	}
+}
 
-	if (strncmp(message->address, "/Enc", 4) != 0 ||
-	    strlen(message->address) != 7) {
+void on_osc_encoder_message(OSC_message_t *message) {
+	if (strlen(message->address) != 7) {
 		printf("[osc] Invalid address %s\n", message->address);
 		return;
 	}
+
 	encoder_update_t update;
 	switch (message->address[4]) {
 	case '1':
@@ -250,6 +262,32 @@ void printf_event(encoder_event_t *event) {
 		    event->fader
 		);
 		break;
+	}
+}
+
+void on_osc_control_message(OSC_message_t *message) {
+	if (strcmp(message->address, "/Woodpecker/Bootsel") == 0) {
+		multicore_reset_core1();
+		reset_usb_boot(0, 0);
+	} else if (strcmp(message->address, "/Woodpecker/Reset") == 0) {
+		watchdog_reboot(0, 0, 0);
+		for (;;) {
+		}
+	} else if (strcmp(message->address, "/Woodpecker/KeyAsKeyboard") == 0) {
+		if (message->argument.type == OSC_TRUE) {
+			printf("[main] TODO: sending keys as keyboard events\n");
+		} else if (message->argument.type == OSC_FALSE) {
+			printf("[main] TODO: sending keys as OSC events\n");
+		} else {
+			printf(
+			    "[osc]: invalid message type for '/Woodpecker/KeyAsKeyboard'\n"
+			);
+		}
+	} else if (strcmp(message->address, "/Woodpecker/Stats") == 0) {
+		// TODO sends RX stats ?
+
+	} else {
+		printf("[osc] Unknown control message %s\n", message->address);
 	}
 }
 
