@@ -12,6 +12,7 @@
 
 #include "atomic.h"
 #include "encoder.h"
+#include "osc.h"
 #include "section_rx.h"
 
 #define BAUDRATE                  230400
@@ -133,13 +134,13 @@ static void section_receiver_work(section_rx_t *rx, absolute_time_t now) {
 }
 
 #ifndef NDEBUG
-static ctime_prob_t *ctime = NULL;
+static ctime_prob_t *_ctime = NULL;
 #endif
 
 static void __isr __not_in_flash_func(hid_section_irq_handler)(void) {
 #ifndef NDEBUG
-	if (ctime == NULL) {
-		ctime = ctime_prob_init(4096, "hid_background");
+	if (_ctime == NULL) {
+		_ctime = ctime_prob_init(4096, "hid_background");
 	}
 #endif
 	absolute_time_t now = get_absolute_time();
@@ -149,7 +150,7 @@ static void __isr __not_in_flash_func(hid_section_irq_handler)(void) {
 	irq_clear(sections.irq);
 
 #ifndef NDEBUG
-	ctime_prob_push(ctime, absolute_time_diff_us(now, get_absolute_time()));
+	ctime_prob_push(_ctime, absolute_time_diff_us(now, get_absolute_time()));
 #endif
 }
 
@@ -294,6 +295,15 @@ void _hid_pull_pending_updates() {
 	}
 }
 
+static inline const char *_hid_section_name(size_t i) {
+	static const char *names[] =
+	    {"top/0", "top/1", "top/2", "bot/0", "bot/1", "bot/2", "unknown"};
+	if (i > 6) {
+		i = 6;
+	}
+	return names[i];
+}
+
 void hid_task() {
 	_hid_pull_pending_updates();
 
@@ -320,12 +330,10 @@ void hid_task() {
 
 	section_rx_stats_t stats;
 	section_rx_get_stats(&sections.receivers[toDisplay], &stats);
-	const char *type = toDisplay / 3 == 0 ? "top" : "bottom";
 	printf(
-	    "[hid/receiver/%s/%d] stats: received:%d locked_errors:%d "
+	    "[hid/receiver/%s] stats: received:%d locked_errors:%d "
 	    "frame_errors:%d crc_errors:%d\n",
-	    type,
-	    (toDisplay % 3),
+	    _hid_section_name(toDisplay),
 	    stats.received,
 	    stats.locked_errors,
 	    stats.framing_errors,
@@ -336,4 +344,21 @@ void hid_task() {
 		toDisplay = 0;
 	}
 #endif
+}
+
+int hid_push_stats_over_osc() {
+	for (size_t i = 0; i < NUM_RECEIVERS; ++i) {
+		section_rx_stats_t stats;
+		section_rx_get_stats(&sections.receivers[i], &stats);
+		err_t err = osc_send_stats(_hid_section_name(i), &stats);
+		if (err != ERR_OK) {
+			printf(
+			    "[hid] could not send stats for %s to OSC: %d\n",
+			    _hid_section_name(i),
+			    err
+			);
+			return PICO_ERROR_GENERIC;
+		}
+	}
+	return PICO_OK;
 }

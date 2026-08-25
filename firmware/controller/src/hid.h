@@ -56,6 +56,8 @@ int hid_pull_event(encoder_event_t *event);
  */
 int hid_push_update(encoder_update_t *update);
 
+int hid_push_stats_over_osc();
+
 #ifdef __cplusplus
 }
 #endif

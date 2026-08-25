@@ -194,6 +194,55 @@ err_t osc_send(const OSC_message_t *m) {
 	return err;
 }
 
+err_t osc_send_stats(const char *name, const section_rx_stats_t *stats) {
+	if (name == NULL || stats == NULL) {
+		return ERR_ARG;
+	}
+
+	const static uint16_t prefix_length  = strlen("/Woodpecker/Stats/");
+	uint16_t              address_length = prefix_length + strlen(name);
+	uint16_t padded_address_length       = osc_pad_strlen(address_length);
+	uint16_t size = padded_address_length + osc_pad_strlen(5) + 4 * 4;
+	if (size > PBUF_POOL_BUFSIZE) {
+		return ERR_BUF;
+	}
+	struct pbuf *packet = pbuf_alloc(PBUF_TRANSPORT, size, PBUF_POOL);
+	if (packet == NULL) {
+		return ERR_BUF;
+	}
+	uint16_t cur = 0;
+	memcpy(packet->payload, "/Woodpecker/Stats/", prefix_length);
+	memcpy(&((char *)packet->payload)[prefix_length], name, strlen(name));
+
+	for (size_t i = address_length; i < padded_address_length; ++i) {
+		((char *)packet->payload)[i] = '\0';
+	}
+	cur += padded_address_length;
+	((char *)packet->payload)[cur + 0] = ',';
+	((char *)packet->payload)[cur + 1] = 'i';
+	((char *)packet->payload)[cur + 2] = 'i';
+	((char *)packet->payload)[cur + 3] = 'i';
+	((char *)packet->payload)[cur + 4] = 'i';
+	for (size_t i = cur + 5; i < cur + osc_pad_strlen(5); ++i) {
+		((char *)packet->payload)[i] = '\0';
+	}
+	cur += osc_pad_strlen(5);
+#define append_uint32(v)                                                       \
+	do {                                                                       \
+		uint32_t be_value = lwip_htonl((v));                                   \
+		memcpy(&((char *)packet->payload)[cur], &be_value, sizeof(uint32_t));  \
+		cur += 4;                                                              \
+	} while (0)
+	append_uint32(stats->received);
+	append_uint32(stats->crc_errors);
+	append_uint32(stats->framing_errors);
+	append_uint32(stats->locked_errors);
+#undef append_uint32
+	err_t err = udp_send(pcb,packet);
+	pbuf_free(packet);
+	return err;
+}
+
 static void osc_recv_proc(
     void            *arg,
     struct udp_pcb  *osc_pcb,

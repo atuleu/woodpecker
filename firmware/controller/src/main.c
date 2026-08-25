@@ -27,6 +27,7 @@
 #define WAIT      false
 
 static bool schedule_render = true;
+static bool keyboard_events = false;
 
 char osc_addresses[3 * 4 * 5 * HID_NUM_SECTIONS * 8];
 
@@ -151,6 +152,10 @@ void send_event_to_osc(encoder_event_t *event) {
 	}
 }
 
+void send_keyboard_event(encoder_event_t *event) {
+	printf("[main] TODO implement keyboard press events!!!!\n");
+}
+
 int32_t parse_hex_color(const char *str) {
 	if (str[0] != '#') {
 		return -1;
@@ -171,10 +176,10 @@ static inline color_t color_from_int32_t(int32_t c) {
 	};
 }
 
-void on_osc_encoder_message(OSC_message_t *message);
-void on_osc_control_message(OSC_message_t *message);
+void on_osc_encoder_message(const OSC_message_t *message);
+void on_osc_control_message(const OSC_message_t *message);
 
-void on_osc_message(void *arg, OSC_message_t *message) {
+void on_osc_message(void *arg, const OSC_message_t *message) {
 	(void)arg;
 	if (strncmp(message->address, "/Enc", 4) == 0) {
 		on_osc_encoder_message(message);
@@ -183,7 +188,7 @@ void on_osc_message(void *arg, OSC_message_t *message) {
 	}
 }
 
-void on_osc_encoder_message(OSC_message_t *message) {
+void on_osc_encoder_message(const OSC_message_t *message) {
 	if (strlen(message->address) != 7) {
 		printf("[osc] Invalid address %s\n", message->address);
 		return;
@@ -265,7 +270,7 @@ void printf_event(encoder_event_t *event) {
 	}
 }
 
-void on_osc_control_message(OSC_message_t *message) {
+void on_osc_control_message(const OSC_message_t *message) {
 	if (strcmp(message->address, "/Woodpecker/Bootsel") == 0) {
 		multicore_reset_core1();
 		reset_usb_boot(0, 0);
@@ -275,17 +280,21 @@ void on_osc_control_message(OSC_message_t *message) {
 		}
 	} else if (strcmp(message->address, "/Woodpecker/KeyAsKeyboard") == 0) {
 		if (message->argument.type == OSC_TRUE) {
-			printf("[main] TODO: sending keys as keyboard events\n");
+			printf("[main] sending keys as keyboard events\n");
+			keyboard_events = true;
 		} else if (message->argument.type == OSC_FALSE) {
-			printf("[main] TODO: sending keys as OSC events\n");
+			printf("[main] sending keys as OSC events\n");
+			keyboard_events = false;
 		} else {
 			printf(
 			    "[osc]: invalid message type for '/Woodpecker/KeyAsKeyboard'\n"
 			);
 		}
 	} else if (strcmp(message->address, "/Woodpecker/Stats") == 0) {
-		// TODO sends RX stats ?
-
+		int err = hid_push_stats_over_osc();
+		if (err != PICO_OK) {
+			printf("[osc] Could not send all stats over OSC.\n");
+		}
 	} else {
 		printf("[osc] Unknown control message %s\n", message->address);
 	}
@@ -298,8 +307,11 @@ void pull_encoder_events() {
 		if (hid_pull_event(&event) != PICO_OK) {
 			return;
 		}
-		send_event_to_osc(&event);
-		// printf_event(&event);
+		if (keyboard_events == true && event.ID.type == BUTTON) {
+			send_keyboard_event(&event);
+		} else {
+			send_event_to_osc(&event);
+		}
 	}
 }
 
@@ -322,6 +334,8 @@ int main() {
 	if (err != ERR_OK) {
 		printf("[osc]: initialization failed: %d\n", err);
 	}
+
+	osc_recv(&on_osc_message, NULL);
 
 	while (true) {
 		netusb_task();

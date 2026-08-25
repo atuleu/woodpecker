@@ -1,9 +1,10 @@
 #pragma once
 
+#include "section_rx.h"
 #include <lwip/err.h>
 
 #define OSC_PORT_IN  8000
-#define OSC_PORT_OUT 9000
+#define OSC_PORT_OUT 8000
 
 enum OSC_type {
 	OSC_INT32 = 0,
@@ -39,8 +40,10 @@ struct OSC_message {
 typedef struct OSC_message OSC_message_t;
 
 err_t osc_init();
-void osc_deinit();
+void  osc_deinit();
 err_t osc_send(const OSC_message_t *m);
+
+err_t osc_send_stats(const char *name, const section_rx_stats_t *stats);
 
 typedef void (*osc_recv_fn)(void *arg, const OSC_message_t *m);
 void osc_recv(osc_recv_fn recv_fn, void *recv_arg);
