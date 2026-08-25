@@ -18,6 +18,14 @@ extern "C" {
 
 #define HID_ENCODER_IDX(row, col) ((row) * HID_NUM_SECTIONS * 5 + (col))
 
+#ifndef HID_PRINT_STATS
+#ifndef NDEBUG
+#define HID_PRINT_STATS 1
+#else
+#define HID_PRINT_STATS 0
+#endif // NDEBUG
+#endif // HID_PRINT_STATS
+
 /**
  * Inits the HID submodule. The HID submodule handles incoming packet from
  * daughter board, emits encoder_event_t, and manage incoming encoder color

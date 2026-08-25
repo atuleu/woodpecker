@@ -20,6 +20,10 @@
 #define NUM_RECEIVERS             6
 #define STATS_UPDATE_PERIOD_us    (1000 * 1000)
 
+#ifndef NDEBUG
+#include "ctime_prob.h"
+#endif
+
 struct hid {
 	int               irq;
 	alarm_pool_t     *alarm_pool;
@@ -297,6 +301,7 @@ void hid_task() {
 		section_rx_check_and_unblock(&sections.receivers[i]);
 	}
 
+#if HID_PRINT_STATS == 1
 	absolute_time_t now = get_absolute_time();
 	if (absolute_time_diff_us(sections.last_update, now) <
 	    STATS_UPDATE_PERIOD_us) {
@@ -330,4 +335,5 @@ void hid_task() {
 	if (toDisplay >= NUM_RECEIVERS) {
 		toDisplay = 0;
 	}
+#endif
 }

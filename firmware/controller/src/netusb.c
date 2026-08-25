@@ -50,7 +50,7 @@ static queue_t tx_queue;
 // this function glues liwp -> tud for xmit
 static err_t linkoutput_fn(__unused struct netif *netif, struct pbuf *p) {
 	pbuf_ref(p);
-	if (queue_try_add(&tx_queue, p) == false) {
+	if (queue_try_add(&tx_queue, &p) == false) {
 		pbuf_free(p);
 		return ERR_USE;
 	}
