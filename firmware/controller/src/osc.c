@@ -263,10 +263,13 @@ static void osc_recv_proc(
 		return;
 	}
 	address_len = osc_pad_strlen(address_len);
-	if (address_len >= (p->len - 4)) {
+	if (address_len > (p->len - 4)) {
 		printf(
-		    "[osc]: invalid formatted message .address=%s\n",
-		    (char *)p->payload
+		    "[osc]: invalid formatted message .address=%s, not enough data for type and args (total: %d, address: %d reminder: %d).\n",
+		    (char *)p->payload,
+			p->len,
+			address_len,
+			p->len - address_len
 		);
 		pbuf_free(p);
 		return;
