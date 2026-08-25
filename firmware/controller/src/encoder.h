@@ -30,6 +30,7 @@ struct encoder {
 	bool              button;
 	bool              initButton;
 	bool              initValue;
+	bool              blink;
 	uint8_t           value;
 };
 typedef struct encoder encoder_t;

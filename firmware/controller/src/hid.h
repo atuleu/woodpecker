@@ -58,6 +58,8 @@ int hid_push_update(encoder_update_t *update);
 
 int hid_push_stats_over_osc();
 
+void hid_mark_all_encoders(bool blinky);
+
 #ifdef __cplusplus
 }
 #endif

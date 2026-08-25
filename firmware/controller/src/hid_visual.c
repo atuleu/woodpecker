@@ -28,6 +28,7 @@
 #define MAX_DIST            norm2(6 * HID_NUM_SECTIONS - 1, 8 - 1)
 #define UPDATE_ANIMATION_ms (uint16_t)(500)
 #define UPDATE_ANIMATION_us (uint64_t)((uint64_t)UPDATE_ANIMATION_ms * 1000)
+#define BLINK_PERIOD_us     (uint64_t)(500 * 1000)
 
 struct hid_visual {
 	i2c_dma_t      *top_bus, *bot_bus;
@@ -249,6 +250,8 @@ color_t color_mult(float s, color_t c) {
 void hid_render(encoder_t *encoders, size_t num_encoders, absolute_time_t now) {
 	union hid_update d;
 	memset(d.dots, 0, NUM_DOTS);
+	bool blink_low = (2 * now / BLINK_PERIOD_us) % 2 == 0;
+
 	for (size_t i = 0; i < num_encoders; ++i) {
 		encoder_t *enc = &encoders[i];
 		if (enc->ID.col >= 5 * HID_NUM_SECTIONS) {
@@ -265,6 +268,11 @@ void hid_render(encoder_t *encoders, size_t num_encoders, absolute_time_t now) {
 			);
 		} else {
 			c = color_mult(0.25, enc->color);
+		}
+		if (enc->blink == true && blink_low == true) {
+			c.R = 0;
+			c.G = 0;
+			c.B = 0;
 		}
 
 		switch (enc->ID.row) {

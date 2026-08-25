@@ -362,3 +362,9 @@ int hid_push_stats_over_osc() {
 	}
 	return PICO_OK;
 }
+
+void hid_mark_all_encoders(bool blinky) {
+	for (size_t i = 0; i < HID_NUM_ENCODERS; ++i) {
+		sections.encoders[i].blink = blinky;
+	}
+}

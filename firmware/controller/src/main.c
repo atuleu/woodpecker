@@ -270,6 +270,11 @@ void printf_event(encoder_event_t *event) {
 	}
 }
 
+void send_event_as_keyboard(bool enable) {
+	keyboard_events = enable;
+	hid_mark_all_encoders(enable);
+}
+
 void on_osc_control_message(const OSC_message_t *message) {
 	if (strcmp(message->address, "/Woodpecker/Bootsel") == 0) {
 		multicore_reset_core1();
@@ -281,10 +286,10 @@ void on_osc_control_message(const OSC_message_t *message) {
 	} else if (strcmp(message->address, "/Woodpecker/KeyAsKeyboard") == 0) {
 		if (message->argument.type == OSC_TRUE) {
 			printf("[main] sending keys as keyboard events\n");
-			keyboard_events = true;
+			send_event_as_keyboard(true);
 		} else if (message->argument.type == OSC_FALSE) {
 			printf("[main] sending keys as OSC events\n");
-			keyboard_events = false;
+			send_event_as_keyboard(false);
 		} else {
 			printf(
 			    "[osc]: invalid message type for '/Woodpecker/KeyAsKeyboard'\n"

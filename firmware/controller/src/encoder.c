@@ -7,6 +7,7 @@ void encoder_init(encoder_t *enc, struct encoder_ID ID) {
 	enc->ID         = ID;
 	enc->initButton = false;
 	enc->initValue  = false;
+	enc->blink      = false;
 	switch (ID.row) {
 	case 0:
 		enc->color.B = 255;
