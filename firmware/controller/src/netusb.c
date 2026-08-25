@@ -1,12 +1,14 @@
 #include "netusb.h"
 
 #include "atomic.h"
+#include "class/hid/hid_device.h"
 #include "class/net/net_device.h"
 #include "device/usbd.h"
 #include "tusb_config.h"
 
 #include <dhserver.h>
 #include <lwip/netif.h>
+#include <pico/error.h>
 #include <pico/platform/common.h>
 #include <pico/util/queue.h>
 #include <tusb.h>
@@ -45,7 +47,7 @@ static const dhcp_config_t netusb_dhcp_config = {
     netusb_dhcp_entries
 };
 
-static queue_t tx_queue;
+static queue_t tx_queue, keyboard_queue;
 
 // this function glues liwp -> tud for xmit
 static err_t linkoutput_fn(__unused struct netif *netif, struct pbuf *p) {
@@ -148,6 +150,21 @@ void netusb_task() {
 
 		pbuf_free(p);
 	}
+
+	keyboard_keypress_t kp;
+
+	if (tud_hid_ready() == false ||
+	    queue_try_peek(&keyboard_queue, &kp) == false) {
+		return;
+	}
+	uint8_t keycode[6] = {kp.key, 0, 0, 0, 0, 0};
+	if (tud_hid_keyboard_report(0, kp.modifiers, keycode) == false) {
+		printf("[netusb] could not send keyboard event\n");
+		return;
+	} else {
+		printf("[netusb] send keyboard event %x %x\n", kp.modifiers, kp.key);
+	}
+	queue_try_remove(&keyboard_queue, &kp);
 }
 
 static bool netusb_netif_added = false;
@@ -164,6 +181,7 @@ bool netusb_init(void) {
 	lwip_init();
 
 	queue_init(&tx_queue, sizeof(struct pbuf *), 32);
+	queue_init(&keyboard_queue, sizeof(keyboard_keypress_t), 32);
 
 	pico_unique_board_id_t board_id;
 	pico_get_unique_board_id(&board_id);
@@ -240,4 +258,21 @@ const ip4_addr_t *netusb_own_ip() {
 const ip4_addr_t *netusb_broadcast_ip() {
 	static const ip4_addr_t broadcast = INIT_MYSUBNET_IP(11);
 	return &broadcast;
+}
+
+int netusb_enqueue_keypress(keyboard_keypress_t kp) {
+	if (queue_try_add(&keyboard_queue, &kp) == false) {
+		printf(
+		    "[netusb] could not enqueue: %x, key: %x\n",
+		    kp.modifiers,
+		    kp.key
+		);
+		return PICO_ERROR_BUFFER_TOO_SMALL;
+	}
+	printf(
+	    "[netusb] enqueued keypress modifiers: %x, key: %x\n",
+	    kp.modifiers,
+	    kp.key
+	);
+	return PICO_OK;
 }

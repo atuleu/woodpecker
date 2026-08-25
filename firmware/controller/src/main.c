@@ -16,6 +16,7 @@
 #include <string.h>
 
 #include "atomic.h"
+#include "class/hid/hid.h"
 #include "encoder.h"
 #include "hid.h"
 #include "hid_visual.h"
@@ -153,7 +154,46 @@ void send_event_to_osc(encoder_event_t *event) {
 }
 
 void send_keyboard_event(encoder_event_t *event) {
-	printf("[main] TODO implement keyboard press events!!!!\n");
+	if (event->button == false) {
+		return;
+	}
+	const static uint8_t modifiers[4] = {
+	    KEYBOARD_MODIFIER_LEFTCTRL,
+	    KEYBOARD_MODIFIER_LEFTALT,
+	    KEYBOARD_MODIFIER_LEFTCTRL | KEYBOARD_MODIFIER_LEFTALT,
+	    0
+	};
+	const static uint8_t keys[16] = {
+	    HID_KEY_F1,
+	    HID_KEY_F2,
+	    HID_KEY_F3,
+	    HID_KEY_F4,
+	    HID_KEY_F5,
+	    HID_KEY_F6,
+	    HID_KEY_F7,
+	    HID_KEY_F8,
+	    HID_KEY_F9,
+	    HID_KEY_F10,
+	    HID_KEY_F11,
+	    HID_KEY_F12,
+	    0,
+	    0,
+	    0,
+	    0
+	};
+	const static uint8_t keys_alt[16] =
+	    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+
+	keyboard_keypress_t kp = {
+	    .modifiers = modifiers[event->ID.row],
+	    .key =
+	        event->ID.row == 3 ? keys_alt[event->ID.col] : keys[event->ID.col]
+	};
+
+	netusb_enqueue_keypress(kp);
+	kp.modifiers = 0;
+	kp.key       = 0;
+	netusb_enqueue_keypress(kp);
 }
 
 int32_t parse_hex_color(const char *str) {
