@@ -23,6 +23,9 @@
  *
  */
 
+#include "class/hid/hid.h"
+#include "class/hid/hid_device.h"
+#include "device/usbd.h"
 #include <pico/unique_id.h>
 #include <tusb.h>
 
@@ -49,7 +52,7 @@ enum {
 	STRID_MAC
 };
 
-enum { ITF_NUM_CDC = 0, ITF_NUM_CDC_DATA, ITF_NUM_TOTAL };
+enum { ITF_NUM_CDC = 0, ITF_NUM_CDC_DATA, ITF_NUM_HID, ITF_NUM_TOTAL };
 
 enum {
 #if CFG_TUD_ECM_RNDIS
@@ -99,9 +102,12 @@ uint8_t const *tud_descriptor_device_cb(void) {
 //--------------------------------------------------------------------+
 // Configuration Descriptor
 //--------------------------------------------------------------------+
-#define MAIN_CONFIG_TOTAL_LEN (TUD_CONFIG_DESC_LEN + TUD_RNDIS_DESC_LEN)
-#define ALT_CONFIG_TOTAL_LEN  (TUD_CONFIG_DESC_LEN + TUD_CDC_ECM_DESC_LEN)
-#define NCM_CONFIG_TOTAL_LEN  (TUD_CONFIG_DESC_LEN + TUD_CDC_NCM_DESC_LEN)
+#define MAIN_CONFIG_TOTAL_LEN                                                  \
+	(TUD_CONFIG_DESC_LEN + TUD_RNDIS_DESC_LEN + TUD_HID_DESC_LEN)
+#define ALT_CONFIG_TOTAL_LEN                                                   \
+	(TUD_CONFIG_DESC_LEN + TUD_CDC_ECM_DESC_LEN + TUD_HID_DESC_LEN)
+#define NCM_CONFIG_TOTAL_LEN                                                   \
+	(TUD_CONFIG_DESC_LEN + TUD_CDC_NCM_DESC_LEN + TUD_HID_DESC_LEN)
 
 #if CFG_TUSB_MCU == OPT_MCU_LPC175X_6X ||                                      \
     CFG_TUSB_MCU == OPT_MCU_LPC177X_8X || CFG_TUSB_MCU == OPT_MCU_LPC40XX
@@ -131,7 +137,16 @@ uint8_t const *tud_descriptor_device_cb(void) {
 #define EPNUM_NET_NOTIF 0x81
 #define EPNUM_NET_OUT   0x02
 #define EPNUM_NET_IN    0x82
+
 #endif
+#define EPNUM_HID_IN 0x84
+
+const uint8_t desc_hid_report[] = {TUD_HID_REPORT_DESC_KEYBOARD()};
+
+uint8_t const *tud_hid_descriptor_report_cb(uint8_t instance) {
+	(void)instance;
+	return desc_hid_report;
+}
 
 #if CFG_TUD_ECM_RNDIS
 
@@ -152,6 +167,16 @@ static uint8_t const rndis_configuration[] = {
         EPNUM_NET_OUT,
         EPNUM_NET_IN,
         CFG_TUD_NET_ENDPOINT_SIZE
+    ),
+
+    TUD_HID_DESCRIPTOR(
+        ITF_NUM_HID,
+        STRID_INTERFACE,
+        HID_ITF_PROTOCOL_KEYBOARD,
+        sizeof(desc_hid_report),
+        EPNUM_HID_IN,
+        16,
+        10
     ),
 };
 
@@ -175,6 +200,16 @@ static uint8_t const ecm_configuration[] = {
         EPNUM_NET_IN,
         CFG_TUD_NET_ENDPOINT_SIZE,
         CFG_TUD_NET_MTU
+    ),
+
+    TUD_HID_DESCRIPTOR(
+        ITF_NUM_HID,
+        STRID_INTERFACE,
+        HID_ITF_PROTOCOL_KEYBOARD,
+        sizeof(desc_hid_report),
+        EPNUM_HID_IN,
+        16,
+        10
     ),
 };
 
@@ -201,6 +236,17 @@ static uint8_t const ncm_configuration[] = {
         CFG_TUD_NET_ENDPOINT_SIZE,
         CFG_TUD_NET_MTU
     ),
+
+    TUD_HID_DESCRIPTOR(
+        ITF_NUM_HID,
+        STRID_INTERFACE,
+        HID_ITF_PROTOCOL_KEYBOARD,
+        sizeof(desc_hid_report),
+        EPNUM_HID_IN,
+        16,
+        10
+    ),
+
 };
 
 #endif
@@ -413,4 +459,34 @@ uint16_t const *tud_descriptor_string_cb(uint8_t index, uint16_t langid) {
 	_desc_str[0] = (uint16_t)((TUSB_DESC_STRING << 8) | (2 * chr_count + 2));
 
 	return _desc_str;
+}
+
+// very simple keyboard that does not support polling, only interrupts
+void tud_hid_set_report_cb(
+    uint8_t           instance,
+    uint8_t           report_id,
+    hid_report_type_t report_type,
+    const uint8_t    *buffer,
+    uint16_t          bufsize
+) {
+	(void)instance;
+	(void)report_id;
+	(void)report_type;
+	(void)buffer;
+	(void)bufsize;
+}
+
+uint16_t tud_hid_get_report_cb(
+    uint8_t           instance,
+    uint8_t           report_id,
+    hid_report_type_t report_type,
+    uint8_t          *buffer,
+    uint16_t          reqlen
+) {
+	(void)instance;
+	(void)report_id;
+	(void)report_type;
+	(void)buffer;
+	(void)reqlen;
+	return 0;
 }
