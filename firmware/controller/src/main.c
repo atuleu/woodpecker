@@ -139,9 +139,7 @@ void send_event_to_osc(encoder_event_t *event) {
 
 	printf("sending %s %x\n", message.address, event->delta);
 	int err;
-	ATOMIC_CORE_BLOCK() {
-		err = osc_send(&message);
-	}
+	err = osc_send(&message);
 	if (err != ERR_OK) {
 		printf(
 		    "could not send OSC message: %d address=%s\n",

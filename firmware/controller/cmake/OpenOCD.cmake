@@ -30,13 +30,12 @@ if(NOT OPENOCD_EXECUTABLE OR OPENOCD_VERSION VERSION_LESS "0.12.0")
 				"Found OpenOCD ${OPENOCD_VERSION} but it doesn't support rp2040. Downloading Pi foundation version"
 		)
 	endif()
-
 	include(ExternalProject)
 	include(ProcessorCount)
 	ProcessorCount(N)
 	ExternalProject_Add(
 		openocd
-		PREFIX ${PROJECT_BINARY_DIR}/_deps/openocd
+		PREFIX ${CMAKE_CURRENT_BINARY_DIR}/_deps/openocd
 		GIT_REPOSITORY https://github.com/raspberrypi/openocd.git
 		GIT_TAG sdk-2.0.0
 		GIT_SHALLOW 1
@@ -44,14 +43,16 @@ if(NOT OPENOCD_EXECUTABLE OR OPENOCD_VERSION VERSION_LESS "0.12.0")
 		BUILD_IN_SOURCE 1
 		UPDATE_DISCONNECTED 1
 		CONFIGURE_COMMAND ./bootstrap
-		COMMAND ./configure --prefix=${PROJECT_BINARY_DIR}/_deps/openocd-install
-				--enable-cmsis-dap
+		COMMAND
+			./configure
+			--prefix=${CMAKE_CURRENT_BINARY_DIR}/_deps/openocd-install
+			--enable-cmsis-dap
 		BUILD_COMMAND make -j ${N}
 		LOG_CONFIGURE 1
 		LOG_OUTPUT_ON_FAILURE 1
 	)
 	set(OPENOCD_EXECUTABLE
-		${PROJECT_BINARY_DIR}/_deps/openocd-install/bin/openocd
+		${CMAKE_CURRENT_BINARY_DIR}/_deps/openocd-install/bin/openocd
 	)
 	set(OPENOCD_VERSION "0.12.0")
 endif()

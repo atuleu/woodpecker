@@ -1,11 +1,14 @@
 #include "netusb.h"
 
+#include "atomic.h"
+#include "class/net/net_device.h"
 #include "device/usbd.h"
 #include "tusb_config.h"
 
 #include <dhserver.h>
 #include <lwip/netif.h>
 #include <pico/platform/common.h>
+#include <pico/util/queue.h>
 #include <tusb.h>
 
 #include <lwip/apps/httpd.h>
@@ -42,18 +45,16 @@ static const dhcp_config_t netusb_dhcp_config = {
     netusb_dhcp_entries
 };
 
+static queue_t tx_queue;
+
 // this function glues liwp -> tud for xmit
 static err_t linkoutput_fn(__unused struct netif *netif, struct pbuf *p) {
-	for (;;) {
-		if (!tud_ready()) {
-			return ERR_USE;
-		}
-		if (tud_network_can_xmit(p->tot_len)) {
-			tud_network_xmit(p, 0 /*unused arg*/);
-			return ERR_OK;
-		}
-		tud_task();
+	pbuf_ref(p);
+	if (queue_try_add(&tx_queue, p) == false) {
+		pbuf_free(p);
+		return ERR_USE;
 	}
+	return ERR_OK;
 }
 
 static err_t netif_init_cb(struct netif *netif) {
@@ -72,26 +73,39 @@ static err_t netif_init_cb(struct netif *netif) {
 	return ERR_OK;
 }
 
-static struct pbuf *received_frame;
+void tud_network_init_cb() {}
 
-void tud_network_init_cb() {
-	if (received_frame) {
-		pbuf_free(received_frame);
-		received_frame = NULL;
-	}
-}
+static bool rx_pending = false;
 
 bool tud_network_recv_cb(const uint8_t *src, uint16_t size) {
-	if (received_frame) {
+	if (size == 0) {
+		return true;
+	}
+
+	struct pbuf *p = pbuf_alloc(PBUF_RAW, size, PBUF_POOL);
+	if (p == NULL) {
+		printf("[netusb]: error could not allocate PBUF for reception\n");
+		rx_pending = true;
 		return false;
 	}
-	if (size) {
-		struct pbuf *p = pbuf_alloc(PBUF_RAW, size, PBUF_POOL);
-		if (p) {
-			memcpy(p->payload, src, size);
-			received_frame = p;
-		}
+	err_t err = pbuf_take(p, src, size);
+	if (err != ERR_OK) {
+		pbuf_free(p);
+		printf(
+		    "[netusb]: error could not copy PBUF memory for reception: %d\n",
+		    err
+		);
+		rx_pending = true;
+		return false;
 	}
+
+	err = netusb_netif.input(p, &netusb_netif);
+	if (err != ERR_OK) {
+		printf("[netusb]: error could not process input packet: %d\n", err);
+		pbuf_free(p);
+	}
+	tud_network_recv_renew();
+
 	return true;
 }
 
@@ -101,20 +115,39 @@ uint16_t tud_network_xmit_cb(uint8_t *dst, void *ref, uint16_t arg) {
 	return pbuf_copy_partial(p, dst, p->tot_len, 0);
 }
 
-static inline void service_traffic() {
-	if (received_frame) {
-		if (netusb_netif.input(received_frame, &netusb_netif) != ERR_OK) {
-			pbuf_free(received_frame);
-		}
-		received_frame = NULL;
-		tud_network_recv_renew();
-	}
-	sys_check_timeouts();
-}
-
 void netusb_task() {
 	tud_task();
-	service_traffic();
+
+	bool need_renew;
+	ATOMIC_CORE_BLOCK() {
+		need_renew = rx_pending;
+		rx_pending = false;
+	}
+	if (need_renew) {
+		tud_network_recv_renew();
+	}
+
+	sys_check_timeouts();
+
+	for (;;) {
+		struct pbuf *p;
+		if (tud_ready() == false || queue_try_peek(&tx_queue, &p) == false) {
+			// not ready, or nothing to TX
+			break;
+		}
+		if (tud_network_can_xmit(p->tot_len) == false) {
+			// not ready to TX that much
+			break;
+		}
+
+		queue_try_remove(&tx_queue, &p);
+
+		// sending it.
+		tud_network_xmit(p, 0);
+		// release it.
+
+		pbuf_free(p);
+	}
 }
 
 static bool netusb_netif_added = false;
@@ -129,6 +162,8 @@ bool netusb_init(void) {
 	struct netif *intf = &netusb_netif;
 
 	lwip_init();
+
+	queue_init(&tx_queue, sizeof(struct pbuf *), 32);
 
 	pico_unique_board_id_t board_id;
 	pico_get_unique_board_id(&board_id);
